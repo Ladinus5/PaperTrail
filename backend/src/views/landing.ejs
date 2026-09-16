@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Papertrail - Professional Receipts Delivered Instantly</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=swap" rel="stylesheet"/>
+    
+    <!-- Google Fonts: Inter & Courier Prime -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        .hero-pattern {
+            background-color: #faf8ff;
+            background-image: radial-gradient(#e2e2eb 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-[#faf8ff] text-[#191b22] font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- Header Navigation -->
+    <header class="w-full fixed top-0 z-50 bg-[#faf8ff]/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#004aad] filled-icon">receipt_long</span>
+                <span class="text-xl sm:text-2xl text-[#00357f] font-black tracking-tight">Papertrail</span>
+            </div>
+            
+            <nav class="hidden md:flex items-center gap-6">
+                <a class="text-sm font-medium text-slate-600 hover:text-[#00357f] transition-colors" href="/features">Features</a>
+                <a class="text-sm font-medium text-slate-600 hover:text-[#00357f] transition-colors" href="/templates">Templates</a>
+                <a class="text-sm font-medium text-slate-600 hover:text-[#00357f] transition-colors" href="/pricing">Pricing</a>
+            </nav>
+
+            <div class="flex items-center gap-4">
+                <a class="hidden sm:block text-sm font-medium text-[#191b22] hover:text-[#00357f] transition-colors" href="/login">Log in</a>
+                <a class="bg-[#004aad] text-white hover:bg-[#00357f] transition-colors rounded-lg px-4 py-2 text-xs font-semibold uppercase tracking-wider flex items-center gap-2 shadow-sm" href="/signup">
+                    Get Started Free
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-grow pt-16">
+        <!-- Hero Section -->
+        <section class="relative pt-12 sm:pt-16 lg:pt-20 pb-20 sm:pb-28 lg:pb-32 overflow-hidden hero-pattern">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+                    
+                    <!-- Text / Content Column -->
+                    <div class="flex flex-col gap-4 z-10">
+                        <div class="inline-flex items-center gap-2 bg-slate-100 border border-slate-200 rounded-full px-3 py-1 w-max">
+                            <span class="material-symbols-outlined text-[16px] text-[#004aad] filled-icon">new_releases</span>
+                            <span class="text-xs font-semibold text-[#004aad]">No complicated setup</span>
+                        </div>
+
+                        <h1 class="text-3xl sm:text-5xl lg:text-[56px] text-[#191b22] font-bold leading-tight sm:leading-[1.1]">
+                            Professional receipts. <br/>
+                            <span class="text-[#004aad]">Delivered instantly.</span>
+                        </h1>
+
+                        <p class="text-base sm:text-lg text-slate-600 max-w-lg mt-2 leading-relaxed">
+                            Create beautiful digital receipts and send them directly to your customers. Streamline your reconciliation and manage your transactions with ease.
+                        </p>
+
+                        <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                            <a class="bg-[#004aad] text-white hover:bg-[#00357f] transition-colors rounded-xl px-6 py-3.5 text-base font-semibold text-center inline-flex justify-center items-center gap-2 shadow-lg shadow-blue-500/20 hover:-translate-y-0.5 transition-transform" href="/signup">
+                                Get Started Free
+                                <span class="material-symbols-outlined">arrow_forward</span>
+                            </a>
+                            <a class="bg-white text-[#191b22] border border-slate-300 hover:bg-slate-50 transition-colors rounded-xl px-6 py-3.5 text-base font-semibold text-center inline-flex justify-center items-center gap-2" href="#demo">
+                                <span class="material-symbols-outlined">play_circle</span>
+                                Watch Demo
+                            </a>
+                        </div>
+
+                        <div class="flex items-center gap-4 mt-6 pt-6 border-t border-slate-200">
+                            <div class="flex -space-x-3 shrink-0">
+                                <img class="w-10 h-10 rounded-full border-2 border-white object-cover" alt="User portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmF95XN9Dpl9SBMOUKClG9xZWApR3N4VtSFZh9oCUZYjO24rSMKy1wN42X-CiSxLBKimGW96MoXfnWlOC7lGG-2VS9PtcS9QynC5bOqUs0EhCcCZjjgHMdf014PM9mV8jOZeBaZtxIlM4jRTFJGHwkaWTqVmSgqn00dGB37rSdUBz-Rxd39hk3IOrfKfLATkPMxQqGaA1c6QXjsej4LCC5HyKI4lE_CzGmmkZVduFkuw2AZjMSzg"/>
+                                <img class="w-10 h-10 rounded-full border-2 border-white object-cover" alt="User portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiuv4Be5nFuvO_4e_M3BgkX01098Hh_EXejRtGt9Lpmo_1_j3-1nBv4PiypBVh12QAD4haUIqDflKS-t8ae4PUR12LC691XDd5aaygzZ2CcGyz3d84d8zwJALHDAxRqrfU4FXH7pE-JHj-JrELfKGboKAY-BqdMcR8kzAweqLiMKLVzTCcGNEHR-CKG7HmArOUlOkw5kPl-1FddqnY6F6OPB-a9byDo-90TVibPdEfYoNHKatMYA"/>
+                                <img class="w-10 h-10 rounded-full border-2 border-white object-cover" alt="User portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8BUlFMvfvZEcltEfeBdIDX4Jq9t6LdVJzYXYVxM8bA62b-wk9LsdMerHSGoF0Q1ZrQtlWQ7a4SxOM5j25C6VHM3l3-UQY3Diy8aE6bEpJz1pivM2L6HN_puaIsr6mrTfReDy5UmPZe8jg86sC8_K-FwJJmikDOpBClyTBTqlEyPFyZ0SaDGM2Ebkbt731hNUXeDR-HzdT7meW2EFNpM7Xcl0Icc81gLANQVTUDV91kUOU2isfJQ"/>
+                            </div>
+                            <div class="text-sm text-slate-600">
+                                Trusted by <strong class="text-[#191b22] font-bold">10,000+</strong> businesses
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Graphic Column -->
+                    <div class="relative z-10 mt-6 lg:mt-0">
+                        <div class="relative rounded-xl border border-slate-200 bg-white shadow-2xl overflow-hidden transform lg:rotate-2 hover:rotate-0 transition-transform duration-500">
+                            <!-- Window Bar -->
+                            <div class="h-10 bg-slate-100 flex items-center px-4 gap-2 border-b border-slate-200">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+                                <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+                                <div class="ml-4 bg-white rounded-md h-6 w-1/2 border border-slate-200"></div>
+                            </div>
+
+                            <!-- Graphic Main Body -->
+                            <div class="p-4 sm:p-6 bg-white grid grid-cols-12 gap-4 sm:gap-6">
+                                <!-- Graphic Sidebar -->
+                                <div class="hidden sm:flex col-span-4 flex-col gap-3 border-r border-slate-200 pr-4">
+                                    <div class="h-8 w-8 rounded bg-blue-100 flex items-center justify-center text-[#004aad] mb-2">
+                                        <span class="material-symbols-outlined text-[20px] filled-icon">receipt_long</span>
+                                    </div>
+                                    <div class="h-8 bg-blue-50 rounded-md w-full flex items-center px-2 border-l-2 border-[#004aad]">
+                                        <div class="w-4 h-4 rounded bg-blue-200 mr-2"></div>
+                                        <div class="h-2 w-16 bg-blue-300 rounded"></div>
+                                    </div>
+                                    <div class="h-8 rounded-md w-full flex items-center px-2">
+                                        <div class="w-4 h-4 rounded bg-slate-200 mr-2"></div>
+                                        <div class="h-2 w-20 bg-slate-200 rounded"></div>
+                                    </div>
+                                    <div class="h-8 rounded-md w-full flex items-center px-2">
+                                        <div class="w-4 h-4 rounded bg-slate-200 mr-2"></div>
+                                        <div class="h-2 w-12 bg-slate-200 rounded"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Graphic Content Area -->
+                                <div class="col-span-12 sm:col-span-8 flex flex-col gap-4">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <div class="h-4 w-32 bg-slate-800 rounded mb-2"></div>
+                                            <div class="h-2 w-24 bg-slate-200 rounded"></div>
+                                        </div>
+                                        <div class="h-8 w-24 bg-[#004aad] rounded-md flex items-center justify-center">
+                                            <div class="h-2 w-12 bg-white rounded"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Faux Receipt Card -->
+                                    <div class="border border-slate-200 rounded-lg p-4 bg-white shadow-sm">
+                                        <div class="flex justify-between items-start mb-4 border-b border-slate-100 pb-4">
+                                            <div>
+                                                <div class="h-3 w-20 bg-slate-800 rounded mb-2"></div>
+                                                <div class="h-2 w-32 bg-slate-200 rounded"></div>
+                                            </div>
+                                            <div class="bg-blue-100 text-[#004aad] px-2 py-1 rounded text-xs font-bold border border-blue-200">
+                                                PAID
+                                            </div>
+                                        </div>
+                                        <div class="flex justify-between py-2">
+                                            <div class="h-2 w-32 bg-slate-200 rounded"></div>
+                                            <div class="h-2 w-12 bg-slate-800 rounded"></div>
+                                        </div>
+                                        <div class="flex justify-between py-2 border-t border-slate-100 mt-2 pt-2">
+                                            <div class="h-3 w-16 bg-slate-800 rounded"></div>
+                                            <div class="h-4 w-16 bg-[#004aad] rounded"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floating Notification Badge -->
+                        <div class="absolute -bottom-4 sm:-bottom-6 -left-2 sm:-left-6 bg-white border border-slate-200 rounded-xl p-3 sm:p-4 shadow-xl flex items-center gap-3 sm:gap-4 animate-bounce" style="animation-duration: 3s;">
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-emerald-600 text-lg sm:text-xl">check_circle</span>
+                            </div>
+                            <div>
+                                <div class="text-xs sm:text-sm text-[#191b22] font-bold">Receipt Sent</div>
+                                <div class="text-[10px] sm:text-xs text-slate-500">Just now to client@example.com</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-100 border-t border-slate-200 py-10 sm:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 text-center">
+            <h2 class="text-2xl sm:text-3xl text-[#191b22] font-bold mb-6">Ready to simplify your receipts?</h2>
+            <a class="bg-[#004aad] text-white hover:bg-[#00357f] transition-colors rounded-xl px-6 py-3 text-base font-semibold inline-flex items-center gap-2 shadow-sm" href="/signup">
+                Get Started
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+            
+            <div class="mt-10 sm:mt-12 pt-8 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#004aad] filled-icon">receipt_long</span>
+                    <span class="text-[#191b22] font-bold text-base">Papertrail</span>
+                </div>
+                <div>
+                    © 2026 Papertrail Inc. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Papertrail - Create Receipt</title>
+    
+    <!-- Google Fonts & Material Symbols -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Inter:wght@400;500;600;700;900&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .filled-icon { font-variation-settings: 'FILL' 1; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex h-screen w-screen overflow-hidden bg-slate-50 text-slate-900 font-sans antialiased">
+
+    <!-- Mobile Backdrop Overlay -->
+    <div id="mobile-backdrop" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden md:hidden" onclick="toggleMobileNav()"></div>
+
+    <!-- Mobile Drawer Navigation -->
+    <nav id="mobile-nav" class="fixed inset-y-0 left-0 w-72 z-50 md:hidden bg-white shadow-2xl flex flex-col p-6 gap-2 transition-transform duration-300 ease-in-out -translate-x-full">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-blue-700 flex items-center justify-center text-white font-bold text-lg">
+                    L
+                </div>
+                <div>
+                    <h2 class="text-xl font-black text-blue-900">Papertrail</h2>
+                    <p class="text-xs text-slate-500 font-medium">Louis</p>
+                </div>
+            </div>
+            <button type="button" class="p-2 rounded-lg text-slate-600 hover:bg-slate-100" onclick="toggleMobileNav()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-xl font-medium">
+            <span class="material-symbols-outlined">dashboard</span> Dashboard
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-700 rounded-xl font-bold">
+            <span class="material-symbols-outlined filled-icon">receipt_long</span> Receipts
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-xl font-medium">
+            <span class="material-symbols-outlined">group</span> Customers
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-xl font-medium">
+            <span class="material-symbols-outlined">description</span> Templates
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-xl font-medium mt-auto">
+            <span class="material-symbols-outlined">settings</span> Settings
+        </a>
+    </nav>
+
+    <!-- Desktop Sidebar Navigation -->
+    <nav class="hidden md:flex flex-col w-64 h-screen bg-white border-r border-slate-200 p-6 shrink-0 z-20">
+        <div class="flex items-center gap-3 mb-8 px-2">
+            <div class="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-slate-200">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80" alt="User profile" class="w-full h-full object-cover"/>
+            </div>
+            <div class="truncate">
+                <h1 class="text-xl font-bold text-blue-900 tracking-tight">Papertrail</h1>
+                <p class="text-xs text-slate-500 font-medium truncate">Louis</p>
+            </div>
+        </div>
+
+        <button type="button" class="w-full mb-6 bg-blue-700 hover:bg-blue-800 text-white rounded-xl h-11 flex items-center justify-center font-medium text-sm shadow-sm transition-colors">
+            + Create Receipt
+        </button>
+
+        <div class="flex flex-col gap-1 flex-1">
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-blue-900 hover:bg-slate-50 transition-colors rounded-lg font-medium text-sm">
+                <span class="material-symbols-outlined">dashboard</span> Dashboard
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-blue-800 font-bold bg-blue-50 border-r-4 border-blue-700 transition-colors rounded-l-lg text-sm">
+                <span class="material-symbols-outlined filled-icon">receipt_long</span> Receipts
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-blue-900 hover:bg-slate-50 transition-colors rounded-lg font-medium text-sm">
+                <span class="material-symbols-outlined">group</span> Customers
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-blue-900 hover:bg-slate-50 transition-colors rounded-lg font-medium text-sm">
+                <span class="material-symbols-outlined">description</span> Templates
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-blue-900 hover:bg-slate-50 transition-colors rounded-lg font-medium text-sm mt-auto">
+                <span class="material-symbols-outlined">settings</span> Settings
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Workspace Container -->
+    <main class="flex-1 flex flex-col h-screen min-w-0 relative">
+        <!-- Top Application Bar -->
+        <header class="h-16 border-b border-slate-200 bg-white px-4 md:px-8 flex items-center justify-between shrink-0 z-10">
+            <div class="flex items-center gap-3">
+                <button type="button" class="md:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-lg" onclick="toggleMobileNav()">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <h1 class="text-xl font-bold text-blue-900 md:hidden">Papertrail</h1>
+                <h2 class="hidden md:block text-lg font-bold text-slate-800">Create Receipt</h2>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button type="button" class="p-2 text-slate-500 hover:bg-slate-100 rounded-full hidden sm:flex items-center justify-center">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+                <button type="button" class="p-2 text-slate-500 hover:bg-slate-100 rounded-full flex items-center justify-center">
+                    <span class="material-symbols-outlined">notifications</span>
+                </button>
+                <button type="button" class="p-2 text-slate-500 hover:bg-slate-100 rounded-full hidden sm:flex items-center justify-center">
+                    <span class="material-symbols-outlined">help_outline</span>
+                </button>
+                <div class="w-8 h-8 rounded-full overflow-hidden border border-slate-200 md:hidden ml-2 shrink-0">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80" alt="User avatar" class="w-full h-full object-cover"/>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace (Split View) -->
+        <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+            
+            <!-- Left Column: Editor -->
+            <div class="w-full lg:w-1/2 h-full overflow-y-auto no-scrollbar bg-white border-b lg:border-b-0 lg:border-r border-slate-200 p-4 sm:p-6 lg:p-10 pb-32">
+                <div class="max-w-xl mx-auto w-full space-y-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900">Receipt Details</h3>
+                        <p class="text-sm text-slate-500">Configure information and style in real-time.</p>
+                    </div>
+
+                    <!-- Customer Section -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Customer</label>
+                            <button type="button" class="text-blue-700 text-xs font-semibold hover:underline flex items-center gap-0.5">
+                                <span class="material-symbols-outlined text-[14px]">add</span> Add New
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <select class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100 appearance-none pr-10 cursor-pointer">
+                                <option disabled selected value="">Select a customer...</option>
+                                <option>TechCorp Industries</option>
+                                <option>Acme Dynamics</option>
+                                <option>Global Logistics Ltd</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 top-2.5 text-slate-400 pointer-events-none">expand_more</span>
+                        </div>
+                    </div>
+
+                    <!-- Items Section -->
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 block mb-3">Itemized List</label>
+                        
+                        <!-- Desktop Table Headers -->
+                        <div class="hidden sm:grid sm:grid-cols-12 gap-3 mb-2 px-1 text-xs font-semibold text-slate-500">
+                            <div class="col-span-6">Item Description</div>
+                            <div class="col-span-2 text-right">Qty</div>
+                            <div class="col-span-3 text-right">Unit Price (₦)</div>
+                            <div class="col-span-1"></div>
+                        </div>
+
+                        <!-- Item Row -->
+                        <div class="space-y-3">
+                            <div class="flex flex-col sm:grid sm:grid-cols-12 gap-3 p-3 sm:p-0 border border-slate-200 sm:border-none rounded-xl sm:rounded-none bg-slate-50 sm:bg-transparent">
+                                <div class="col-span-6">
+                                    <label class="sm:hidden text-xs font-semibold text-slate-500 mb-1 block">Item Description</label>
+                                    <input type="text" value="Consulting Retainer" placeholder="e.g. Web Design Services" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100" />
+                                </div>
+                                <div class="col-span-2">
+                                    <label class="sm:hidden text-xs font-semibold text-slate-500 mb-1 block">Qty</label>
+                                    <input type="number" min="1" value="1" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 sm:text-right focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100" />
+                                </div>
+                                <div class="col-span-3">
+                                    <label class="sm:hidden text-xs font-semibold text-slate-500 mb-1 block">Price (₦)</label>
+                                    <input type="text" value="10,000" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 text-right focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100" />
+                                </div>
+                                <div class="col-span-1 flex items-center justify-end">
+                                    <button type="button" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="w-full mt-3 h-10 border-2 border-dashed border-blue-200 hover:border-blue-500 hover:bg-blue-50/50 text-blue-700 rounded-xl font-medium text-sm flex items-center justify-center transition-all">
+                            <span class="material-symbols-outlined text-[18px] mr-1">add</span> Add Another Item
+                        </button>
+                    </div>
+
+                    <hr class="border-slate-200"/>
+
+                    <!-- Payment Method -->
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 block mb-2">Payment Method</label>
+                        <div class="relative w-full sm:w-1/2">
+                            <select class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100 appearance-none pr-10 cursor-pointer">
+                                <option>Bank Transfer</option>
+                                <option>Cash</option>
+                                <option>Credit Card</option>
+                                <option>Cheque</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 top-2.5 text-slate-400 pointer-events-none">expand_more</span>
+                        </div>
+                    </div>
+
+                    <!-- Template Selection -->
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 block mb-3">Receipt Template</label>
+                        <div class="grid grid-cols-3 gap-3 sm:gap-4">
+                            <button type="button" class="relative border-2 border-blue-700 rounded-xl p-2 bg-white shadow-sm flex flex-col items-center">
+                                <div class="absolute top-2 right-2 w-4 h-4 bg-blue-700 rounded-full flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-white text-[12px]">check</span>
+                                </div>
+                                <div class="w-full h-20 bg-slate-50 rounded border border-slate-200 p-2 flex flex-col mb-2">
+                                    <div class="w-1/2 h-2 bg-blue-200 rounded mb-2"></div>
+                                    <div class="w-full h-1 bg-slate-200 rounded mb-1"></div>
+                                    <div class="w-3/4 h-1 bg-slate-200 rounded"></div>
+                                </div>
+                                <span class="text-xs font-bold text-slate-800">Modern</span>
+                            </button>
+
+                            <button type="button" class="relative border border-slate-200 hover:border-slate-300 rounded-xl p-2 bg-white flex flex-col items-center transition-colors">
+                                <div class="w-full h-20 bg-white rounded border border-slate-200 p-2 flex flex-col items-center justify-center mb-2">
+                                    <div class="w-1/3 h-2 bg-slate-300 rounded mb-2"></div>
+                                    <div class="w-full border-t border-dashed border-slate-200 mb-1"></div>
+                                    <div class="w-full h-1 bg-slate-200 rounded"></div>
+                                </div>
+                                <span class="text-xs font-medium text-slate-600">Classic</span>
+                            </button>
+
+                            <button type="button" class="relative border border-slate-200 hover:border-slate-300 rounded-xl p-2 bg-white flex flex-col items-center transition-colors">
+                                <div class="w-full h-20 bg-slate-50 rounded border border-slate-200 p-2 flex flex-col items-end mb-2">
+                                    <div class="w-1/4 h-2 bg-slate-300 rounded mb-2"></div>
+                                    <div class="w-full h-[1px] bg-slate-200 mb-1"></div>
+                                </div>
+                                <span class="text-xs font-medium text-slate-600">Minimal</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Live Preview -->
+            <div class="w-full lg:w-1/2 h-full overflow-y-auto no-scrollbar bg-slate-100 p-4 sm:p-6 lg:p-10 flex justify-center items-start pb-32">
+                <div class="w-full max-w-lg bg-white shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-200 overflow-hidden text-sm">
+                    <div class="bg-blue-700 h-2.5 w-full"></div>
+                    <div class="p-6 sm:p-10">
+                        <div class="flex justify-between items-start mb-8 gap-4">
+                            <div>
+                                <h2 class="text-2xl font-black text-blue-700 tracking-tight">RECEIPT</h2>
+                                <p class="text-slate-400 font-mono text-xs uppercase tracking-wider mt-0.5">#RCPT-2023-089</p>
+                            </div>
+                            <div class="text-right">
+                                <h3 class="font-bold text-slate-900 text-base">Papertrail Inc.</h3>
+                                <p class="text-slate-500 text-xs mt-1 leading-relaxed">123 Tech Boulevard<br/>Lagos, Nigeria</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6 mb-8">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Billed To</p>
+                                <p class="font-bold text-slate-900">TechCorp Industries</p>
+                                <p class="text-slate-500 text-xs mt-0.5">contact@techcorp.com</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Date of Issue</p>
+                                <p class="font-medium text-slate-800">Oct 24, 2023</p>
+                            </div>
+                        </div>
+
+                        <div class="w-full border-y border-slate-200 py-3 mb-6">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="text-xs font-semibold text-slate-400 uppercase">
+                                        <th class="pb-2">Description</th>
+                                        <th class="pb-2 text-center">Qty</th>
+                                        <th class="pb-2 text-right">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 text-slate-700">
+                                    <tr>
+                                        <td class="py-3 font-medium text-slate-900">Consulting Retainer</td>
+                                        <td class="py-3 text-center">1</td>
+                                        <td class="py-3 text-right font-medium text-slate-900">₦10,000.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="flex justify-end mb-8">
+                            <div class="w-full sm:w-1/2 space-y-2">
+                                <div class="flex justify-between text-slate-500">
+                                    <span>Subtotal</span>
+                                    <span class="text-slate-800 font-medium">₦10,000.00</span>
+                                </div>
+                                <div class="flex justify-between text-slate-500">
+                                    <span>Tax (0%)</span>
+                                    <span class="text-slate-800 font-medium">₦0.00</span>
+                                </div>
+                                <div class="flex justify-between pt-2 border-t-2 border-slate-900 font-bold text-slate-900 text-base">
+                                    <span>Total</span>
+                                    <span>₦10,000.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-8">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Payment Method</p>
+                            <p class="font-medium text-slate-800">Bank Transfer</p>
+                        </div>
+
+                        <div class="text-center">
+                            <span class="inline-block bg-emerald-50 text-emerald-700 font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-md border border-emerald-200">
+                                PAID
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sticky Actions Footer -->
+            <div class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 p-4 md:px-8 flex items-center justify-between z-30 shadow-lg">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block">Total Amount</span>
+                    <span class="text-xl sm:text-2xl font-bold text-slate-900">₦10,000</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button type="button" class="hidden sm:flex h-10 px-5 items-center justify-center border border-slate-200 rounded-xl text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-colors">
+                        Save Draft
+                    </button>
+                    <button type="button" class="h-10 px-6 sm:px-8 bg-blue-700 hover:bg-blue-800 text-white rounded-xl font-semibold text-sm shadow-sm transition-colors flex items-center justify-center">
+                        Create Receipt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Drawer Script -->
+    <script>
+        function toggleMobileNav() {
+            const nav = document.getElementById('mobile-nav');
+            const backdrop = document.getElementById('mobile-backdrop');
+            
+            nav.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

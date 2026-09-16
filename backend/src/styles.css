@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@source "./views/**/*.ejs";
+@source "./**/*.js";
+
+@theme {
+  --color-primary-container: #004aad;
+  --color-background: #faf8ff;
+  --color-surface: #faf8ff;
+  --color-on-surface: #191b22;
+  --color-on-surface-variant: #434653;
+
+  --color-primary: #00357f;
+  --color-outline-variant: #c3c6d5;
+
+  --color-surface-container: #ededf6;
+  --color-surface-container-low: #f3f3fc;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-high: #e7e7f0;
+  --color-surface-variant: #e2e2eb;
+
+  --color-tertiary-fixed-dim: #ffb599;
+  --color-error: #ba1a1a;
+
+  --font-inter: "Inter", sans-serif;
+  --font-courier: "Courier Prime", monospace;
+}
+
+.hero-pattern {
+  background-color: #faf8ff;
+  background-image: radial-gradient(#e2e2eb 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}

@@ -1,0 +1,175 @@
+
+<div class="flex flex-col w-full items-center justify-center py-4 sm:py-6 px-2 sm:px-4">
+  <div class="relative w-full max-w-xl">
+    <div class="absolute -top-16 -left-12 w-64 h-64 bg-primary-fixed/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
+    <div class="absolute -bottom-16 -right-12 w-72 h-72 bg-secondary-fixed/50 rounded-full blur-3xl pointer-events-none -z-10"></div>
+    <div class="bg-surface-container-lowest rounded-xl shadow-xl p-5 sm:p-8 md:p-10 relative">
+
+      <!-- Header block (unchanged) -->
+      <div class="flex flex-col items-center text-center mb-6 sm:mb-8">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-primary-container text-on-primary flex items-center justify-center mb-3 sm:mb-4 shadow-sm">
+          <span class="material-symbols-outlined text-[24px] sm:text-[28px]" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+        </div>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed text-primary font-label-md text-label-md font-semibold tracking-wide uppercase mb-3">
+          <span class="w-2 h-2 rounded-full bg-primary-container animate-ping"></span>
+          <span>Papertrail Enterprise</span>
+        </div>
+        <h1 class="font-headline-md text-headline-md text-on-surface tracking-tight max-w-md text-[20px] sm:text-[24px]">
+          Start issuing professional receipts in seconds
+        </h1>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-sm text-[13px] sm:text-[14px]">
+          Join over 12,000 African merchants streamlining billing, verification, and automated tax accounting.
+        </p>
+      </div>
+
+      <!-- Error banner
+      <% if (errors && errors.length) { %>
+        <div class="mb-4 p-3 rounded-lg bg-error-container text-on-error-container font-body-md text-body-md">
+          <ul class="list-disc list-inside">
+            <% errors.forEach(err => { %><li><%= err %></li><% }) %>
+          </ul>
+        </div>
+      <% } %> -->
+
+      <!-- ✅ Real form, real action -->
+      <form id="registerForm" class="space-y-4" method="POST" action="/api/auth/register">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Full Name</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">person</span>
+              <input name="name" required
+                     value="<%= values.name || '' %>"
+                     class="w-full h-10 pl-9 pr-3 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:bg-surface-container-lowest focus:outline-none transition-all shadow-sm"
+                     placeholder="First and last name" type="text"/>
+            </div>
+          </div>
+          <div class="space-y-1.5">
+            <label class="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Business / Store Name</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">storefront</span>
+              <input name="company" value="<%= values.company || '' %>"
+                     class="w-full h-10 pl-9 pr-3 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:bg-surface-container-lowest focus:outline-none transition-all shadow-sm"
+                     placeholder="Registered enterprise name" type="text"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Business Email</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">mail</span>
+            <input name="email" required type="email"
+                   value="<%= values.email || '' %>"
+                   class="w-full h-10 pl-9 pr-3 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:bg-surface-container-lowest focus:outline-none transition-all shadow-sm"
+                   placeholder="name@company.com"/>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Password</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">lock</span>
+            <input id="passInput" name="password" required minlength="8" type="password"
+                   class="w-full h-10 pl-9 pr-10 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none transition-all shadow-sm"/>
+            <button type="button"
+              onclick="const p=document.getElementById('passInput'); p.type = p.type==='password'?'text':'password';"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors">
+              <span class="material-symbols-outlined text-[18px]">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <label class="flex items-start gap-3 cursor-pointer group">
+            <input required name="terms" type="checkbox"
+                   class="w-4 h-4 mt-0.5 rounded text-primary-container bg-surface-container-low accent-[#004aad] cursor-pointer"/>
+            <span class="font-body-md text-body-md text-on-surface-variant group-hover:text-on-surface transition-colors select-none leading-tight">
+              I agree to Papertrail <a class="text-primary-container font-semibold hover:underline" href="#">Terms</a> and <a class="text-primary-container font-semibold hover:underline" href="#">Privacy Policy</a>
+            </span>
+          </label>
+        </div>
+
+        <button id="submitBtn" type="submit"
+                class="w-full h-11 mt-4 rounded-xl bg-primary-container hover:bg-primary text-on-primary font-title-md text-title-md text-[15px] font-semibold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed">
+          <span id="btnText">Create Free Account</span>
+          <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </button>
+      </form>
+
+      <div class="mt-6 pt-6 bg-surface-container-low/60 rounded-xl p-4 text-center">
+        <p class="font-body-md text-body-md text-on-surface-variant">
+          Already have an account?
+          <a class="text-primary-container font-semibold hover:text-primary transition-colors ml-1 inline-flex items-center gap-0.5" href="/login">
+            <span>Sign in</span>
+            <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Trust badges (unchanged) -->
+    <div class="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-2 mt-6 text-center">
+      <div class="inline-flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant bg-surface-container-lowest px-3 py-1.5 rounded-full shadow-xs">
+        <span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span>Free 14-day trial</span>
+      </div>
+      <div class="inline-flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant bg-surface-container-lowest px-3 py-1.5 rounded-full shadow-xs">
+        <span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span>No credit card required</span>
+      </div>
+      <div class="inline-flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant bg-surface-container-lowest px-3 py-1.5 rounded-full shadow-xs">
+        <span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span>Setup in 2 minutes</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Intercept form, POST via fetch, redirect on success
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const btn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+
+    btn.disabled = true;
+    btnText.textContent = 'Creating account...';
+
+    const payload = {
+      name:     form.name.value.trim(),
+      email:    form.email.value.trim(),
+      password: form.password.value,
+      // company: form.company.value.trim(),  // add to backend if you support it
+    };
+
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',       // ⭐ sends & receives cookies
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || 'Registration failed');
+      }
+
+      // Cookie is now set by server → go to dashboard
+      window.location.href = '/dashboard';
+
+    } catch (err) {
+      // Simple inline error — replace with toast if you have one
+      let banner = form.parentElement.querySelector('.js-error');
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.className = 'js-error mb-4 p-3 rounded-lg bg-error-container text-on-error-container font-body-md text-body-md';
+        form.insertBefore(banner, form.firstChild);
+      }
+      banner.textContent = err.message;
+
+      btn.disabled = false;
+      btnText.textContent = 'Create Free Account';
+    }
+  });
+</script>

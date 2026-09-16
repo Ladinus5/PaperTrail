@@ -1,0 +1,11 @@
+<script>
+  // Logout via fetch (works from sidebar button too)
+  document.querySelectorAll('form[action="/logout"]').forEach(f => {
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      window.location.href = '/login';
+    });
+  });
+</script>
+<%- typeof script !== 'undefined' ? script : '' %>
