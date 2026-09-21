@@ -1,37 +1,46 @@
 const prisma = require("../config/database");
 
 const createCustomer = async (req, res) => {
-    try {
-        const { name, email, phone } = req.body;
+  try {
+    const { name, email, phone } = req.body;
+    const companyId = req.user.company.id;
 
-        if (!name) {
-            return res.status(400).json({
-                success: false,
-                message: "Customer name is required",
-            });
-        }
-
-        const customer = await prisma.customer.create({
-            data: {
-                name,
-                email,
-                phone,
-                companyId: req.user.company.id,
-            },
-        });
-
-        res.status(201).json({
-            success: true,
-            message: "Customer created successfully",
-            data: customer,
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message,
-        });
+    if (!name || !name.trim()) {
+      return res.status(400).json({ success: false, message: "Customer name is required" });
     }
+
+    const customer = await prisma.customer.create({
+      data: {
+        name: name.trim(),
+        email: email ? email.trim() : null,
+        phone: phone ? phone.trim() : null,
+        companyId,
+      },
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Customer created",
+      data: { customer },
+    });
+  } catch (error) {
+    console.error("[customer.create]", error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+const listCustomers = async (req, res) => {
+  try {
+    const companyId = req.user.company.id;
+    const customers = await prisma.customer.findMany({
+      where: { companyId },
+      orderBy: { createdAt: "desc" },
+      include: { _count: { select: { receipts: true } } },
+    });
+    res.json({ success: true, data: { customers } });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
 };
 
 
@@ -131,4 +140,5 @@ module.exports = {
     getCustomers,
     getCustomer,
     deleteCustomer,
+    listCustomers,
 };

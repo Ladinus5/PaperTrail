@@ -1,0 +1,116 @@
+<main class="w-full pt-16 bg-surface px-md sm:px-lg py-md sm:py-xl min-h-screen">
+  <div class="flex flex-col w-full">
+    <div class="max-w-[1400px] w-full mx-auto space-y-6">
+
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Receipts</span>
+            <span class="px-2.5 py-0.5 rounded-full text-label-md font-label-md bg-secondary-container text-on-secondary-fixed-variant font-medium">Ledger</span>
+          </div>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-1">All receipts issued from your workspace.</p>
+          <% if (customerFilter) { %>
+            <p class="font-label-md text-label-md text-primary mt-1">Filtered by customer</p>
+          <% } %>
+        </div>
+        <a href="/receipts/new"
+          class="h-10 px-4 bg-primary-container hover:bg-primary text-on-primary rounded-lg font-title-md text-title-md text-[14px] font-medium inline-flex items-center gap-1.5 shadow-sm transition-all self-start md:self-auto">
+          <span class="material-symbols-outlined text-[18px]">add</span>
+          <span>Create Receipt</span>
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+        <div class="p-5 rounded-xl bg-surface-container-lowest border border-outline-variant/40 shadow-sm">
+          <div class="flex items-start justify-between">
+            <div class="flex flex-col">
+              <span class="font-label-md text-label-md text-secondary tracking-wide uppercase font-medium">Total Receipts</span>
+              <span class="font-display-lg text-display-lg text-on-surface mt-1 tracking-tight"><%= totalCount %></span>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-primary-fixed flex items-center justify-center text-primary-container">
+              <span class="material-symbols-outlined text-[22px]">receipt_long</span>
+            </div>
+          </div>
+        </div>
+        <div class="p-5 rounded-xl bg-surface-container-lowest border border-outline-variant/40 shadow-sm">
+          <div class="flex items-start justify-between">
+            <div class="flex flex-col">
+              <span class="font-label-md text-label-md text-secondary tracking-wide uppercase font-medium">Total Value</span>
+              <span class="font-display-lg text-display-lg text-on-surface mt-1 tracking-tight"><%= formatCurrency(totalValue) %></span>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-secondary-fixed flex items-center justify-center text-primary">
+              <span class="material-symbols-outlined text-[22px]">payments</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 shadow-sm overflow-hidden">
+        <div class="px-lg py-md border-b border-outline-variant/30 flex items-center justify-between bg-surface">
+          <span class="font-title-md text-title-md text-on-surface font-semibold">All Receipts</span>
+          <span class="px-2 py-0.5 rounded bg-surface-container text-secondary text-label-md font-label-md"><%= totalCount %> total</span>
+        </div>
+
+        <% if (receipts.length === 0) { %>
+          <div class="p-xl text-center">
+            <span class="material-symbols-outlined text-[48px] text-on-surface-variant/40 mb-sm block">receipt_long</span>
+            <p class="text-body-md text-on-surface-variant mb-md">No receipts yet.</p>
+            <a href="/receipts/new" class="inline-flex items-center gap-1 bg-primary-container hover:bg-primary text-on-primary px-md py-sm rounded-lg text-label-md font-semibold transition-colors">
+              <span class="material-symbols-outlined text-[16px]">add</span>
+              Create your first receipt
+            </a>
+          </div>
+        <% } else { %>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[720px]">
+              <thead>
+                <tr class="bg-surface-container-low/70 border-b border-outline-variant/30 text-secondary uppercase font-label-md text-label-md tracking-wider">
+                  <th class="py-3 px-lg font-semibold">Receipt #</th>
+                  <th class="py-3 px-lg font-semibold">Customer</th>
+                  <th class="py-3 px-lg font-semibold text-right">Amount</th>
+                  <th class="py-3 px-lg font-semibold">Payment</th>
+                  <th class="py-3 px-lg font-semibold">Status</th>
+                  <th class="py-3 px-lg font-semibold">Date</th>
+                  <th class="py-3 px-lg text-center font-semibold">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-outline-variant/20">
+                <% receipts.forEach(r => { %>
+                  <tr class="hover:bg-surface-container-low/60 transition-colors">
+                    <td class="py-3 px-lg font-code-md text-body-md text-on-surface font-medium"><%= r.receiptNumber %></td>
+                    <td class="py-3 px-lg text-body-md text-on-surface">
+                      <%= r.customer?.name || "—" %>
+                    </td>
+                    <td class="py-3 px-lg text-right font-code-md text-body-md text-on-surface font-semibold"><%= formatCurrency(r.total, company?.currency) %></td>
+                    <td class="py-3 px-lg text-body-md text-on-surface-variant"><%= r.paymentMethod %></td>
+                    <td class="py-3 px-lg">
+                      <% if (r.paymentStatus === "PAID") { %>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#dcfce7] text-[#15803d] text-label-md font-semibold">Paid</span>
+                      <% } else if (r.paymentStatus === "PENDING") { %>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-label-md font-semibold">Pending</span>
+                      <% } else { %>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant text-label-md font-semibold"><%= r.paymentStatus %></span>
+                      <% } %>
+                    </td>
+                    <td class="py-3 px-lg text-body-md text-on-surface-variant"><%= timeAgo(r.createdAt) %></td>
+                    <td class="py-3 px-lg">
+                      <div class="flex items-center justify-center gap-1">
+                        <a href="/receipts/<%= r.id %>" class="p-1.5 rounded-lg text-primary-container hover:bg-primary-fixed transition-colors" title="View">
+                          <span class="material-symbols-outlined text-[18px]">visibility</span>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </div>
+
+    </div>
+  </div>
+</main>

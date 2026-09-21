@@ -15,6 +15,7 @@ const create = async (req, res) => {
             discount,
             tax,
             paymentMethod,
+            paymentStatus,
             notes,
         } = req.body;
 
@@ -25,6 +26,7 @@ const create = async (req, res) => {
             discount,
             tax,
             paymentMethod,
+            paymentStatus,
             notes,
         });
 
@@ -45,9 +47,7 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
     try {
-        const receipts = await getReceipts(
-            req.user.company.id
-        );
+        const receipts = await getReceipts(req.user.company.id);
 
         res.status(200).json({
             success: true,
@@ -83,6 +83,7 @@ const getOne = async (req, res) => {
     }
 };
 
+
 const assignReceiptTemplate = async (req, res) => {
     try {
         const receipt = await assignTemplate(
@@ -105,6 +106,7 @@ const assignReceiptTemplate = async (req, res) => {
     }
 };
 
+
 const renderData = async (req, res) => {
     try {
         const data = await getReceiptForRendering(
@@ -124,6 +126,7 @@ const renderData = async (req, res) => {
         });
     }
 };
+
 
 const renderReceipt = async (req, res) => {
     try {
@@ -147,4 +150,4 @@ module.exports = {
     assignReceiptTemplate,
     renderData,
     renderReceipt,
-}; 
+};

@@ -1,354 +1,335 @@
-<!DOCTYPE html>
-<html class="light" lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Papertrail - Create Receipt</title>
-    
-    <!-- Google Fonts & Material Symbols -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Inter:wght@400;500;600;700;900&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=swap" rel="stylesheet"/>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <style>
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .filled-icon { font-variation-settings: 'FILL' 1; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
-</head>
-<body class="flex h-screen w-screen overflow-hidden bg-slate-50 text-slate-900 font-sans antialiased">
+<main class="w-full pt-16 bg-surface px-md sm:px-lg py-md sm:py-xl min-h-screen pb-32">
+  <div class="max-w-[1400px] w-full mx-auto">
 
-    <!-- Mobile Backdrop Overlay -->
-    <div id="mobile-backdrop" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden md:hidden" onclick="toggleMobileNav()"></div>
+    <!-- Header -->
+    <div class="mb-lg">
+      <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Create Receipt</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-1">Configure information and style in real-time.</p>
+    </div>
 
-    <!-- Mobile Drawer Navigation -->
-    <nav id="mobile-nav" class="fixed inset-y-0 left-0 w-72 z-50 md:hidden bg-white shadow-2xl flex flex-col p-6 gap-2 transition-transform duration-300 ease-in-out -translate-x-full">
-        <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-blue-700 flex items-center justify-center text-white font-bold text-lg">
-                    L
-                </div>
-                <div>
-                    <h2 class="text-xl font-black text-blue-900">Papertrail</h2>
-                    <p class="text-xs text-slate-500 font-medium">Louis</p>
-                </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+
+      <!-- Left: Editor -->
+      <div class="lg:col-span-7 bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-lg shadow-sm space-y-8">
+
+        <form id="receiptForm" class="space-y-8">
+
+          <div id="receiptError"
+               class="hidden p-md rounded-lg bg-error-container text-on-error-container font-body-md text-body-md border border-error/30"></div>
+
+          <!-- Customer -->
+          <div>
+            <label class="text-label-md font-label-md uppercase tracking-wider text-on-surface-variant block mb-sm" for="customerId">Customer</label>
+            <div class="relative">
+              <select id="customerId" name="customerId"
+                class="w-full h-10 px-sm bg-surface-container-low border border-outline-variant/50 rounded-lg text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-container/20 appearance-none pr-10 cursor-pointer">
+                <option value="">Walk-in / No customer</option>
+                <% customers.forEach(c => { %>
+                  <option value="<%= c.id %>" <%= c.id === preselectedCustomerId ? 'selected' : '' %>><%= c.name %></option>
+                <% }) %>
+              </select>
+              <span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant pointer-events-none">expand_more</span>
             </div>
-            <button type="button" class="p-2 rounded-lg text-slate-600 hover:bg-slate-100" onclick="toggleMobileNav()">
-                <span class="material-symbols-outlined">close</span>
+          </div>
+
+          <!-- Items -->
+          <div>
+            <label class="text-label-md font-label-md uppercase tracking-wider text-on-surface-variant block mb-sm">Itemized List</label>
+
+            <div class="hidden sm:grid sm:grid-cols-12 gap-3 mb-sm px-1 text-label-md font-label-md text-on-surface-variant">
+              <div class="col-span-6">Description</div>
+              <div class="col-span-2 text-right">Qty</div>
+              <div class="col-span-3 text-right">Unit Price</div>
+              <div class="col-span-1"></div>
+            </div>
+
+            <div id="itemsList" class="space-y-3">
+              <!-- Rows are appended by JS -->
+            </div>
+
+            <button type="button" id="addItemBtn"
+              class="w-full mt-sm h-10 border-2 border-dashed border-primary-fixed-dim hover:border-primary-container hover:bg-primary-fixed/30 text-primary-container rounded-xl font-medium text-body-md flex items-center justify-center transition-all">
+              <span class="material-symbols-outlined text-[18px] mr-1">add</span> Add Another Item
             </button>
+          </div>
+
+          <hr class="border-outline-variant/30"/>
+
+          <!-- Payment method -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+            <div>
+              <label class="text-label-md font-label-md uppercase tracking-wider text-on-surface-variant block mb-sm" for="paymentMethod">Payment Method</label>
+              <div class="relative">
+                <select id="paymentMethod" name="paymentMethod"
+                  class="w-full h-10 px-sm bg-surface-container-low border border-outline-variant/50 rounded-lg text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-container/20 appearance-none pr-10 cursor-pointer">
+                  <option value="Bank Transfer">Bank Transfer</option>
+                  <option value="Cash">Cash</option>
+                  <option value="Credit Card">Credit Card</option>
+                  <option value="Cheque">Cheque</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant pointer-events-none">expand_more</span>
+              </div>
+            </div>
+
+            <div>
+              <label class="text-label-md font-label-md uppercase tracking-wider text-on-surface-variant block mb-sm" for="paymentStatus">Payment Status</label>
+              <div class="relative">
+                <select id="paymentStatus" name="paymentStatus"
+                  class="w-full h-10 px-sm bg-surface-container-low border border-outline-variant/50 rounded-lg text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-container/20 appearance-none pr-10 cursor-pointer">
+                  <option value="PAID" selected>Paid</option>
+                  <option value="PENDING">Pending</option>
+                  <option value="CANCELLED">Cancelled</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant pointer-events-none">expand_more</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div>
+            <label class="text-label-md font-label-md uppercase tracking-wider text-on-surface-variant block mb-sm" for="notes">Notes (optional)</label>
+            <textarea id="notes" name="notes" rows="2"
+              class="w-full p-sm bg-surface-container-low border border-outline-variant/50 rounded-lg text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-container/20 transition-all resize-none"
+              placeholder="Any extra information..."></textarea>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Right: Live Preview -->
+      <div class="lg:col-span-5 bg-surface-container-lowest rounded-xl border border-outline-variant/40 shadow-sm p-lg h-fit">
+        <div class="flex items-center gap-sm mb-lg">
+          <span class="material-symbols-outlined text-primary text-[20px]">visibility</span>
+          <div class="flex flex-col">
+            <span class="font-title-md text-title-md text-[14px] font-semibold text-on-surface">Live Preview</span>
+            <span class="font-label-md text-label-md text-on-surface-variant text-[11px]">Reflects changes instantly</span>
+          </div>
         </div>
 
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-xl font-medium">
-            <span class="material-symbols-outlined">dashboard</span> Dashboard
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-700 rounded-xl font-bold">
-            <span class="material-symbols-outlined filled-icon">receipt_long</span> Receipts
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-xl font-medium">
-            <span class="material-symbols-outlined">group</span> Customers
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-xl font-medium">
-            <span class="material-symbols-outlined">description</span> Templates
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-xl font-medium mt-auto">
-            <span class="material-symbols-outlined">settings</span> Settings
-        </a>
-    </nav>
+        <div class="bg-surface-container-low rounded-xl p-md">
+          <div class="bg-surface-container-lowest rounded-lg shadow-md p-lg flex flex-col gap-md text-body-md">
+            <div class="h-1.5 bg-primary-container rounded-full -mt-lg -mx-lg mb-md"></div>
 
-    <!-- Desktop Sidebar Navigation -->
-    <nav class="hidden md:flex flex-col w-64 h-screen bg-white border-r border-slate-200 p-6 shrink-0 z-20">
-        <div class="flex items-center gap-3 mb-8 px-2">
-            <div class="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-slate-200">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80" alt="User profile" class="w-full h-full object-cover"/>
+            <div class="flex justify-between items-start">
+              <div class="flex flex-col">
+                <span class="font-headline-md text-headline-md text-[15px] font-bold text-primary-container tracking-tight uppercase"><%= company.name %></span>
+                <% if (company.email) { %><span class="font-label-md text-[10px] text-secondary"><%= company.email %></span><% } %>
+                <% if (company.phone) { %><span class="font-label-md text-[10px] text-secondary"><%= company.phone %></span><% } %>
+              </div>
+              <div class="flex flex-col items-end">
+                <span class="font-code-md text-code-md text-[11px] font-semibold text-on-surface" id="previewNumber"><%= nextNumber %></span>
+                <span class="font-label-md text-label-md text-[10px] text-secondary" id="previewDate"><%= new Date().toLocaleDateString() %></span>
+                <span id="previewStatus" class="mt-xs inline-block px-1.5 py-0.5 rounded text-[9px] font-bold uppercase bg-[#dcfce7] text-[#15803d] tracking-wider">PAID</span>
+              </div>
             </div>
-            <div class="truncate">
-                <h1 class="text-xl font-bold text-blue-900 tracking-tight">Papertrail</h1>
-                <p class="text-xs text-slate-500 font-medium truncate">Louis</p>
+
+            <div class="grid grid-cols-2 gap-md">
+              <div class="flex flex-col">
+                <span class="text-[10px] uppercase font-semibold text-secondary">Billed To</span>
+                <span class="text-body-md font-medium text-on-surface" id="previewCustomer">Walk-in Customer</span>
+              </div>
             </div>
+
+            <div class="border-y border-outline-variant/40 py-sm">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="text-[10px] uppercase font-semibold text-secondary">
+                    <th class="pb-1">Description</th>
+                    <th class="pb-1 text-center">Qty</th>
+                    <th class="pb-1 text-right">Amount</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/20" id="previewItems">
+                  <!-- rendered by JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="flex flex-col gap-1 pt-1">
+              <div class="flex justify-between text-[11px] text-secondary">
+                <span>Subtotal</span>
+                <span class="font-code-md" id="previewSubtotal">₦0.00</span>
+              </div>
+              <div class="flex justify-between text-[11px] text-secondary">
+                <span>Tax</span>
+                <span class="font-code-md" id="previewTax">₦0.00</span>
+              </div>
+              <div class="flex justify-between text-[13px] font-bold text-on-surface pt-2 border-t border-on-surface">
+                <span>Total</span>
+                <span class="text-primary-container font-code-md" id="previewTotal">₦0.00</span>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <button type="button" class="w-full mb-6 bg-blue-700 hover:bg-blue-800 text-white rounded-xl h-11 flex items-center justify-center font-medium text-sm shadow-sm transition-colors">
-            + Create Receipt
+    </div>
+  </div>
+
+  <!-- Sticky Footer -->
+  <div class="fixed bottom-0 left-0 lg:left-64 right-0 bg-surface-container-lowest border-t border-outline-variant/30 p-md flex items-center justify-between z-30 shadow-lg">
+    <div class="flex items-center gap-md">
+      <div>
+        <span class="text-label-md font-bold uppercase tracking-wider text-on-surface-variant block">Total Amount</span>
+        <span class="text-headline-md font-bold text-on-surface" id="footerTotal">₦0</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-md">
+      <a href="/receipts" class="hidden sm:flex h-10 px-lg items-center justify-center border border-outline-variant/50 rounded-xl text-on-surface font-semibold text-body-md hover:bg-surface-container-low transition-colors">
+        Cancel
+      </a>
+      <button type="submit" form="receiptForm" id="submitReceiptBtn"
+        class="h-10 px-lg sm:px-xl bg-primary-container hover:bg-primary text-on-primary rounded-xl font-semibold text-body-md shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
+        <span class="material-symbols-outlined text-[18px]">check</span>
+        <span id="submitBtnText">Create Receipt</span>
+      </button>
+    </div>
+  </div>
+</main>
+
+<script>
+  const CURRENCY = '<%= company.currency || "NGN" %>';
+  const SYMBOLS = { NGN: '₦', USD: '$', GBP: '£', GHS: '₵' };
+  const SYM = SYMBOLS[CURRENCY] || '₦';
+  const itemsList = document.getElementById('itemsList');
+  const previewItems = document.getElementById('previewItems');
+
+  function fmt(n) {
+    return SYM + Number(n || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function makeRow() {
+    const row = document.createElement('div');
+    row.className = 'receipt-item flex flex-col sm:grid sm:grid-cols-12 gap-3 p-3 sm:p-0 border border-outline-variant/50 sm:border-none rounded-xl sm:rounded-none bg-surface-container-low sm:bg-transparent';
+    row.innerHTML = `
+      <div class="col-span-6">
+        <label class="sm:hidden text-label-md font-label-md text-on-surface-variant mb-1 block">Description</label>
+        <input type="text" data-field="name" placeholder="Item name"
+          class="item-name w-full h-10 px-sm bg-surface-container-lowest border border-outline-variant/50 rounded-lg text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-container/20"/>
+      </div>
+      <div class="col-span-2">
+        <label class="sm:hidden text-label-md font-label-md text-on-surface-variant mb-1 block">Qty</label>
+        <input type="number" min="1" value="1" data-field="quantity"
+          class="item-qty w-full h-10 px-sm bg-surface-container-lowest border border-outline-variant/50 rounded-lg text-body-md text-on-surface sm:text-right focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-container/20"/>
+      </div>
+      <div class="col-span-3">
+        <label class="sm:hidden text-label-md font-label-md text-on-surface-variant mb-1 block">Price</label>
+        <input type="number" min="0" step="0.01" value="0" data-field="unitPrice"
+          class="item-price w-full h-10 px-sm bg-surface-container-lowest border border-outline-variant/50 rounded-lg text-body-md text-on-surface text-right focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-container/20"/>
+      </div>
+      <div class="col-span-1 flex items-center justify-end">
+        <button type="button" class="item-remove p-sm text-error hover:bg-error-container rounded-lg transition-colors">
+          <span class="material-symbols-outlined text-[20px]">delete</span>
         </button>
+      </div>
+    `;
+    row.querySelector('.item-remove').addEventListener('click', () => {
+      row.remove();
+      updatePreview();
+    });
+    row.querySelectorAll('input').forEach(inp => inp.addEventListener('input', updatePreview));
+    itemsList.appendChild(row);
+    updatePreview();
+  }
 
-        <div class="flex flex-col gap-1 flex-1">
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-blue-900 hover:bg-slate-50 transition-colors rounded-lg font-medium text-sm">
-                <span class="material-symbols-outlined">dashboard</span> Dashboard
-            </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-blue-800 font-bold bg-blue-50 border-r-4 border-blue-700 transition-colors rounded-l-lg text-sm">
-                <span class="material-symbols-outlined filled-icon">receipt_long</span> Receipts
-            </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-blue-900 hover:bg-slate-50 transition-colors rounded-lg font-medium text-sm">
-                <span class="material-symbols-outlined">group</span> Customers
-            </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-blue-900 hover:bg-slate-50 transition-colors rounded-lg font-medium text-sm">
-                <span class="material-symbols-outlined">description</span> Templates
-            </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-blue-900 hover:bg-slate-50 transition-colors rounded-lg font-medium text-sm mt-auto">
-                <span class="material-symbols-outlined">settings</span> Settings
-            </a>
-        </div>
-    </nav>
+  function getItems() {
+    return [...document.querySelectorAll('.receipt-item')].map(row => {
+      const name = row.querySelector('.item-name').value.trim();
+      const quantity = Number(row.querySelector('.item-qty').value) || 0;
+      const unitPrice = Number(row.querySelector('.item-price').value) || 0;
+      return { name, quantity, unitPrice, total: quantity * unitPrice };
+    }).filter(i => i.name && i.quantity > 0);
+  }
 
-    <!-- Main Workspace Container -->
-    <main class="flex-1 flex flex-col h-screen min-w-0 relative">
-        <!-- Top Application Bar -->
-        <header class="h-16 border-b border-slate-200 bg-white px-4 md:px-8 flex items-center justify-between shrink-0 z-10">
-            <div class="flex items-center gap-3">
-                <button type="button" class="md:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-lg" onclick="toggleMobileNav()">
-                    <span class="material-symbols-outlined">menu</span>
-                </button>
-                <h1 class="text-xl font-bold text-blue-900 md:hidden">Papertrail</h1>
-                <h2 class="hidden md:block text-lg font-bold text-slate-800">Create Receipt</h2>
-            </div>
+  function updatePreview() {
+    const items = getItems();
+    const subtotal = items.reduce((s, i) => s + i.total, 0);
+    const tax = 0;
+    const total = subtotal + tax;
 
-            <div class="flex items-center gap-2">
-                <button type="button" class="p-2 text-slate-500 hover:bg-slate-100 rounded-full hidden sm:flex items-center justify-center">
-                    <span class="material-symbols-outlined">search</span>
-                </button>
-                <button type="button" class="p-2 text-slate-500 hover:bg-slate-100 rounded-full flex items-center justify-center">
-                    <span class="material-symbols-outlined">notifications</span>
-                </button>
-                <button type="button" class="p-2 text-slate-500 hover:bg-slate-100 rounded-full hidden sm:flex items-center justify-center">
-                    <span class="material-symbols-outlined">help_outline</span>
-                </button>
-                <div class="w-8 h-8 rounded-full overflow-hidden border border-slate-200 md:hidden ml-2 shrink-0">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80" alt="User avatar" class="w-full h-full object-cover"/>
-                </div>
-            </div>
-        </header>
+    // Preview table
+    previewItems.innerHTML = items.length
+      ? items.map(i => `
+          <tr>
+            <td class="py-1 text-body-md text-on-surface">${i.name}</td>
+            <td class="py-1 text-center text-secondary">${i.quantity}</td>
+            <td class="py-1 text-right font-code-md text-on-surface">${fmt(i.total)}</td>
+          </tr>`).join('')
+      : '<tr><td colspan="3" class="py-2 text-center text-secondary text-[11px]">No items</td></tr>';
 
-        <!-- Main Workspace (Split View) -->
-        <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
-            
-            <!-- Left Column: Editor -->
-            <div class="w-full lg:w-1/2 h-full overflow-y-auto no-scrollbar bg-white border-b lg:border-b-0 lg:border-r border-slate-200 p-4 sm:p-6 lg:p-10 pb-32">
-                <div class="max-w-xl mx-auto w-full space-y-8">
-                    <div>
-                        <h3 class="text-xl font-bold text-slate-900">Receipt Details</h3>
-                        <p class="text-sm text-slate-500">Configure information and style in real-time.</p>
-                    </div>
+    document.getElementById('previewSubtotal').textContent = fmt(subtotal);
+    document.getElementById('previewTax').textContent = fmt(tax);
+    document.getElementById('previewTotal').textContent = fmt(total);
+    document.getElementById('footerTotal').textContent = SYM + Number(total).toLocaleString('en-NG', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  }
 
-                    <!-- Customer Section -->
-                    <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Customer</label>
-                            <button type="button" class="text-blue-700 text-xs font-semibold hover:underline flex items-center gap-0.5">
-                                <span class="material-symbols-outlined text-[14px]">add</span> Add New
-                            </button>
-                        </div>
-                        <div class="relative">
-                            <select class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100 appearance-none pr-10 cursor-pointer">
-                                <option disabled selected value="">Select a customer...</option>
-                                <option>TechCorp Industries</option>
-                                <option>Acme Dynamics</option>
-                                <option>Global Logistics Ltd</option>
-                            </select>
-                            <span class="material-symbols-outlined absolute right-3 top-2.5 text-slate-400 pointer-events-none">expand_more</span>
-                        </div>
-                    </div>
+  // Customer preview
+  document.getElementById('customerId').addEventListener('change', (e) => {
+    const sel = e.target.selectedOptions[0];
+    document.getElementById('previewCustomer').textContent = sel && sel.value ? sel.textContent : 'Walk-in Customer';
+  });
 
-                    <!-- Items Section -->
-                    <div>
-                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 block mb-3">Itemized List</label>
-                        
-                        <!-- Desktop Table Headers -->
-                        <div class="hidden sm:grid sm:grid-cols-12 gap-3 mb-2 px-1 text-xs font-semibold text-slate-500">
-                            <div class="col-span-6">Item Description</div>
-                            <div class="col-span-2 text-right">Qty</div>
-                            <div class="col-span-3 text-right">Unit Price (₦)</div>
-                            <div class="col-span-1"></div>
-                        </div>
+  // Status preview
+  document.getElementById('paymentStatus').addEventListener('change', (e) => {
+    const el = document.getElementById('previewStatus');
+    const v = e.target.value;
+    el.textContent = v;
+    el.className = 'mt-xs inline-block px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ' +
+      (v === 'PAID' ? 'bg-[#dcfce7] text-[#15803d]' : v === 'PENDING' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-container text-on-surface-variant');
+  });
 
-                        <!-- Item Row -->
-                        <div class="space-y-3">
-                            <div class="flex flex-col sm:grid sm:grid-cols-12 gap-3 p-3 sm:p-0 border border-slate-200 sm:border-none rounded-xl sm:rounded-none bg-slate-50 sm:bg-transparent">
-                                <div class="col-span-6">
-                                    <label class="sm:hidden text-xs font-semibold text-slate-500 mb-1 block">Item Description</label>
-                                    <input type="text" value="Consulting Retainer" placeholder="e.g. Web Design Services" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100" />
-                                </div>
-                                <div class="col-span-2">
-                                    <label class="sm:hidden text-xs font-semibold text-slate-500 mb-1 block">Qty</label>
-                                    <input type="number" min="1" value="1" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 sm:text-right focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100" />
-                                </div>
-                                <div class="col-span-3">
-                                    <label class="sm:hidden text-xs font-semibold text-slate-500 mb-1 block">Price (₦)</label>
-                                    <input type="text" value="10,000" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 text-right focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100" />
-                                </div>
-                                <div class="col-span-1 flex items-center justify-end">
-                                    <button type="button" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                                        <span class="material-symbols-outlined text-[20px]">delete</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+  document.getElementById('addItemBtn').addEventListener('click', makeRow);
 
-                        <button type="button" class="w-full mt-3 h-10 border-2 border-dashed border-blue-200 hover:border-blue-500 hover:bg-blue-50/50 text-blue-700 rounded-xl font-medium text-sm flex items-center justify-center transition-all">
-                            <span class="material-symbols-outlined text-[18px] mr-1">add</span> Add Another Item
-                        </button>
-                    </div>
+  // Start with one row
+  makeRow();
 
-                    <hr class="border-slate-200"/>
+  // Submit
+  document.getElementById('receiptForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errorBox = document.getElementById('receiptError');
+    const btn = document.getElementById('submitReceiptBtn');
+    const btnText = document.getElementById('submitBtnText');
 
-                    <!-- Payment Method -->
-                    <div>
-                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 block mb-2">Payment Method</label>
-                        <div class="relative w-full sm:w-1/2">
-                            <select class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-100 appearance-none pr-10 cursor-pointer">
-                                <option>Bank Transfer</option>
-                                <option>Cash</option>
-                                <option>Credit Card</option>
-                                <option>Cheque</option>
-                            </select>
-                            <span class="material-symbols-outlined absolute right-3 top-2.5 text-slate-400 pointer-events-none">expand_more</span>
-                        </div>
-                    </div>
+    errorBox.classList.add('hidden');
 
-                    <!-- Template Selection -->
-                    <div>
-                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 block mb-3">Receipt Template</label>
-                        <div class="grid grid-cols-3 gap-3 sm:gap-4">
-                            <button type="button" class="relative border-2 border-blue-700 rounded-xl p-2 bg-white shadow-sm flex flex-col items-center">
-                                <div class="absolute top-2 right-2 w-4 h-4 bg-blue-700 rounded-full flex items-center justify-center">
-                                    <span class="material-symbols-outlined text-white text-[12px]">check</span>
-                                </div>
-                                <div class="w-full h-20 bg-slate-50 rounded border border-slate-200 p-2 flex flex-col mb-2">
-                                    <div class="w-1/2 h-2 bg-blue-200 rounded mb-2"></div>
-                                    <div class="w-full h-1 bg-slate-200 rounded mb-1"></div>
-                                    <div class="w-3/4 h-1 bg-slate-200 rounded"></div>
-                                </div>
-                                <span class="text-xs font-bold text-slate-800">Modern</span>
-                            </button>
+    const items = getItems();
+    if (items.length === 0) {
+      errorBox.textContent = 'Add at least one item with a name and quantity.';
+      errorBox.classList.remove('hidden');
+      return;
+    }
 
-                            <button type="button" class="relative border border-slate-200 hover:border-slate-300 rounded-xl p-2 bg-white flex flex-col items-center transition-colors">
-                                <div class="w-full h-20 bg-white rounded border border-slate-200 p-2 flex flex-col items-center justify-center mb-2">
-                                    <div class="w-1/3 h-2 bg-slate-300 rounded mb-2"></div>
-                                    <div class="w-full border-t border-dashed border-slate-200 mb-1"></div>
-                                    <div class="w-full h-1 bg-slate-200 rounded"></div>
-                                </div>
-                                <span class="text-xs font-medium text-slate-600">Classic</span>
-                            </button>
+    btn.disabled = true;
+    btnText.textContent = 'Creating...';
 
-                            <button type="button" class="relative border border-slate-200 hover:border-slate-300 rounded-xl p-2 bg-white flex flex-col items-center transition-colors">
-                                <div class="w-full h-20 bg-slate-50 rounded border border-slate-200 p-2 flex flex-col items-end mb-2">
-                                    <div class="w-1/4 h-2 bg-slate-300 rounded mb-2"></div>
-                                    <div class="w-full h-[1px] bg-slate-200 mb-1"></div>
-                                </div>
-                                <span class="text-xs font-medium text-slate-600">Minimal</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    const payload = {
+      customerId: document.getElementById('customerId').value || null,
+      paymentMethod: document.getElementById('paymentMethod').value,
+      paymentStatus: document.getElementById('paymentStatus').value,
+      notes: document.getElementById('notes').value.trim() || null,
+      items,
+    };
 
-            <!-- Right Column: Live Preview -->
-            <div class="w-full lg:w-1/2 h-full overflow-y-auto no-scrollbar bg-slate-100 p-4 sm:p-6 lg:p-10 flex justify-center items-start pb-32">
-                <div class="w-full max-w-lg bg-white shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-200 overflow-hidden text-sm">
-                    <div class="bg-blue-700 h-2.5 w-full"></div>
-                    <div class="p-6 sm:p-10">
-                        <div class="flex justify-between items-start mb-8 gap-4">
-                            <div>
-                                <h2 class="text-2xl font-black text-blue-700 tracking-tight">RECEIPT</h2>
-                                <p class="text-slate-400 font-mono text-xs uppercase tracking-wider mt-0.5">#RCPT-2023-089</p>
-                            </div>
-                            <div class="text-right">
-                                <h3 class="font-bold text-slate-900 text-base">Papertrail Inc.</h3>
-                                <p class="text-slate-500 text-xs mt-1 leading-relaxed">123 Tech Boulevard<br/>Lagos, Nigeria</p>
-                            </div>
-                        </div>
+    try {
+      const res = await fetch('/api/receipts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
 
-                        <div class="grid grid-cols-2 gap-6 mb-8">
-                            <div>
-                                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Billed To</p>
-                                <p class="font-bold text-slate-900">TechCorp Industries</p>
-                                <p class="text-slate-500 text-xs mt-0.5">contact@techcorp.com</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Date of Issue</p>
-                                <p class="font-medium text-slate-800">Oct 24, 2023</p>
-                            </div>
-                        </div>
+      const raw = await res.text();
+      let data;
+      try { data = JSON.parse(raw); } catch { throw new Error('Server error — please try again.'); }
 
-                        <div class="w-full border-y border-slate-200 py-3 mb-6">
-                            <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="text-xs font-semibold text-slate-400 uppercase">
-                                        <th class="pb-2">Description</th>
-                                        <th class="pb-2 text-center">Qty</th>
-                                        <th class="pb-2 text-right">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-100 text-slate-700">
-                                    <tr>
-                                        <td class="py-3 font-medium text-slate-900">Consulting Retainer</td>
-                                        <td class="py-3 text-center">1</td>
-                                        <td class="py-3 text-right font-medium text-slate-900">₦10,000.00</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+      if (!res.ok || !data.success) throw new Error(data.message || 'Failed to create receipt');
 
-                        <div class="flex justify-end mb-8">
-                            <div class="w-full sm:w-1/2 space-y-2">
-                                <div class="flex justify-between text-slate-500">
-                                    <span>Subtotal</span>
-                                    <span class="text-slate-800 font-medium">₦10,000.00</span>
-                                </div>
-                                <div class="flex justify-between text-slate-500">
-                                    <span>Tax (0%)</span>
-                                    <span class="text-slate-800 font-medium">₦0.00</span>
-                                </div>
-                                <div class="flex justify-between pt-2 border-t-2 border-slate-900 font-bold text-slate-900 text-base">
-                                    <span>Total</span>
-                                    <span>₦10,000.00</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-8">
-                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Payment Method</p>
-                            <p class="font-medium text-slate-800">Bank Transfer</p>
-                        </div>
-
-                        <div class="text-center">
-                            <span class="inline-block bg-emerald-50 text-emerald-700 font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-md border border-emerald-200">
-                                PAID
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sticky Actions Footer -->
-            <div class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 p-4 md:px-8 flex items-center justify-between z-30 shadow-lg">
-                <div>
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block">Total Amount</span>
-                    <span class="text-xl sm:text-2xl font-bold text-slate-900">₦10,000</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button type="button" class="hidden sm:flex h-10 px-5 items-center justify-center border border-slate-200 rounded-xl text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-colors">
-                        Save Draft
-                    </button>
-                    <button type="button" class="h-10 px-6 sm:px-8 bg-blue-700 hover:bg-blue-800 text-white rounded-xl font-semibold text-sm shadow-sm transition-colors flex items-center justify-center">
-                        Create Receipt
-                    </button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Mobile Drawer Script -->
-    <script>
-        function toggleMobileNav() {
-            const nav = document.getElementById('mobile-nav');
-            const backdrop = document.getElementById('mobile-backdrop');
-            
-            nav.classList.toggle('-translate-x-full');
-            backdrop.classList.toggle('hidden');
-        }
-    </script>
-</body>
-</html>
+      window.location.href = '/receipts';
+    } catch (err) {
+      errorBox.textContent = err.message;
+      errorBox.classList.remove('hidden');
+      btn.disabled = false;
+      btnText.textContent = 'Create Receipt';
+    }
+  });
+</script>

@@ -1,11 +1,28 @@
+<!-- Mobile drawer toggle -->
 <script>
-  // Logout via fetch (works from sidebar button too)
-  document.querySelectorAll('form[action="/logout"]').forEach(f => {
-    f.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-      window.location.href = '/login';
-    });
+  document.addEventListener('DOMContentLoaded', function () {
+    const openBtn = document.getElementById('open-drawer-btn');
+    const closeBtn = document.getElementById('close-drawer-btn');
+    const drawer = document.getElementById('mobile-nav-drawer');
+    const overlay = document.getElementById('mobile-nav-overlay');
+
+    if (!openBtn || !drawer || !overlay) return;
+
+    function toggleDrawer() {
+      const isClosed = drawer.classList.contains('-translate-x-full');
+      if (isClosed) {
+        drawer.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+      } else {
+        drawer.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      }
+    }
+
+    openBtn.addEventListener('click', toggleDrawer);
+    if (closeBtn) closeBtn.addEventListener('click', toggleDrawer);
+    overlay.addEventListener('click', toggleDrawer);
   });
 </script>
+
 <%- typeof script !== 'undefined' ? script : '' %>

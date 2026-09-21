@@ -1,7 +1,6 @@
 const crypto = require("crypto");
 const prisma = require("../config/database");
 
-
 const createReceipt = async ({
     companyId,
     customerId,
@@ -9,56 +8,53 @@ const createReceipt = async ({
     discount = 0,
     tax = 0,
     paymentMethod,
+    paymentStatus = "PAID",
     notes,
 }) => {
-
-    // 1. Make sure the customer belongs to this company
-    const customer = await prisma.customer.findFirst({
-        where: {
-            id: customerId,
-            companyId,
-        },
-    });
-
-    if (!customer) {
-        throw new Error("Customer not found");
+    // 1. Validate customer only if provided
+    let customer = null;
+    if (customerId) {
+        customer = await prisma.customer.findFirst({
+            where: { id: customerId, companyId },
+        });
+        if (!customer) {
+            throw new Error("Customer not found");
+        }
     }
 
     // 2. Validate items
-    if (!items || items.length === 0) {
+    if (!items || !Array.isArray(items) || items.length === 0) {
         throw new Error("Receipt must contain at least one item");
     }
 
-    // 3. Calculate item totals
+    // 3. Compute item totals
     const processedItems = items.map((item) => {
-        if (!item.name || !item.quantity || item.unitPrice === undefined) {
-            throw new Error(
-                "Each item must have name, quantity and unitPrice"
-            );
+        if (!item.name || item.quantity === undefined || item.unitPrice === undefined) {
+            throw new Error("Each item must have name, quantity and unitPrice");
         }
 
-        if (item.quantity <= 0 || item.unitPrice < 0) {
-            throw new Error("Invalid quantity or unit price");
-        }
+        const quantity = Number(item.quantity);
+        const unitPrice = Number(item.unitPrice);
 
-        const itemTotal =
-            Number(item.quantity) * Number(item.unitPrice);
+        if (!Number.isFinite(quantity) || quantity <= 0) {
+            throw new Error("Invalid item quantity");
+        }
+        if (!Number.isFinite(unitPrice) || unitPrice < 0) {
+            throw new Error("Invalid item unit price");
+        }
 
         return {
-            name: item.name,
-            quantity: Number(item.quantity),
-            unitPrice: Number(item.unitPrice),
-            total: itemTotal,
+            name: String(item.name).trim(),
+            quantity,
+            unitPrice,
+            total: quantity * unitPrice,
         };
     });
 
-    // 4. Calculate subtotal
-    const subtotal = processedItems.reduce(
-        (sum, item) => sum + item.total,
-        0
-    );
+    // 4. Subtotal
+    const subtotal = processedItems.reduce((sum, item) => sum + item.total, 0);
 
-    // 5. Calculate final total
+    // 5. Discount / tax / total
     const discountAmount = Number(discount) || 0;
     const taxAmount = Number(tax) || 0;
 
@@ -66,137 +62,109 @@ const createReceipt = async ({
         throw new Error("Discount and tax cannot be negative");
     }
 
-    const total =
-        subtotal -
-        discountAmount +
-        taxAmount;
+    const total = subtotal - discountAmount + taxAmount;
 
     if (total < 0) {
         throw new Error("Receipt total cannot be negative");
     }
 
-    // 6. Generate receipt number
-    const receiptCount = await prisma.receipt.count({
-        where: {
+    // 6. Generate receipt number using company prefix
+    const company = await prisma.company.findUnique({
+        where: { id: companyId },
+        select: { receiptPrefix: true },
+    });
+    const prefix = company?.receiptPrefix || "REC";
+
+    const lastReceipt = await prisma.receipt.findFirst({
+        where: { companyId },
+        orderBy: { createdAt: "desc" },
+        select: { receiptNumber: true },
+    });
+
+    let nextNumber = `${prefix}-000001`;
+    if (lastReceipt?.receiptNumber) {
+        const match = lastReceipt.receiptNumber.match(/(\d+)$/);
+        if (match) {
+            nextNumber = `${prefix}-${String(parseInt(match[1], 10) + 1).padStart(6, "0")}`;
+        }
+    }
+
+    // 7. Public token
+    const publicToken = crypto.randomBytes(32).toString("hex");
+
+    // 8. Create receipt + items (nested create is atomic)
+    const receipt = await prisma.receipt.create({
+        data: {
+            receiptNumber: nextNumber,
+            publicToken,
+
             companyId,
+            customerId: customer ? customer.id : null,
+
+            subtotal,
+            discount: discountAmount,
+            tax: taxAmount,
+            total,
+
+            paymentMethod: paymentMethod || "Bank Transfer",
+            paymentStatus,
+            notes: notes || null,
+
+            items: { create: processedItems },
+        },
+        include: {
+            customer: true,
+            items: true,
         },
     });
 
-    const receiptNumber =
-    `REC-${String(receiptCount + 1).padStart(6, "0")}`;
-
-const publicToken = crypto.randomBytes(32).toString("hex");
-
-    // 7. Create receipt + items
-    const receipt = await prisma.receipt.create({
-    data: {
-        receiptNumber,
-        publicToken,
-
-        companyId,
-        customerId,
-
-        subtotal,
-        discount: discountAmount,
-        tax: taxAmount,
-        total,
-
-        paymentMethod,
-        notes,
-
-        items: {
-            create: processedItems,
-        },
-    },
-
-    include: {
-        customer: true,
-        items: true,
-    },
-});
     return receipt;
 };
 
+
 const assignTemplate = async (companyId, receiptId, templateId) => {
     const receipt = await prisma.receipt.findFirst({
-        where: {
-            id: receiptId,
-            companyId,
-        },
+        where: { id: receiptId, companyId },
     });
+    if (!receipt) throw new Error("Receipt not found");
 
-    if (!receipt) {
-        throw new Error("Receipt not found");
+    if (templateId) {
+        const template = await prisma.receiptTemplate.findFirst({
+            where: { id: templateId, companyId },
+        });
+        if (!template) throw new Error("Template not found");
     }
 
-    const template = await prisma.receiptTemplate.findFirst({
-        where: {
-            id: templateId,
-            companyId,
-        },
-    });
-
-    if (!template) {
-        throw new Error("Template not found");
-    }
-
-    return await prisma.receipt.update({
-        where: {
-            id: receiptId,
-        },
-        data: {
-            templateId,
-        },
-        include: {
-            customer: true,
-            items: true,
-            template: true,
-        },
+    return prisma.receipt.update({
+        where: { id: receiptId },
+        data: { templateId: templateId || null },
+        include: { customer: true, items: true, template: true },
     });
 };
 
+
 const getReceipts = async (companyId) => {
-    return await prisma.receipt.findMany({
-        where: {
-            companyId,
-        },
-        include: {
-            customer: true,
-            items: true,
-        },
-        orderBy: {
-            createdAt: "desc",
-        },
+    return prisma.receipt.findMany({
+        where: { companyId },
+        include: { customer: true },
+        orderBy: { createdAt: "desc" },
     });
 };
 
 
 const getReceipt = async (companyId, receiptId) => {
     const receipt = await prisma.receipt.findFirst({
-        where: {
-            id: receiptId,
-            companyId,
-        },
-        include: {
-            customer: true,
-            items: true,
-            company: true,
-        },
+        where: { id: receiptId, companyId },
+        include: { customer: true, items: true, company: true },
     });
-
-    if (!receipt) {
-        throw new Error("Receipt not found");
-    }
-
+    if (!receipt) throw new Error("Receipt not found");
     return receipt;
 };
 
+
 const getReceiptForRendering = async (companyId, receiptId) => {
     const receipt = await prisma.receipt.findFirst({
-        where: {
-            id: receiptId,
-            companyId,
-        },
+        where: { id: receiptId, companyId },
         include: {
             company: true,
             customer: true,
@@ -205,9 +173,7 @@ const getReceiptForRendering = async (companyId, receiptId) => {
         },
     });
 
-    if (!receipt) {
-        throw new Error("Receipt not found");
-    }
+    if (!receipt) throw new Error("Receipt not found");
 
     return {
         receipt: {
@@ -221,8 +187,8 @@ const getReceiptForRendering = async (companyId, receiptId) => {
             paymentStatus: receipt.paymentStatus,
             notes: receipt.notes,
             createdAt: receipt.createdAt,
+            publicToken: receipt.publicToken,
         },
-
         company: {
             name: receipt.company.name,
             email: receipt.company.email,
@@ -232,28 +198,25 @@ const getReceiptForRendering = async (companyId, receiptId) => {
             logoUrl: receipt.company.logoUrl,
             currency: receipt.company.currency,
         },
-
         customer: receipt.customer
             ? {
                 name: receipt.customer.name,
                 email: receipt.customer.email,
                 phone: receipt.customer.phone,
-            }
+              }
             : null,
-
         items: receipt.items.map((item) => ({
             name: item.name,
             quantity: item.quantity,
             unitPrice: item.unitPrice,
             total: item.total,
         })),
-
         template: receipt.template
             ? {
                 name: receipt.template.name,
                 type: receipt.template.type,
                 settings: receipt.template.settings || {},
-            }
+              }
             : null,
     };
 };
@@ -264,5 +227,5 @@ module.exports = {
     getReceipts,
     getReceipt,
     assignTemplate,
-     getReceiptForRendering,
+    getReceiptForRendering,
 };

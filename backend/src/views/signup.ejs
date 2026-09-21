@@ -22,14 +22,9 @@
         </p>
       </div>
 
-      <!-- Error banner
-      <% if (errors && errors.length) { %>
-        <div class="mb-4 p-3 rounded-lg bg-error-container text-on-error-container font-body-md text-body-md">
-          <ul class="list-disc list-inside">
-            <% errors.forEach(err => { %><li><%= err %></li><% }) %>
-          </ul>
-        </div>
-      <% } %> -->
+      <div id="signup-error"
+     class="hidden mb-md p-md rounded-xl bg-error-container text-on-error-container font-body-md text-body-md border border-error/30">
+      </div>
 
       <!-- ✅ Real form, real action -->
       <form id="registerForm" class="space-y-4" method="POST" action="/api/auth/register">
@@ -142,34 +137,34 @@
     };
 
     try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',       // ⭐ sends & receives cookies
-        body: JSON.stringify(payload),
-      });
+  const res = await fetch('/api/auth/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(payload),
+  });
 
-      const data = await res.json();
+  const raw = await res.text();
+  let data;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    throw new Error('Server error — please try again.');
+  }
 
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || 'Registration failed');
-      }
+  if (!res.ok || !data.success) {
+    throw new Error(data.message || 'Registration failed');
+  }
 
-      // Cookie is now set by server → go to dashboard
-      window.location.href = '/dashboard';
+  window.location.href = '/dashboard';
 
-    } catch (err) {
-      // Simple inline error — replace with toast if you have one
-      let banner = form.parentElement.querySelector('.js-error');
-      if (!banner) {
-        banner = document.createElement('div');
-        banner.className = 'js-error mb-4 p-3 rounded-lg bg-error-container text-on-error-container font-body-md text-body-md';
-        form.insertBefore(banner, form.firstChild);
-      }
-      banner.textContent = err.message;
+} catch (err) {
+  const errorBox = document.getElementById('signup-error');
+  errorBox.textContent = err.message;
+  errorBox.classList.remove('hidden');
 
-      btn.disabled = false;
-      btnText.textContent = 'Create Free Account';
-    }
+  btn.disabled = false;
+  btnText.textContent = 'Create Free Account';
+}
   });
 </script>

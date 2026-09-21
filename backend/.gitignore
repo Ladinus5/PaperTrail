@@ -8,3 +8,7 @@ node_modules
 
 prisma/*.db
 npm-debug.log*
+*.log
+storage/receipts/
+.wwebjs_auth/
+.wwebjs_cache/

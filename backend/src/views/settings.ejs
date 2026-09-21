@@ -1,749 +1,461 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-  <style>
-    @layer base {
-      html, body { margin: 0; padding: 0; }
-      body { overscroll-behavior: none; }
-      main > :first-child { margin-top: 0 !important; }
-      main > :last-child { margin-bottom: 0 !important; }
-    }
-    ::-webkit-scrollbar { display: none; }
-  </style>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script id="tailwind-config">
-    tailwind.config = {
-      "darkMode": "class",
-      "theme": {
-        "extend": {
-          "colors": {
-            "surface-variant": "#e2e2eb",
-            "secondary-container": "#dce2f3",
-            "on-primary-fixed-variant": "#00429b",
-            "surface-bright": "#faf8ff",
-            "on-tertiary-fixed-variant": "#7f2b00",
-            "tertiary-fixed-dim": "#ffb599",
-            "on-primary": "#ffffff",
-            "on-background": "#191b22",
-            "outline-variant": "#c3c6d5",
-            "surface-container-lowest": "#ffffff",
-            "primary-fixed": "#d9e2ff",
-            "secondary-fixed-dim": "#c0c7d6",
-            "tertiary": "#682200",
-            "tertiary-fixed": "#ffdbce",
-            "on-error-container": "#93000a",
-            "on-tertiary": "#ffffff",
-            "background": "#faf8ff",
-            "on-tertiary-container": "#ffaf90",
-            "on-primary-fixed": "#001945",
-            "tertiary-container": "#8e3100",
-            "on-primary-container": "#a9c1ff",
-            "inverse-surface": "#2e3037",
-            "on-secondary": "#ffffff",
-            "surface-container-highest": "#e2e2eb",
-            "on-surface": "#191b22",
-            "inverse-on-surface": "#f0f0f9",
-            "on-secondary-fixed": "#151c27",
-            "surface-tint": "#215abd",
-            "error-container": "#ffdad6",
-            "surface": "#faf8ff",
-            "secondary-fixed": "#dce2f3",
-            "surface-container": "#ededf6",
-            "surface-container-high": "#e7e7f0",
-            "inverse-primary": "#b0c6ff",
-            "on-tertiary-fixed": "#370e00",
-            "primary-container": "#004aad",
-            "primary-fixed-dim": "#b0c6ff",
-            "on-secondary-fixed-variant": "#404754",
-            "surface-dim": "#d9d9e2",
-            "secondary": "#585f6c",
-            "outline": "#737784",
-            "on-secondary-container": "#5e6572",
-            "on-error": "#ffffff",
-            "surface-container-low": "#f3f3fc",
-            "primary": "#00357f",
-            "on-surface-variant": "#434653",
-            "error": "#ba1a1a"
-          },
-          "borderRadius": {
-            "DEFAULT": "0.125rem",
-            "lg": "0.25rem",
-            "xl": "0.5rem",
-            "full": "0.75rem"
-          },
-          "spacing": {
-            "margin-desktop": "40px",
-            "lg": "24px",
-            "gutter": "24px",
-            "2xl": "48px",
-            "xl": "32px",
-            "md": "16px",
-            "margin-mobile": "16px",
-            "sm": "8px",
-            "xs": "4px",
-            "base": "4px"
-          },
-          "fontFamily": {
-            "headline-lg": ["Inter"],
-            "headline-lg-mobile": ["Inter"],
-            "label-md": ["Inter"],
-            "title-md": ["Inter"],
-            "display-lg": ["Inter"],
-            "code-md": ["Courier Prime"],
-            "body-lg": ["Inter"],
-            "headline-md": ["Inter"],
-            "body-md": ["Inter"]
-          },
-          "fontSize": {
-            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
-            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
-            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
-            "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "500" }],
-            "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
-            "code-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
-            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
-            "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
-            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
-          }
-        }
-      }
-    }
-  </script>
-</head>
-<body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
-  
-  <!-- Sidebar Navigation Drawer -->
-  <aside class="fixed left-0 top-0 h-screen w-64 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between select-none -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out" id="sidebar">
-    <div class="flex flex-col">
-      <div class="h-16 flex items-center justify-between px-lg border-b border-outline-variant/30">
-        <div class="flex items-center gap-sm">
-          <div class="flex items-center justify-center w-8 h-8 rounded-xl bg-primary-fixed text-primary-container">
-            <span class="material-symbols-outlined text-[20px]">receipt_long</span>
-          </div>
-          <div class="flex flex-col">
-            <span class="font-headline-md text-headline-md text-on-surface tracking-tight leading-none text-[18px]">Papertrail</span>
-            <span class="font-label-md text-label-md text-on-surface-variant leading-tight">e-receipts</span>
-          </div>
-        </div>
-        <button class="lg:hidden text-on-surface-variant hover:text-on-surface p-1 rounded-lg" onclick="document.getElementById('sidebar').classList.add('-translate-x-full'); document.getElementById('sidebar-backdrop').classList.add('hidden');" type="button">
-          <span class="material-symbols-outlined text-[20px]">close</span>
-        </button>
-      </div>
-      <nav class="flex flex-col gap-xs px-md pt-lg" data-active-classes="bg-primary-container text-on-primary font-title-md font-medium rounded-xl shadow-sm">
-        <a class="flex items-center gap-md px-md py-sm rounded-xl font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dashboard" href="#">
-          <span class="material-symbols-outlined text-[20px]">dashboard</span>
-          <span>Dashboard</span>
-        </a>
-        <a class="flex items-center gap-md px-md py-sm rounded-xl font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="receipts" href="#">
-          <span class="material-symbols-outlined text-[20px]">receipt</span>
-          <span>Receipts</span>
-        </a>
-        <a class="flex items-center gap-md px-md py-sm rounded-xl font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="customers" href="#">
-          <span class="material-symbols-outlined text-[20px]">group</span>
-          <span>Customers</span>
-        </a>
-        <a class="flex items-center gap-md px-md py-sm rounded-xl font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="templates" href="#">
-          <span class="material-symbols-outlined text-[20px]">style</span>
-          <span>Templates</span>
-        </a>
-        <a aria-current="page" class="flex items-center gap-md px-md py-sm transition-colors bg-primary-container text-on-primary font-title-md font-medium rounded-xl shadow-sm" data-path="settings" href="#">
-          <span class="material-symbols-outlined text-[20px]">settings</span>
-          <span>Settings</span>
-        </a>
-      </nav>
-    </div>
-    <div class="p-md border-t border-outline-variant/30">
-      <div class="flex items-center justify-between p-sm rounded-xl hover:bg-surface-container transition-colors">
-        <div class="flex items-center gap-sm">
-          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-            <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
-          </div>
-          <div class="flex flex-col truncate">
-            <span class="font-title-md text-title-md text-[14px] text-on-surface font-medium truncate">Louis</span>
-            <span class="font-label-md text-label-md text-on-surface-variant truncate">louis@business.co</span>
-          </div>
-        </div>
-        <a class="text-on-surface-variant hover:text-error p-xs rounded-lg transition-colors flex items-center" data-path="login" href="#" title="Logout / Account">
-          <span class="material-symbols-outlined text-[20px]">logout</span>
-        </a>
-      </div>
-    </div>
-  </aside>
+<main class="w-full pt-16 bg-surface px-sm sm:px-lg py-md sm:py-xl min-h-screen">
+  <div class="flex flex-col w-full">
+    <div class="max-w-6xl w-full mx-auto flex flex-col gap-lg sm:gap-xl pb-24">
 
-  <!-- Mobile Backdrop Overlay -->
-  <div class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden transition-opacity" id="sidebar-backdrop" onclick="document.getElementById('sidebar').classList.add('-translate-x-full'); this.classList.add('hidden');"></div>
-
-  <!-- Main Content Layout Area -->
-  <div class="pl-0 lg:pl-64 transition-all duration-200">
-    <header class="fixed top-0 left-0 lg:left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-md border-b border-outline-variant/30 z-40 px-md sm:px-lg flex items-center justify-between gap-sm">
-      <div class="flex items-center gap-sm w-full sm:w-80">
-        <button class="lg:hidden p-sm text-on-surface-variant hover:text-on-surface rounded-xl focus:outline-none" onclick="document.getElementById('sidebar').classList.remove('-translate-x-full'); document.getElementById('sidebar-backdrop').classList.remove('hidden');" type="button">
-          <span class="material-symbols-outlined text-[24px]">menu</span>
-        </button>
-        <div class="relative w-full">
-          <span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
-          <input class="w-full h-10 pl-9 pr-md bg-surface-container-low rounded-xl border border-outline-variant/50 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/70 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-container/20 transition-all" placeholder="Search receipts, customers, IDs..." type="text"/>
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-md pb-xs sm:pb-md">
+        <div class="flex flex-col gap-xs">
+          <div class="flex items-center gap-sm">
+            <span class="font-label-md text-label-md uppercase tracking-wider text-primary font-semibold">Workspace Settings</span>
+            <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+            <span class="font-code-md text-code-md text-on-surface-variant">v2.4.1</span>
+          </div>
+          <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight text-[24px] sm:text-[32px]">Settings</h1>
+          <p class="font-body-md text-body-md text-on-surface-variant text-[13px] sm:text-[14px]">Manage your business profile, receipt defaults, tax preferences, and WhatsApp notifications.</p>
+        </div>
+        <div class="flex items-center gap-sm self-start md:self-auto bg-surface-container-low px-md py-xs rounded-full">
+          <span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+          <span class="font-label-md text-label-md text-on-surface-variant" id="autosave-indicator">Last saved 2 minutes ago</span>
         </div>
       </div>
-      <div class="flex items-center gap-xs sm:gap-md shrink-0">
-        <button class="inline-flex items-center gap-xs px-sm sm:px-md py-sm rounded-xl bg-primary-container hover:bg-primary text-on-primary font-title-md text-title-md text-[14px] font-medium shadow-sm transition-colors" type="button">
-          <span class="material-symbols-outlined text-[18px]">add</span>
-          <span class="hidden sm:inline">Create Receipt</span>
-        </button>
-        <div class="h-6 w-px bg-outline-variant/40 mx-xs hidden sm:block"></div>
-        <button aria-label="Notifications" class="p-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors hidden sm:block" type="button">
-          <span class="material-symbols-outlined text-[20px]">notifications</span>
-        </button>
-        <button aria-label="Help &amp; Docs" class="p-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors hidden sm:block" type="button">
-          <span class="material-symbols-outlined text-[20px]">help_outline</span>
-        </button>
-        <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center cursor-pointer sm:ml-xs">
-          <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
-        </div>
-      </div>
-    </header>
 
-    <main class="w-full pt-16 bg-surface px-sm sm:px-lg py-md sm:py-xl min-h-screen">
-      <div class="flex flex-col w-full">
-        <script>
-          document.querySelectorAll('aside nav a').forEach(a => {
-            if (a.getAttribute('data-path') === 'settings') {
-              a.className = 'flex items-center gap-md px-md py-sm bg-primary-container text-on-primary font-title-md font-medium rounded-xl shadow-sm transition-colors';
-            } else {
-              a.className = 'flex items-center gap-md px-md py-sm rounded-xl font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors';
-            }
-          });
-        </script>
-        
-        <div class="max-w-6xl w-full mx-auto flex flex-col gap-lg sm:gap-xl pb-24">
-          <!-- Header Block -->
-          <div class="flex flex-col md:flex-row md:items-end justify-between gap-md pb-xs sm:pb-md">
-            <div class="flex flex-col gap-xs">
-              <div class="flex items-center gap-sm">
-                <span class="font-label-md text-label-md uppercase tracking-wider text-primary font-semibold">Workspace Settings</span>
-                <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-                <span class="font-code-md text-code-md text-on-surface-variant">v2.4.1</span>
-              </div>
-              <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight text-[24px] sm:text-[32px]">Settings</h1>
-              <p class="font-body-md text-body-md text-on-surface-variant text-[13px] sm:text-[14px]">Manage your business profile, receipt defaults, tax preferences, and WhatsApp notifications.</p>
+      <!-- Tabs -->
+      <div class="bg-surface-container p-xs rounded-xl flex items-center gap-xs overflow-x-auto whitespace-nowrap">
+        <button type="button" class="tab-btn active-tab flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-title-md text-title-md text-[13px] sm:text-[14px] font-medium bg-surface-container-lowest text-on-surface shadow-sm transition-all shrink-0" data-tab="profile">
+          <span class="material-symbols-outlined text-[18px] text-primary">storefront</span>
+          <span>Business Profile</span>
+        </button>
+        <button type="button" class="tab-btn flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-body-md text-body-md text-[13px] sm:text-[14px] text-on-surface-variant hover:text-on-surface transition-all shrink-0" data-tab="receipts">
+          <span class="material-symbols-outlined text-[18px]">receipt_long</span>
+          <span>Receipt Preferences</span>
+        </button>
+        <button type="button" class="tab-btn flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-body-md text-body-md text-[13px] sm:text-[14px] text-on-surface-variant hover:text-on-surface transition-all shrink-0" data-tab="whatsapp">
+          <span class="material-symbols-outlined text-[18px]">chat</span>
+          <span>WhatsApp &amp; Delivery</span>
+        </button>
+        <button type="button" class="tab-btn flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-body-md text-body-md text-[13px] sm:text-[14px] text-on-surface-variant hover:text-on-surface transition-all shrink-0" data-tab="team">
+          <span class="material-symbols-outlined text-[18px]">shield_person</span>
+          <span>Team &amp; Security</span>
+        </button>
+      </div>
+
+      <form class="flex flex-col gap-xl sm:gap-2xl" id="settings-form">
+
+        <!-- SECTION 1: Business Profile -->
+        <section class="flex flex-col gap-md sm:gap-lg" id="section-business">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex flex-col">
+              <span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">01. Identity &amp; Legal</span>
+              <h2 class="font-headline-md text-headline-md text-on-surface text-[20px] sm:text-[24px]">Business Information</h2>
             </div>
-            <div class="flex items-center gap-sm self-start md:self-auto bg-surface-container-low px-md py-xs rounded-full">
-              <span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
-              <span class="font-label-md text-label-md text-on-surface-variant" id="autosave-indicator">Last saved 2 minutes ago</span>
+            <span class="font-label-md text-label-md px-sm py-xs rounded-lg bg-surface-container-high text-on-surface-variant font-medium self-start sm:self-auto">Public in Receipts</span>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-md sm:gap-lg">
+            <!-- Logo Card -->
+            <div class="lg:col-span-4 bg-surface-container-lowest p-md sm:p-lg rounded-xl flex flex-col justify-between shadow-sm relative overflow-hidden group">
+              <div class="flex flex-col gap-xs">
+                <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Brand Identity</label>
+                <span class="font-title-md text-title-md text-on-surface font-medium">Logo &amp; Watermark</span>
+                <p class="font-body-md text-body-md text-on-surface-variant text-[13px]">Shown on PDF receipts, dynamic URLs, and WhatsApp headers.</p>
+              </div>
+
+              <div class="my-md sm:my-lg flex flex-col items-center justify-center p-md sm:p-lg rounded-xl bg-surface-container-low text-center cursor-pointer hover:bg-surface-container transition-colors">
+                <div class="relative w-20 h-20 sm:w-24 sm:h-24 mb-md rounded-xl overflow-hidden bg-surface-container-lowest flex items-center justify-center shadow-sm">
+                  <img class="w-full h-full object-cover" alt="Brand logo"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkgndcYpMXI2bf6UdldnLHnDnfgFo0VVXhJ0rx1csccwtztx_K_MVQHcpodPWlAi198fn_99pIsgMPL4VQTO_FZ5LP8VzfA8XV-O_RAF5SioFZJLHQZ0-MkJG0Y1yg9xhS72Ia9_IYNrtslgQv6LPnXya86VZlcUE7NBt3G-N-fNR3AypaDWGPwm0Jq39WiV1CMszdhHySmGG94RJx5Hh3W8qZKsBgmKNCiYxULMRwJkVY_cEwwA"/>
+                  <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                    <span class="material-symbols-outlined text-on-primary">photo_camera</span>
+                  </div>
+                </div>
+                <span class="font-title-md text-title-md text-[14px] text-on-surface font-medium">Papertrail / Louis Enterprise</span>
+                <span class="font-label-md text-label-md text-on-surface-variant mt-xs">Click to upload SVG, PNG (max 2MB)</span>
+              </div>
+
+              <div class="flex items-center justify-between pt-sm">
+                <span class="font-label-md text-label-md text-on-surface-variant">Recommended: 512x512px</span>
+                <button type="button" class="text-error font-label-md text-label-md hover:underline">Remove</button>
+              </div>
+            </div>
+
+            <!-- Fields -->
+            <div class="lg:col-span-8 bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col gap-md sm:gap-lg">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                <div class="flex flex-col gap-xs md:col-span-2">
+                  <label class="font-label-md text-label-md text-on-surface-variant" for="biz_name">Registered Business Name</label>
+                  <input id="biz_name" type="text"
+                    class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
+                    value="Papertrail Inc. / Louis Enterprise"/>
+                </div>
+
+                <div class="flex flex-col gap-xs">
+                  <label class="font-label-md text-label-md text-on-surface-variant" for="biz_email">Official Billing Email</label>
+                  <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-sm text-on-surface-variant text-[18px]">mail</span>
+                    <input id="biz_email" type="email"
+                      class="h-10 w-full pl-9 pr-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
+                      value="louis@business.co"/>
+                  </div>
+                </div>
+
+                <div class="flex flex-col gap-xs">
+                  <label class="font-label-md text-label-md text-on-surface-variant" for="biz_phone">Customer Support Phone</label>
+                  <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-sm text-on-surface-variant text-[18px]">call</span>
+                    <input id="biz_phone" type="tel"
+                      class="h-10 w-full pl-9 pr-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
+                      value="+234 801 234 5678"/>
+                  </div>
+                </div>
+
+                <div class="flex flex-col gap-xs md:col-span-2">
+                  <label class="font-label-md text-label-md text-on-surface-variant" for="biz_addr">Physical Store / Headquarters Address</label>
+                  <input id="biz_addr" type="text"
+                    class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
+                    value="Plot 4B, Admiralty Way, Lekki Phase 1, Lagos, Nigeria"/>
+                </div>
+
+                <div class="flex flex-col gap-xs">
+                  <label class="font-label-md text-label-md text-on-surface-variant" for="biz_web">Website or Social Handle</label>
+                  <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-sm text-on-surface-variant text-[18px]">globe</span>
+                    <input id="biz_web" type="text"
+                      class="h-10 w-full pl-9 pr-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
+                      value="instagram.com/papertrail_ng"/>
+                  </div>
+                </div>
+
+                <div class="flex flex-col gap-xs">
+                  <div class="flex items-center justify-between">
+                    <label class="font-label-md text-label-md text-on-surface-variant" for="biz_tin">Tax ID (TIN) / RC Number</label>
+                    <span class="material-symbols-outlined text-[14px] text-on-surface-variant" title="Required for compliant fiscal receipts">info</span>
+                  </div>
+                  <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-sm text-on-surface-variant text-[18px]">badge</span>
+                    <input id="biz_tin" type="text"
+                      class="h-10 w-full pl-9 pr-md rounded-lg bg-surface-container-low font-code-md text-code-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all uppercase"
+                      value="RC-1948502"/>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+        </section>
 
-          <!-- Segmented Tab Navigation -->
-          <div class="bg-surface-container p-xs rounded-xl flex items-center gap-xs overflow-x-auto whitespace-nowrap">
-            <button class="tab-btn active-tab flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-title-md text-title-md text-[13px] sm:text-[14px] font-medium bg-surface-container-lowest text-on-surface shadow-sm transition-all shrink-0" data-tab="profile" type="button">
-              <span class="material-symbols-outlined text-[18px] text-primary">storefront</span>
-              <span>Business Profile</span>
-            </button>
-            <button class="tab-btn flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-body-md text-body-md text-[13px] sm:text-[14px] text-on-surface-variant hover:text-on-surface transition-all shrink-0" data-tab="receipts" type="button">
-              <span class="material-symbols-outlined text-[18px]">receipt_long</span>
-              <span>Receipt Preferences</span>
-            </button>
-            <button class="tab-btn flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-body-md text-body-md text-[13px] sm:text-[14px] text-on-surface-variant hover:text-on-surface transition-all shrink-0" data-tab="whatsapp" type="button">
-              <span class="material-symbols-outlined text-[18px]">chat</span>
-              <span>WhatsApp &amp; Delivery</span>
-            </button>
-            <button class="tab-btn flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-body-md text-body-md text-[13px] sm:text-[14px] text-on-surface-variant hover:text-on-surface transition-all shrink-0" data-tab="team" type="button">
-              <span class="material-symbols-outlined text-[18px]">shield_person</span>
-              <span>Team &amp; Security</span>
-            </button>
+        <!-- SECTION 2: Receipt Configuration -->
+        <section class="flex flex-col gap-md sm:gap-lg" id="section-receipts">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex flex-col">
+              <span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">02. Formatting &amp; Ledger</span>
+              <h2 class="font-headline-md text-headline-md text-on-surface text-[20px] sm:text-[24px]">Receipt Configuration</h2>
+            </div>
+            <span class="font-label-md text-label-md px-sm py-xs rounded-lg bg-secondary-container text-on-secondary-container font-medium self-start sm:self-auto">Applied to new receipts</span>
           </div>
 
-          <!-- MAIN FORM WRAPPER -->
-          <form class="flex flex-col gap-xl sm:gap-2xl" id="settings-form">
-            <!-- SECTION 1: Business Profile -->
-            <section class="flex flex-col gap-md sm:gap-lg" id="section-business">
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div class="flex flex-col">
-                  <span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">01. Identity &amp; Legal</span>
-                  <h2 class="font-headline-md text-headline-md text-on-surface text-[20px] sm:text-[24px]">Business Information</h2>
-                </div>
-                <span class="font-label-md text-label-md px-sm py-xs rounded-lg bg-surface-container-high text-on-surface-variant font-medium self-start sm:self-auto">Public in Receipts</span>
-              </div>
-              <div class="grid grid-cols-1 lg:grid-cols-12 gap-md sm:gap-lg">
-                <!-- Logo Uploder Card (Bento Left) -->
-                <div class="lg:col-span-4 bg-surface-container-lowest p-md sm:p-lg rounded-xl flex flex-col justify-between shadow-sm relative overflow-hidden group">
-                  <div class="flex flex-col gap-xs">
-                    <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Brand Identity</label>
-                    <span class="font-title-md text-title-md text-on-surface font-medium">Logo &amp; Watermark</span>
-                    <p class="font-body-md text-body-md text-on-surface-variant text-[13px]">Shown on PDF receipts, dynamic URLs, and WhatsApp headers.</p>
-                  </div>
-                  <div class="my-md sm:my-lg flex flex-col items-center justify-center p-md sm:p-lg rounded-xl bg-surface-container-low text-center cursor-pointer hover:bg-surface-container transition-colors">
-                    <div class="relative w-20 h-20 sm:w-24 sm:h-24 mb-md rounded-xl overflow-hidden bg-surface-container-lowest flex items-center justify-center shadow-sm">
-                      <img class="w-full h-full object-cover" data-alt="Corporate minimalist logo mark monogram with deep blue navy abstract geometry on crisp clean white backdrop for fintech financial enterprise, studio lighting high end modern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkgndcYpMXI2bf6UdldnLHnDnfgFo0VVXhJ0rx1csccwtztx_K_MVQHcpodPWlAi198fn_99pIsgMPL4VQTO_FZ5LP8VzfA8XV-O_RAF5SioFZJLHQZ0-MkJG0Y1yg9xhS72Ia9_IYNrtslgQv6LPnXya86VZlcUE7NBt3G-N-fNR3AypaDWGPwm0Jq39WiV1CMszdhHySmGG94RJx5Hh3W8qZKsBgmKNCiYxULMRwJkVY_cEwwA"/>
-                      <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                        <span class="material-symbols-outlined text-on-primary">photo_camera</span>
-                      </div>
-                    </div>
-                    <span class="font-title-md text-title-md text-[14px] text-on-surface font-medium">Papertrail / Louis Enterprise</span>
-                    <span class="font-label-md text-label-md text-on-surface-variant mt-xs">Click to upload SVG, PNG (max 2MB)</span>
-                  </div>
-                  <div class="flex items-center justify-between pt-sm">
-                    <span class="font-label-md text-label-md text-on-surface-variant">Recommended: 512x512px</span>
-                    <button class="text-error font-label-md text-label-md hover:underline" type="button">Remove</button>
-                  </div>
-                </div>
-                <!-- Fields Grid (Bento Right) -->
-                <div class="lg:col-span-8 bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col gap-md sm:gap-lg">
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
-                    <!-- Business Name -->
-                    <div class="flex flex-col gap-xs md:col-span-2">
-                      <label class="font-label-md text-label-md text-on-surface-variant" for="biz_name">Registered Business Name</label>
-                      <input class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all" id="biz_name" type="text" value="Papertrail Inc. / Louis Enterprise"/>
-                    </div>
-                    <!-- Official Email -->
-                    <div class="flex flex-col gap-xs">
-                      <label class="font-label-md text-label-md text-on-surface-variant" for="biz_email">Official Billing Email</label>
-                      <div class="relative flex items-center">
-                        <span class="material-symbols-outlined absolute left-sm text-on-surface-variant text-[18px]">mail</span>
-                        <input class="h-10 w-full pl-9 pr-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all" id="biz_email" type="email" value="louis@business.co"/>
-                      </div>
-                    </div>
-                    <!-- Support Phone -->
-                    <div class="flex flex-col gap-xs">
-                      <label class="font-label-md text-label-md text-on-surface-variant" for="biz_phone">Customer Support Phone</label>
-                      <div class="relative flex items-center">
-                        <span class="material-symbols-outlined absolute left-sm text-on-surface-variant text-[18px]">call</span>
-                        <input class="h-10 w-full pl-9 pr-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all" id="biz_phone" type="tel" value="+234 801 234 5678"/>
-                      </div>
-                    </div>
-                    <!-- Physical Address -->
-                    <div class="flex flex-col gap-xs md:col-span-2">
-                      <label class="font-label-md text-label-md text-on-surface-variant" for="biz_addr">Physical Store / Headquarters Address</label>
-                      <input class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all" id="biz_addr" type="text" value="Plot 4B, Admiralty Way, Lekki Phase 1, Lagos, Nigeria"/>
-                    </div>
-                    <!-- Website / Social -->
-                    <div class="flex flex-col gap-xs">
-                      <label class="font-label-md text-label-md text-on-surface-variant" for="biz_web">Website or Social Handle</label>
-                      <div class="relative flex items-center">
-                        <span class="material-symbols-outlined absolute left-sm text-on-surface-variant text-[18px]">globe</span>
-                        <input class="h-10 w-full pl-9 pr-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all" id="biz_web" type="text" value="instagram.com/papertrail_ng"/>
-                      </div>
-                    </div>
-                    <!-- TIN / RC -->
-                    <div class="flex flex-col gap-xs">
-                      <div class="flex items-center justify-between">
-                        <label class="font-label-md text-label-md text-on-surface-variant" for="biz_tin">Tax ID (TIN) / RC Number</label>
-                        <span class="material-symbols-outlined text-[14px] text-on-surface-variant" title="Required for compliant fiscal receipts">info</span>
-                      </div>
-                      <div class="relative flex items-center">
-                        <span class="material-symbols-outlined absolute left-sm text-on-surface-variant text-[18px]">badge</span>
-                        <input class="h-10 w-full pl-9 pr-md rounded-lg bg-surface-container-low font-code-md text-code-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all uppercase" id="biz_tin" type="text" value="RC-1948502"/>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-md sm:gap-lg">
 
-            <!-- SECTION 2: Receipt Configuration -->
-            <section class="flex flex-col gap-md sm:gap-lg" id="section-receipts">
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div class="flex flex-col">
-                  <span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">02. Formatting &amp; Ledger</span>
-                  <h2 class="font-headline-md text-headline-md text-on-surface text-[20px] sm:text-[24px]">Receipt Configuration</h2>
-                </div>
-                <span class="font-label-md text-label-md px-sm py-xs rounded-lg bg-secondary-container text-on-secondary-container font-medium self-start sm:self-auto">Applied to new receipts</span>
-              </div>
-              <div class="grid grid-cols-1 lg:grid-cols-12 gap-md sm:gap-lg">
-                <!-- Left Column: Currency, Prefix, Tax -->
-                <div class="lg:col-span-6 flex flex-col gap-md sm:gap-lg">
-                  <div class="bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col gap-md">
-                    <span class="font-title-md text-title-md text-on-surface font-medium">General Numbering &amp; Denomination</span>
-                    <!-- Currency -->
-                    <div class="flex flex-col gap-xs">
-                      <label class="font-label-md text-label-md text-on-surface-variant" for="currency_select">Primary Currency</label>
-                      <div class="relative flex items-center">
-                        <select class="h-10 w-full px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface appearance-none focus:outline-none focus:bg-surface-container-lowest transition-all" id="currency_select">
-                          <option selected="" value="NGN">NGN (₦) - Nigerian Naira</option>
-                          <option value="USD">USD ($) - United States Dollar</option>
-                          <option value="GBP">GBP (£) - British Pound</option>
-                          <option value="GHS">GHS (₵) - Ghanaian Cedi</option>
-                        </select>
-                        <span class="material-symbols-outlined absolute right-sm text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
-                      </div>
-                    </div>
-                    <!-- Prefix & Live Preview -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-md pt-xs">
-                      <div class="flex flex-col gap-xs">
-                        <label class="font-label-md text-label-md text-on-surface-variant" for="receipt_prefix">Receipt Prefix Code</label>
-                        <div class="relative flex items-center">
-                          <span class="absolute left-sm font-code-md text-code-md text-on-surface-variant font-bold">[</span>
-                          <input class="h-10 w-full pl-6 pr-6 rounded-lg bg-surface-container-low font-code-md text-code-md text-on-surface uppercase tracking-wider focus:outline-none focus:bg-surface-container-lowest transition-all text-center font-bold" id="receipt_prefix" type="text" value="REC"/>
-                          <span class="absolute right-sm font-code-md text-code-md text-on-surface-variant font-bold">]</span>
-                        </div>
-                      </div>
-                      <div class="flex flex-col justify-end">
-                        <div class="bg-surface-container p-sm rounded-lg flex flex-col justify-center h-10">
-                          <span class="font-label-md text-[10px] uppercase text-on-surface-variant">Generated Preview</span>
-                          <span class="font-code-md text-code-md text-primary font-bold tracking-wider" id="prefix-preview">REC-000043</span>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Tax / VAT Toggle -->
-                    <div class="mt-xs pt-md flex items-center justify-between bg-surface-container-low p-md rounded-xl gap-sm">
-                      <div class="flex items-center gap-sm sm:gap-md">
-                        <div class="w-9 h-9 rounded-lg bg-primary-fixed flex items-center justify-center text-primary-container shrink-0">
-                          <span class="material-symbols-outlined text-[20px]">percent</span>
-                        </div>
-                        <div class="flex flex-col">
-                          <span class="font-title-md text-title-md text-[13px] sm:text-[14px] text-on-surface font-medium">Default FIRS VAT (7.5%)</span>
-                          <span class="font-label-md text-label-md text-on-surface-variant">Auto-apply standard sales levy</span>
-                        </div>
-                      </div>
-                      <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                        <input checked="" class="sr-only peer" id="vat-toggle" type="checkbox"/>
-                        <div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
-                      </label>
-                    </div>
-                  </div>
-                  <!-- Default Bank Details -->
-                  <div class="bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col gap-md">
-                    <div class="flex items-center justify-between">
-                      <span class="font-title-md text-title-md text-on-surface font-medium">Bank Transfer Instructions</span>
-                      <span class="material-symbols-outlined text-[18px] text-on-surface-variant">account_balance</span>
-                    </div>
-                    <p class="font-body-md text-body-md text-on-surface-variant text-[13px]">Printed on unpaid invoices and digital receipts for instant settlement.</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-md">
-                      <div class="flex flex-col gap-xs">
-                        <label class="font-label-md text-label-md text-on-surface-variant">Bank Name</label>
-                        <input class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none" type="text" value="GTBank"/>
-                      </div>
-                      <div class="flex flex-col gap-xs">
-                        <label class="font-label-md text-label-md text-on-surface-variant">Account Name</label>
-                        <input class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none truncate" type="text" value="Papertrail Technologies Ltd"/>
-                      </div>
-                      <div class="flex flex-col gap-xs">
-                        <label class="font-label-md text-label-md text-on-surface-variant">Account Number</label>
-                        <input class="h-10 px-md rounded-lg bg-surface-container-low font-code-md text-code-md text-on-surface focus:outline-none font-bold tracking-wider" type="text" value="0123456789"/>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- Right Column: Visual Template Picker -->
-                <div class="lg:col-span-6 bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col justify-between gap-md">
-                  <div class="flex flex-col gap-xs">
-                    <div class="flex items-center justify-between">
-                      <span class="font-title-md text-title-md text-on-surface font-medium">Default Receipt Template</span>
-                      <a class="font-label-md text-label-md text-primary font-medium hover:underline flex items-center gap-xs" data-path="templates" href="#">
-                        <span>Customizer</span>
-                        <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
-                      </a>
-                    </div>
-                    <p class="font-body-md text-body-md text-on-surface-variant text-[13px]">Select the base visual layout for generated PDFs and customer downloads.</p>
-                  </div>
-                  <!-- Visual mini selector cards -->
-                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-md my-xs sm:my-md">
-                    <!-- Template 1: Selected -->
-                    <div class="template-card relative flex flex-col rounded-xl overflow-hidden cursor-pointer bg-surface-container-lowest shadow-md ring-2 ring-primary-container transition-all" data-tpl="modern">
-                      <div class="h-28 bg-surface-container-low p-xs flex flex-col justify-between overflow-hidden">
-                        <div class="flex items-center justify-between">
-                          <div class="w-6 h-2 rounded bg-primary-container"></div>
-                          <div class="w-4 h-1.5 rounded bg-outline-variant"></div>
-                        </div>
-                        <div class="space-y-1">
-                          <div class="w-full h-1 bg-surface-container-highest rounded"></div>
-                          <div class="w-3/4 h-1 bg-surface-container-highest rounded"></div>
-                          <div class="w-1/2 h-1 bg-surface-container-highest rounded"></div>
-                        </div>
-                        <div class="w-full pt-1 flex justify-between items-center">
-                          <div class="w-5 h-1.5 bg-outline-variant rounded"></div>
-                          <div class="w-8 h-2 bg-primary-fixed-dim rounded"></div>
-                        </div>
-                      </div>
-                      <div class="p-sm bg-surface-container-lowest flex flex-col gap-xs">
-                        <div class="flex items-center justify-between">
-                          <span class="font-title-md text-[12px] font-semibold text-on-surface truncate">Modern Corp</span>
-                          <span class="w-2 h-2 rounded-full bg-primary-container"></span>
-                        </div>
-                        <span class="font-label-md text-[10px] text-primary font-bold">Selected</span>
-                      </div>
-                    </div>
-                    <!-- Template 2 -->
-                    <div class="template-card relative flex flex-col rounded-xl overflow-hidden cursor-pointer bg-surface-container-lowest hover:shadow-md transition-all opacity-80 hover:opacity-100" data-tpl="classic">
-                      <div class="h-28 bg-surface-container p-xs flex flex-col justify-between overflow-hidden">
-                        <div class="flex flex-col items-center gap-1 pt-1">
-                          <div class="w-12 h-1.5 rounded bg-secondary"></div>
-                          <div class="w-6 h-1 rounded bg-outline"></div>
-                        </div>
-                        <div class="space-y-1.5">
-                          <div class="w-full h-0.5 bg-outline-variant"></div>
-                          <div class="w-full h-0.5 bg-outline-variant"></div>
-                          <div class="w-full h-0.5 bg-outline-variant"></div>
-                        </div>
-                        <div class="w-full pt-1 flex justify-end">
-                          <div class="w-10 h-2 bg-secondary-fixed-dim rounded"></div>
-                        </div>
-                      </div>
-                      <div class="p-sm bg-surface-container-lowest flex flex-col gap-xs">
-                        <span class="font-title-md text-[12px] font-medium text-on-surface truncate">Classic Ledger</span>
-                        <span class="font-label-md text-[10px] text-on-surface-variant">Traditional format</span>
-                      </div>
-                    </div>
-                    <!-- Template 3 -->
-                    <div class="template-card relative flex flex-col rounded-xl overflow-hidden cursor-pointer bg-surface-container-lowest hover:shadow-md transition-all opacity-80 hover:opacity-100" data-tpl="minimal">
-                      <div class="h-28 bg-surface-container-lowest p-xs flex flex-col justify-between">
-                        <div class="w-3 h-3 rounded-full bg-on-surface"></div>
-                        <div class="space-y-1">
-                          <div class="w-full h-1 bg-surface-container rounded"></div>
-                          <div class="w-2/3 h-1 bg-surface-container rounded"></div>
-                        </div>
-                        <div class="w-full pt-1">
-                          <div class="w-7 h-1.5 bg-surface-dim rounded"></div>
-                        </div>
-                      </div>
-                      <div class="p-sm bg-surface-container-lowest flex flex-col gap-xs">
-                        <span class="font-title-md text-[12px] font-medium text-on-surface truncate">Minimal Clean</span>
-                        <span class="font-label-md text-[10px] text-on-surface-variant">Ultra-light</span>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Rich Visual Preview Banner -->
-                  <div class="bg-surface-container-low p-md rounded-xl flex items-center justify-between gap-md">
-                    <div class="flex items-center gap-sm">
-                      <span class="material-symbols-outlined text-primary text-[22px]">visibility</span>
-                      <div class="flex flex-col">
-                        <span class="font-title-md text-[13px] font-medium text-on-surface">Customer View Layout</span>
-                        <span class="font-label-md text-label-md text-on-surface-variant">Dynamic responsive web view enabled</span>
-                      </div>
-                    </div>
-                    <button class="px-md py-xs bg-surface-container-lowest font-label-md text-label-md text-on-surface rounded-lg shadow-sm hover:bg-surface transition-colors shrink-0" type="button">Test Preview</button>
-                  </div>
-                </div>
-              </div>
-            </section>
+            <!-- Left: numbering -->
+            <div class="lg:col-span-6 flex flex-col gap-md sm:gap-lg">
+              <div class="bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col gap-md">
+                <span class="font-title-md text-title-md text-on-surface font-medium">General Numbering &amp; Denomination</span>
 
-            <!-- SECTION 3: WhatsApp & Delivery Settings -->
-            <section class="flex flex-col gap-md sm:gap-lg" id="section-whatsapp">
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div class="flex flex-col">
-                  <span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">03. Messaging &amp; Automated Pipeline</span>
-                  <h2 class="font-headline-md text-headline-md text-on-surface text-[20px] sm:text-[24px]">WhatsApp &amp; Delivery</h2>
+                <div class="flex flex-col gap-xs">
+                  <label class="font-label-md text-label-md text-on-surface-variant" for="currency_select">Primary Currency</label>
+                  <div class="relative flex items-center">
+                    <select id="currency_select"
+                      class="h-10 w-full px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface appearance-none focus:outline-none focus:bg-surface-container-lowest transition-all">
+                      <option selected value="NGN">NGN (₦) - Nigerian Naira</option>
+                      <option value="USD">USD ($) - United States Dollar</option>
+                      <option value="GBP">GBP (£) - British Pound</option>
+                      <option value="GHS">GHS (₵) - Ghanaian Cedi</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-sm text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+                  </div>
                 </div>
-                <span class="flex items-center gap-xs px-sm py-xs rounded-lg bg-surface-container-highest text-on-surface font-label-md text-label-md self-start sm:self-auto">
-                  <span class="w-2 h-2 rounded-full bg-primary-container"></span>
-                  Meta Cloud API Connected
-                </span>
-              </div>
-              <div class="grid grid-cols-1 lg:grid-cols-12 gap-md sm:gap-lg">
-                <!-- WhatsApp Business Account status -->
-                <div class="lg:col-span-5 bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col justify-between gap-md sm:gap-lg">
-                  <div class="flex flex-col gap-md">
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center gap-sm">
-                        <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary-container shrink-0">
-                          <span class="material-symbols-outlined text-[24px]">chat_bubble</span>
-                        </div>
-                        <div class="flex flex-col">
-                          <span class="font-title-md text-title-md text-on-surface font-medium">WhatsApp Gateway</span>
-                          <span class="font-label-md text-label-md text-on-surface-variant">Verified WhatsApp Business API</span>
-                        </div>
-                      </div>
-                      <span class="material-symbols-outlined text-primary-container text-[20px]" title="Verified badge">verified</span>
-                    </div>
-                    <!-- Integration details card -->
-                    <div class="bg-surface-container-low p-md rounded-xl flex flex-col gap-sm">
-                      <div class="flex items-center justify-between">
-                        <span class="font-label-md text-label-md text-on-surface-variant">Dedicated Sender Number</span>
-                        <span class="font-code-md text-code-md font-bold text-on-surface">+234 801 234 5678</span>
-                      </div>
-                      <div class="flex items-center justify-between">
-                        <span class="font-label-md text-label-md text-on-surface-variant">Business Tier</span>
-                        <span class="font-label-md text-label-md font-semibold text-primary">Enterprise Tier 1 (1k msgs/day)</span>
-                      </div>
-                      <div class="flex items-center justify-between">
-                        <span class="font-label-md text-label-md text-on-surface-variant">Quality Rating</span>
-                        <div class="flex items-center gap-xs">
-                          <span class="w-2 h-2 rounded-full bg-primary-container"></span>
-                          <span class="font-label-md text-label-md text-on-surface font-medium">High</span>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Automated Trigger Switch -->
-                    <div class="flex items-center justify-between pt-xs gap-sm">
-                      <div class="flex flex-col">
-                        <span class="font-title-md text-title-md text-[13px] sm:text-[14px] text-on-surface font-medium">Auto-send On Creation</span>
-                        <span class="font-body-md text-body-md text-on-surface-variant text-[12px] sm:text-[13px]">Dispatch receipt PDF &amp; link right after generation</span>
-                      </div>
-                      <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                        <input checked="" class="sr-only peer" id="autosend-toggle" type="checkbox"/>
-                        <div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
-                      </label>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-md pt-xs">
+                  <div class="flex flex-col gap-xs">
+                    <label class="font-label-md text-label-md text-on-surface-variant" for="receipt_prefix">Receipt Prefix Code</label>
+                    <div class="relative flex items-center">
+                      <span class="absolute left-sm font-code-md text-code-md text-on-surface-variant font-bold">[</span>
+                      <input id="receipt_prefix" type="text"
+                        class="h-10 w-full pl-6 pr-6 rounded-lg bg-surface-container-low font-code-md text-code-md text-on-surface uppercase tracking-wider focus:outline-none focus:bg-surface-container-lowest transition-all text-center font-bold"
+                        value="REC"/>
+                      <span class="absolute right-sm font-code-md text-code-md text-on-surface-variant font-bold">]</span>
                     </div>
                   </div>
-                  <!-- Metric SVG Mini Chart (Delivery Rate) -->
-                  <div class="bg-surface-container p-md rounded-xl flex items-center justify-between">
+                  <div class="flex flex-col justify-end">
+                    <div class="bg-surface-container p-sm rounded-lg flex flex-col justify-center h-10">
+                      <span class="font-label-md text-[10px] uppercase text-on-surface-variant">Generated Preview</span>
+                      <span class="font-code-md text-code-md text-primary font-bold tracking-wider" id="prefix-preview">REC-000043</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-xs pt-md flex items-center justify-between bg-surface-container-low p-md rounded-xl gap-sm">
+                  <div class="flex items-center gap-sm sm:gap-md">
+                    <div class="w-9 h-9 rounded-lg bg-primary-fixed flex items-center justify-center text-primary-container shrink-0">
+                      <span class="material-symbols-outlined text-[20px]">percent</span>
+                    </div>
                     <div class="flex flex-col">
-                      <span class="font-label-md text-[11px] text-on-surface-variant uppercase font-medium">Delivery Success (30d)</span>
-                      <span class="font-headline-md text-headline-md text-on-surface leading-tight">99.4%</span>
-                      <span class="font-label-md text-label-md text-primary font-medium">1,429 sent • 0 bounced</span>
-                    </div>
-                    <div class="w-16 h-16 relative flex items-center justify-center shrink-0">
-                      <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                        <path class="text-surface-variant" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
-                        <path class="text-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="99, 100" stroke-linecap="round" stroke-width="3.5"></path>
-                      </svg>
-                      <span class="material-symbols-outlined text-[18px] text-primary absolute">done_all</span>
+                      <span class="font-title-md text-title-md text-[13px] sm:text-[14px] text-on-surface font-medium">Default FIRS VAT (7.5%)</span>
+                      <span class="font-label-md text-label-md text-on-surface-variant">Auto-apply standard sales levy</span>
                     </div>
                   </div>
-                </div>
-                <!-- Message Template Editor & Live Phone Simulation -->
-                <div class="lg:col-span-7 bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col md:flex-row gap-md sm:gap-lg">
-                  <!-- Left: Text Editor -->
-                  <div class="flex-1 flex flex-col justify-between gap-md">
-                    <div class="flex flex-col gap-xs">
-                      <label class="font-title-md text-title-md text-[14px] text-on-surface font-medium" for="wa_template">WhatsApp Notification Copy</label>
-                      <span class="font-body-md text-body-md text-on-surface-variant text-[13px]">Personalize customer greeting. Use variables: <code class="bg-surface-container px-xs rounded text-primary">{customer_name}</code>, <code class="bg-surface-container px-xs rounded text-primary">{receipt_number}</code>, <code class="bg-surface-container px-xs rounded text-primary">{amount}</code></span>
-                    </div>
-                    <textarea class="w-full p-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all resize-none" id="wa_template" rows="5">Hello {customer_name}, thank you for your patronage! Your official receipt {receipt_number} for {amount} is ready. View and download your copy here: {receipt_link}</textarea>
-                    <div class="flex flex-wrap items-center gap-xs">
-                      <button class="px-sm py-xs rounded bg-surface-container font-code-md text-[11px] text-on-surface hover:bg-surface-container-high transition-colors" onclick="insertVar('{customer_name}')" type="button">+ Name</button>
-                      <button class="px-sm py-xs rounded bg-surface-container font-code-md text-[11px] text-on-surface hover:bg-surface-container-high transition-colors" onclick="insertVar('{receipt_number}')" type="button">+ Rec #</button>
-                      <button class="px-sm py-xs rounded bg-surface-container font-code-md text-[11px] text-on-surface hover:bg-surface-container-high transition-colors" onclick="insertVar('{amount}')" type="button">+ Amount</button>
-                      <button class="px-sm py-xs rounded bg-surface-container font-code-md text-[11px] text-on-surface hover:bg-surface-container-high transition-colors" onclick="insertVar('{receipt_link}')" type="button">+ Link</button>
-                    </div>
-                  </div>
-                  <!-- Right: Micro WhatsApp bubble preview -->
-                  <div class="w-full md:w-64 bg-[#E5DDD5] p-md rounded-2xl flex flex-col justify-end shadow-inner relative select-none shrink-0 min-h-[220px]">
-                    <div class="absolute top-2 left-3 right-3 flex items-center justify-between pb-1 border-b border-[#D1D7DB]/50">
-                      <div class="flex items-center gap-1">
-                        <div class="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-[10px] text-white font-bold">P</div>
-                        <span class="font-body-md text-[11px] font-semibold text-[#111B21] truncate">Papertrail Inc.</span>
-                      </div>
-                      <span class="material-symbols-outlined text-[12px] text-[#54656F]">more_vert</span>
-                    </div>
-                    <div class="bg-white p-sm rounded-lg shadow-sm text-[#111B21] flex flex-col gap-1 mt-6">
-                      <span class="font-body-md text-[11px] leading-snug" id="wa-preview-text">
-                        Hello <strong>Amara Okafor</strong>, thank you for your patronage! Your official receipt <strong>REC-000043</strong> for <strong>₦45,000.00</strong> is ready. View and download your copy here: <u>ptrail.co/r/43a9</u>
-                      </span>
-                      <div class="flex items-center justify-end gap-1 text-[9px] text-[#667781]">
-                        <span>14:24</span>
-                        <span class="material-symbols-outlined text-[13px] text-primary-container">done_all</span>
-                      </div>
-                    </div>
-                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                    <input id="vat-toggle" type="checkbox" class="sr-only peer" checked/>
+                    <div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+                  </label>
                 </div>
               </div>
-            </section>
 
-            <!-- STICKY FOOTER ACTIONS -->
-            <div class="sticky bottom-4 z-30 bg-surface-container-lowest/95 backdrop-blur-md p-sm sm:p-md rounded-2xl shadow-xl flex items-center justify-between mt-lg border border-outline-variant/30 gap-xs">
-              <div class="flex items-center gap-sm sm:gap-md">
-                <div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant shrink-0">
-                  <span class="material-symbols-outlined text-[18px]">history</span>
+              <div class="bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col gap-md">
+                <div class="flex items-center justify-between">
+                  <span class="font-title-md text-title-md text-on-surface font-medium">Bank Transfer Instructions</span>
+                  <span class="material-symbols-outlined text-[18px] text-on-surface-variant">account_balance</span>
                 </div>
-                <div class="flex flex-col">
-                  <span class="font-title-md text-[12px] sm:text-[13px] text-on-surface font-medium leading-tight">Unsaved changes</span>
-                  <span class="font-label-md text-label-md text-on-surface-variant hidden sm:inline">Updates reflect on next receipt dispatch</span>
+                <p class="font-body-md text-body-md text-on-surface-variant text-[13px]">Printed on unpaid invoices and digital receipts for instant settlement.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-md">
+                  <div class="flex flex-col gap-xs">
+                    <label class="font-label-md text-label-md text-on-surface-variant">Bank Name</label>
+                    <input type="text" class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none" value="GTBank"/>
+                  </div>
+                  <div class="flex flex-col gap-xs">
+                    <label class="font-label-md text-label-md text-on-surface-variant">Account Name</label>
+                    <input type="text" class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none truncate" value="Papertrail Technologies Ltd"/>
+                  </div>
+                  <div class="flex flex-col gap-xs">
+                    <label class="font-label-md text-label-md text-on-surface-variant">Account Number</label>
+                    <input type="text" class="h-10 px-md rounded-lg bg-surface-container-low font-code-md text-code-md text-on-surface focus:outline-none font-bold tracking-wider" value="0123456789"/>
+                  </div>
                 </div>
-              </div>
-              <div class="flex items-center gap-xs sm:gap-sm">
-                <button class="px-md sm:px-lg py-sm rounded-xl font-title-md text-title-md text-[13px] sm:text-[14px] font-medium text-secondary hover:bg-surface-container-high transition-colors" id="discard-btn" type="button">
-                  Discard
-                </button>
-                <button class="inline-flex items-center gap-xs px-md sm:px-xl py-sm rounded-xl bg-primary-container hover:bg-primary text-on-primary font-title-md text-title-md text-[13px] sm:text-[14px] font-medium shadow-md transition-all active:scale-[0.98] shrink-0" id="save-btn" type="button">
-                  <span class="material-symbols-outlined text-[18px]">save</span>
-                  <span>Save Changes</span>
-                </button>
               </div>
             </div>
-          </form>
-        </div>
 
-        <script>
-          // Live prefix update
-          const prefixInput = document.getElementById('receipt_prefix');
-          const prefixPreview = document.getElementById('prefix-preview');
-          if (prefixInput && prefixPreview) {
-            prefixInput.addEventListener('input', (e) => {
-              const val = e.target.value.trim().toUpperCase() || 'REC';
-              prefixPreview.textContent = `${val}-000043`;
-            });
-          }
+            <!-- Right: template picker -->
+            <div class="lg:col-span-6 bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col justify-between gap-md">
+              <div class="flex flex-col gap-xs">
+                <div class="flex items-center justify-between">
+                  <span class="font-title-md text-title-md text-on-surface font-medium">Default Receipt Template</span>
+                  <a href="/templates" class="font-label-md text-label-md text-primary font-medium hover:underline flex items-center gap-xs">
+                    <span>Customizer</span>
+                    <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                  </a>
+                </div>
+                <p class="font-body-md text-body-md text-on-surface-variant text-[13px]">Select the base visual layout for generated PDFs and customer downloads.</p>
+              </div>
 
-          // Tab interaction
-          document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-              document.querySelectorAll('.tab-btn').forEach(b => {
-                b.className = 'tab-btn flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-body-md text-body-md text-[13px] sm:text-[14px] text-on-surface-variant hover:text-on-surface transition-all shrink-0';
-              });
-              btn.className = 'tab-btn active-tab flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-title-md text-title-md text-[13px] sm:text-[14px] font-medium bg-surface-container-lowest text-on-surface shadow-sm transition-all shrink-0';
-            });
-          });
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-md my-xs sm:my-md">
+                <!-- Modern (selected) -->
+                <div class="template-card relative flex flex-col rounded-xl overflow-hidden cursor-pointer bg-surface-container-lowest shadow-md ring-2 ring-primary-container transition-all" data-tpl="modern">
+                  <div class="h-28 bg-surface-container-low p-xs flex flex-col justify-between overflow-hidden">
+                    <div class="flex items-center justify-between">
+                      <div class="w-6 h-2 rounded bg-primary-container"></div>
+                      <div class="w-4 h-1.5 rounded bg-outline-variant"></div>
+                    </div>
+                    <div class="space-y-1">
+                      <div class="w-full h-1 bg-surface-container-highest rounded"></div>
+                      <div class="w-3/4 h-1 bg-surface-container-highest rounded"></div>
+                      <div class="w-1/2 h-1 bg-surface-container-highest rounded"></div>
+                    </div>
+                    <div class="w-full pt-1 flex justify-between items-center">
+                      <div class="w-5 h-1.5 bg-outline-variant rounded"></div>
+                      <div class="w-8 h-2 bg-primary-fixed-dim rounded"></div>
+                    </div>
+                  </div>
+                  <div class="p-sm bg-surface-container-lowest flex flex-col gap-xs">
+                    <div class="flex items-center justify-between">
+                      <span class="font-title-md text-[12px] font-semibold text-on-surface truncate">Modern Corp</span>
+                      <span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                    </div>
+                    <span class="font-label-md text-[10px] text-primary font-bold">Selected</span>
+                  </div>
+                </div>
 
-          // Template selection interaction
-          document.querySelectorAll('.template-card').forEach(card => {
-            card.addEventListener('click', () => {
-              document.querySelectorAll('.template-card').forEach(c => {
-                c.classList.remove('ring-2', 'ring-primary-container', 'shadow-md', 'opacity-100');
-                c.classList.add('opacity-80');
-                const badge = c.querySelector('span.font-bold');
-                if (badge) badge.className = 'font-label-md text-[10px] text-on-surface-variant';
-              });
-              card.classList.remove('opacity-80');
-              card.classList.add('ring-2', 'ring-primary-container', 'shadow-md', 'opacity-100');
-            });
-          });
+                <div class="template-card relative flex flex-col rounded-xl overflow-hidden cursor-pointer bg-surface-container-lowest hover:shadow-md transition-all opacity-80 hover:opacity-100" data-tpl="classic">
+                  <div class="h-28 bg-surface-container p-xs flex flex-col justify-between overflow-hidden">
+                    <div class="flex flex-col items-center gap-1 pt-1">
+                      <div class="w-12 h-1.5 rounded bg-secondary"></div>
+                      <div class="w-6 h-1 rounded bg-outline"></div>
+                    </div>
+                    <div class="space-y-1.5">
+                      <div class="w-full h-0.5 bg-outline-variant"></div>
+                      <div class="w-full h-0.5 bg-outline-variant"></div>
+                      <div class="w-full h-0.5 bg-outline-variant"></div>
+                    </div>
+                    <div class="w-full pt-1 flex justify-end">
+                      <div class="w-10 h-2 bg-secondary-fixed-dim rounded"></div>
+                    </div>
+                  </div>
+                  <div class="p-sm bg-surface-container-lowest flex flex-col gap-xs">
+                    <span class="font-title-md text-[12px] font-medium text-on-surface truncate">Classic Ledger</span>
+                    <span class="font-label-md text-[10px] text-on-surface-variant">Traditional format</span>
+                  </div>
+                </div>
 
-          // Live template preview sync
-          const waTemplate = document.getElementById('wa_template');
-          const waPreview = document.getElementById('wa-preview-text');
-          if (waTemplate && waPreview) {
-            waTemplate.addEventListener('input', (e) => {
-              let text = e.target.value;
-              text = text.replace('{customer_name}', '<strong>Amara Okafor</strong>')
-                         .replace('{receipt_number}', '<strong>REC-000043</strong>')
-                         .replace('{amount}', '<strong>₦45,000.00</strong>')
-                         .replace('{receipt_link}', '<u>ptrail.co/r/43a9</u>');
-              waPreview.innerHTML = text;
-            });
-          }
+                <div class="template-card relative flex flex-col rounded-xl overflow-hidden cursor-pointer bg-surface-container-lowest hover:shadow-md transition-all opacity-80 hover:opacity-100" data-tpl="minimal">
+                  <div class="h-28 bg-surface-container-lowest p-xs flex flex-col justify-between">
+                    <div class="w-3 h-3 rounded-full bg-on-surface"></div>
+                    <div class="space-y-1">
+                      <div class="w-full h-1 bg-surface-container rounded"></div>
+                      <div class="w-2/3 h-1 bg-surface-container rounded"></div>
+                    </div>
+                    <div class="w-full pt-1">
+                      <div class="w-7 h-1.5 bg-surface-dim rounded"></div>
+                    </div>
+                  </div>
+                  <div class="p-sm bg-surface-container-lowest flex flex-col gap-xs">
+                    <span class="font-title-md text-[12px] font-medium text-on-surface truncate">Minimal Clean</span>
+                    <span class="font-label-md text-[10px] text-on-surface-variant">Ultra-light</span>
+                  </div>
+                </div>
+              </div>
 
-          function insertVar(val) {
-            if (!waTemplate) return;
-            waTemplate.value += ` ${val}`;
-            waTemplate.dispatchEvent(new Event('input'));
-          }
+              <div class="bg-surface-container-low p-md rounded-xl flex items-center justify-between gap-md">
+                <div class="flex items-center gap-sm">
+                  <span class="material-symbols-outlined text-primary text-[22px]">visibility</span>
+                  <div class="flex flex-col">
+                    <span class="font-title-md text-[13px] font-medium text-on-surface">Customer View Layout</span>
+                    <span class="font-label-md text-label-md text-on-surface-variant">Dynamic responsive web view enabled</span>
+                  </div>
+                </div>
+                <button type="button" class="px-md py-xs bg-surface-container-lowest font-label-md text-label-md text-on-surface rounded-lg shadow-sm hover:bg-surface transition-colors shrink-0">Test Preview</button>
+              </div>
+            </div>
+          </div>
+        </section>
 
-          // Save Feedback Simulation
-          const saveBtn = document.getElementById('save-btn');
-          const autoSaveInd = document.getElementById('autosave-indicator');
-          if (saveBtn) {
-            saveBtn.addEventListener('click', () => {
-              saveBtn.disabled = true;
-              saveBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>Saving...</span>';
-              setTimeout(() => {
-                saveBtn.disabled = false;
-                saveBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>Saved</span>';
-                if (autoSaveInd) autoSaveInd.textContent = 'Saved just now';
-                setTimeout(() => {
-                  saveBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">save</span><span>Save Changes</span>';
-                }, 2000);
-              }, 600);
-            });
-          }
+        <!-- SECTION 3: WhatsApp -->
+        <section class="flex flex-col gap-md sm:gap-lg" id="section-whatsapp">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex flex-col">
+              <span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">03. Messaging &amp; Automated Pipeline</span>
+              <h2 class="font-headline-md text-headline-md text-on-surface text-[20px] sm:text-[24px]">WhatsApp &amp; Delivery</h2>
+            </div>
+            <span class="flex items-center gap-xs px-sm py-xs rounded-lg bg-surface-container-highest text-on-surface font-label-md text-label-md self-start sm:self-auto">
+              <span class="w-2 h-2 rounded-full bg-primary-container"></span>
+              Meta Cloud API Connected
+            </span>
+          </div>
 
-          const discardBtn = document.getElementById('discard-btn');
-          if (discardBtn) {
-            discardBtn.addEventListener('click', () => {
-              document.getElementById('settings-form').reset();
-              if (prefixPreview) prefixPreview.textContent = 'REC-000043';
-            });
-          }
-        </script>
-      </div>
-    </main>
-  </div>
-</body>
-</html>
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-md sm:gap-lg">
+            <!-- Gateway status -->
+            <div class="lg:col-span-5 bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col justify-between gap-md sm:gap-lg">
+              <div class="flex flex-col gap-md">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-sm">
+                    <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary-container shrink-0">
+                      <span class="material-symbols-outlined text-[24px]">chat_bubble</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="font-title-md text-title-md text-on-surface font-medium">WhatsApp Gateway</span>
+                      <span class="font-label-md text-label-md text-on-surface-variant">Verified WhatsApp Business API</span>
+                    </div>
+                  </div>
+                  <span class="material-symbols-outlined text-primary-container text-[20px]" title="Verified badge">verified</span>
+                </div>
+
+                <div class="bg-surface-container-low p-md rounded-xl flex flex-col gap-sm">
+                  <div class="flex items-center justify-between">
+                    <span class="font-label-md text-label-md text-on-surface-variant">Dedicated Sender Number</span>
+                    <span class="font-code-md text-code-md font-bold text-on-surface">+234 801 234 5678</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="font-label-md text-label-md text-on-surface-variant">Business Tier</span>
+                    <span class="font-label-md text-label-md font-semibold text-primary">Enterprise Tier 1 (1k msgs/day)</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="font-label-md text-label-md text-on-surface-variant">Quality Rating</span>
+                    <div class="flex items-center gap-xs">
+                      <span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                      <span class="font-label-md text-label-md text-on-surface font-medium">High</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-xs gap-sm">
+                  <div class="flex flex-col">
+                    <span class="font-title-md text-title-md text-[13px] sm:text-[14px] text-on-surface font-medium">Auto-send On Creation</span>
+                    <span class="font-body-md text-body-md text-on-surface-variant text-[12px] sm:text-[13px]">Dispatch receipt PDF &amp; link right after generation</span>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                    <input id="autosend-toggle" type="checkbox" class="sr-only peer" checked/>
+                    <div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="bg-surface-container p-md rounded-xl flex items-center justify-between">
+                <div class="flex flex-col">
+                  <span class="font-label-md text-[11px] text-on-surface-variant uppercase font-medium">Delivery Success (30d)</span>
+                  <span class="font-headline-md text-headline-md text-on-surface leading-tight">99.4%</span>
+                  <span class="font-label-md text-label-md text-primary font-medium">1,429 sent • 0 bounced</span>
+                </div>
+                <div class="w-16 h-16 relative flex items-center justify-center shrink-0">
+                  <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                    <path class="text-surface-variant" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+                    <path class="text-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="99, 100" stroke-linecap="round" stroke-width="3.5"></path>
+                  </svg>
+                  <span class="material-symbols-outlined text-[18px] text-primary absolute">done_all</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Template editor + preview -->
+            <div class="lg:col-span-7 bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col md:flex-row gap-md sm:gap-lg">
+              <div class="flex-1 flex flex-col justify-between gap-md">
+                <div class="flex flex-col gap-xs">
+                  <label class="font-title-md text-title-md text-[14px] text-on-surface font-medium" for="wa_template">WhatsApp Notification Copy</label>
+                  <span class="font-body-md text-body-md text-on-surface-variant text-[13px]">
+                    Personalize customer greeting. Use variables:
+                    <code class="bg-surface-container px-xs rounded text-primary">{customer_name}</code>,
+                    <code class="bg-surface-container px-xs rounded text-primary">{receipt_number}</code>,
+                    <code class="bg-surface-container px-xs rounded text-primary">{amount}</code>
+                  </span>
+                </div>
+                <textarea id="wa_template" rows="5"
+                  class="w-full p-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all resize-none">Hello {customer_name}, thank you for your patronage! Your official receipt {receipt_number} for {amount} is ready. View and download your copy here: {receipt_link}</textarea>
+                <div class="flex flex-wrap items-center gap-xs">
+                  <button type="button" class="px-sm py-xs rounded bg-surface-container font-code-md text-[11px] text-on-surface hover:bg-surface-container-high transition-colors" onclick="insertVar('{customer_name}')">+ Name</button>
+                  <button type="button" class="px-sm py-xs rounded bg-surface-container font-code-md text-[11px] text-on-surface hover:bg-surface-container-high transition-colors" onclick="insertVar('{receipt_number}')">+ Rec #</button>
+                  <button type="button" class="px-sm py-xs rounded bg-surface-container font-code-md text-[11px] text-on-surface hover:bg-surface-container-high transition-colors" onclick="insertVar('{amount}')">+ Amount</button>
+                  <button type="button" class="px-sm py-xs rounded bg-surface-container font-code-md text-[11px] text-on-surface hover:bg-surface-container-high transition-colors" onclick="insertVar('{receipt_link}')">+ Link</button>
+                </div>
+              </div>
+
+              <div class="w-full md:w-64 bg-[#E5DDD5] p-md rounded-2xl flex flex-col justify-end shadow-inner relative select-none shrink-0 min-h-[220px]">
+                <div class="absolute top-2 left-3 right-3 flex items-center justify-between pb-1 border-b border-[#D1D7DB]/50">
+                  <div class="flex items-center gap-1">
+                    <div class="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-[10px] text-white font-bold">P</div>
+                    <span class="font-body-md text-[11px] font-semibold text-[#111B21] truncate">Papertrail Inc.</span>
+                  </div>
+                  <span class="material-symbols-outlined text-[12px] text-[#54656F]">more_vert</span>
+                </div>
+                <div class="bg-white p-sm rounded-lg shadow-sm text-[#111B21] flex flex-col gap-1 mt-6">
+                  <span class="font-body-md text-[11px] leading-snug" id="wa-preview-text">
+                    Hello <strong>Amara Okafor</strong>, thank you for your patronage! Your official receipt <strong>REC-000043</strong> for <strong>₦45,000.00</strong> is ready. View and download your copy here: <u>ptrail.co/r/43a9</u>
+                  </span>
+                  <div class="flex items-center justify-end gap-1 text-[9px] text-[#667781]">
+                    <span>14:24</span>
+                    <span class="material-symbols-outlined text-[13px] text-primary-container">done_all</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sticky Footer -->
+        <div class="sticky bottom-4 z-30 bg-surface-container-lowest/95 backdrop-blur-md p-sm sm:p-md rounded-2xl shadow-xl flex items-center justify-between mt-lg border border-outline-variant/30 gap-xs">
+          <div class="flex items-center gap-sm sm:gap-md">
+            <div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant shrink-0">
+              <span class="material-symbols-outlined text-[18px]">history</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-title-md text-[12px] sm:text-[13px] text-on-surface font-medium leading-tight">Unsaved changes</span>
+              <span class="font-label-md text-label-md text-on-surface-variant hidden sm:inline">Updates reflect on next receipt dispatch</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-xs sm:gap-sm">
+            <button id="discard-btn" type="button"
+              class="px-md sm:px-lg py-sm rounded-xl font-title-md text-title-md text-[13px] sm:text-[14px
