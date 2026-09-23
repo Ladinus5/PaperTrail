@@ -9,9 +9,17 @@
             <span class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Receipts</span>
             <span class="px-2.5 py-0.5 rounded-full text-label-md font-label-md bg-secondary-container text-on-secondary-fixed-variant font-medium">Ledger</span>
           </div>
-          <p class="font-body-md text-body-md text-on-surface-variant mt-1">All receipts issued from your workspace.</p>
-          <% if (customerFilter) { %>
-            <p class="font-label-md text-label-md text-primary mt-1">Filtered by customer</p>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+            <% if (typeof query !== 'undefined' && query) { %>
+              Showing results for "<strong class="text-on-surface"><%= query %></strong>"
+            <% } else { %>
+              All receipts issued from your workspace.
+            <% } %>
+          </p>
+          <% if (typeof query !== 'undefined' && query) { %>
+            <a href="/receipts" class="font-label-md text-label-md text-primary hover:underline mt-1 inline-block">
+              Clear search
+            </a>
           <% } %>
         </div>
         <a href="/receipts/new"
@@ -50,18 +58,30 @@
       <!-- Table -->
       <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 shadow-sm overflow-hidden">
         <div class="px-lg py-md border-b border-outline-variant/30 flex items-center justify-between bg-surface">
-          <span class="font-title-md text-title-md text-on-surface font-semibold">All Receipts</span>
+          <span class="font-title-md text-title-md text-on-surface font-semibold">
+            <% if (typeof query !== 'undefined' && query) { %>Search Results<% } else { %>All Receipts<% } %>
+          </span>
           <span class="px-2 py-0.5 rounded bg-surface-container text-secondary text-label-md font-label-md"><%= totalCount %> total</span>
         </div>
 
         <% if (receipts.length === 0) { %>
           <div class="p-xl text-center">
-            <span class="material-symbols-outlined text-[48px] text-on-surface-variant/40 mb-sm block">receipt_long</span>
-            <p class="text-body-md text-on-surface-variant mb-md">No receipts yet.</p>
-            <a href="/receipts/new" class="inline-flex items-center gap-1 bg-primary-container hover:bg-primary text-on-primary px-md py-sm rounded-lg text-label-md font-semibold transition-colors">
-              <span class="material-symbols-outlined text-[16px]">add</span>
-              Create your first receipt
-            </a>
+            <span class="material-symbols-outlined text-[48px] text-on-surface-variant/40 mb-sm block">
+              <%= (typeof query !== 'undefined' && query) ? 'search_off' : 'receipt_long' %>
+            </span>
+            <% if (typeof query !== 'undefined' && query) { %>
+              <p class="text-body-md text-on-surface-variant mb-md">No receipts match "<strong><%= query %></strong>"</p>
+              <a href="/receipts" class="inline-flex items-center gap-1 bg-surface-container-high hover:bg-surface-variant text-on-surface px-md py-sm rounded-lg text-label-md font-semibold transition-colors">
+                <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+                Clear search
+              </a>
+            <% } else { %>
+              <p class="text-body-md text-on-surface-variant mb-md">No receipts yet.</p>
+              <a href="/receipts/new" class="inline-flex items-center gap-1 bg-primary-container hover:bg-primary text-on-primary px-md py-sm rounded-lg text-label-md font-semibold transition-colors">
+                <span class="material-symbols-outlined text-[16px]">add</span>
+                Create your first receipt
+              </a>
+            <% } %>
           </div>
         <% } else { %>
           <div class="overflow-x-auto">

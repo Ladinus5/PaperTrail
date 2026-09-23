@@ -23,6 +23,16 @@
     if (closeBtn) closeBtn.addEventListener('click', toggleDrawer);
     overlay.addEventListener('click', toggleDrawer);
   });
+
+  
+  document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('userMenuBtn');
+    const menu = document.getElementById('userMenu');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('hidden'); });
+    document.addEventListener('click', () => menu.classList.add('hidden'));
+  });
+
 </script>
 
 <%- typeof script !== 'undefined' ? script : '' %>

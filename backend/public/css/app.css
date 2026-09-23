@@ -328,6 +328,9 @@
   .top-2\.5 {
     top: calc(var(--spacing) * 2.5);
   }
+  .top-11 {
+    top: calc(var(--spacing) * 11);
+  }
   .-right-10 {
     right: calc(var(--spacing) * -10);
   }
@@ -342,6 +345,9 @@
   }
   .right-3 {
     right: calc(var(--spacing) * 3);
+  }
+  .right-6 {
+    right: calc(var(--spacing) * 6);
   }
   .-bottom-4 {
     bottom: calc(var(--spacing) * -4);
@@ -360,6 +366,9 @@
   }
   .bottom-4 {
     bottom: calc(var(--spacing) * 4);
+  }
+  .bottom-6 {
+    bottom: calc(var(--spacing) * 6);
   }
   .-left-2 {
     left: calc(var(--spacing) * -2);
@@ -393,6 +402,9 @@
   }
   .z-\[60\] {
     z-index: 60;
+  }
+  .z-\[100\] {
+    z-index: 100;
   }
   .col-span-1 {
     grid-column: span 1 / span 1;
@@ -678,6 +690,9 @@
   }
   .w-44 {
     width: calc(var(--spacing) * 44);
+  }
+  .w-56 {
+    width: calc(var(--spacing) * 56);
   }
   .w-64 {
     width: calc(var(--spacing) * 64);
@@ -1204,6 +1219,12 @@
   .bg-outline-variant {
     background-color: var(--color-outline-variant);
   }
+  .bg-outline-variant\/40 {
+    background-color: color-mix(in srgb, #c3c6d5 40%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-outline-variant) 40%, transparent);
+    }
+  }
   .bg-outline-variant\/50 {
     background-color: color-mix(in srgb, #c3c6d5 50%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -1290,6 +1311,12 @@
   }
   .bg-surface-container-lowest {
     background-color: var(--color-surface-container-lowest);
+  }
+  .bg-surface-container-lowest\/90 {
+    background-color: color-mix(in srgb, #ffffff 90%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-surface-container-lowest) 90%, transparent);
+    }
   }
   .bg-surface-container-lowest\/95 {
     background-color: color-mix(in srgb, #ffffff 95%, transparent);
@@ -2169,6 +2196,9 @@
     }
     .sm\:w-64 {
       width: calc(var(--spacing) * 64);
+    }
+    .sm\:w-80 {
+      width: calc(var(--spacing) * 80);
     }
     .sm\:w-auto {
       width: auto;
