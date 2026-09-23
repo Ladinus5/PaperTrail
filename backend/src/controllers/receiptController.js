@@ -135,7 +135,9 @@ const renderReceipt = async (req, res) => {
             req.params.id
         );
 
-        res.render("receipts/modern", data);
+        const type = receipt.template?.type || "modern";
+        const viewName = `receipts/${type}`;
+        res.render(viewName, { ...data, settings });
 
     } catch (error) {
         res.status(404).send(error.message);

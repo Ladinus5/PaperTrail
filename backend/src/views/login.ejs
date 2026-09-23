@@ -18,15 +18,6 @@
 
       <div class="relative w-full max-w-[440px] z-10">
 
-        <!-- meta bar -->
-        <div class="flex items-center justify-between px-xs mb-md">
-          <div class="flex items-center gap-xs font-code-md text-code-md text-[11px] text-on-surface-variant uppercase tracking-wider">
-            <span class="w-2 h-2 rounded-full bg-primary-container inline-block animate-pulse"></span>
-            <span>Auth Gateway // v2.4</span>
-          </div>
-          <span class="font-code-md text-code-md text-[11px] text-on-surface-variant/80">SESSION ID: 902-TX</span>
-        </div>
-
         <!-- Card -->
         <div class="bg-surface-container-lowest rounded-xl shadow-xl shadow-primary/5 p-md sm:p-xl flex flex-col transition-all">
           <div class="flex flex-col items-center text-center mb-xl">
@@ -83,17 +74,6 @@
               <span class="material-symbols-outlined text-[18px] group-hover:translate-x-0.5 transition-transform" id="btn-icon">arrow_forward</span>
             </button>
           </form>
-
-          <div class="mt-lg pt-md bg-surface-container-low -mx-md sm:-mx-xl -mb-md sm:-mb-xl p-md rounded-b-xl flex flex-wrap items-center justify-between gap-xs">
-            <div class="flex items-center gap-xs text-on-surface-variant">
-              <span class="material-symbols-outlined text-[16px] text-primary-container">verified_user</span>
-              <span class="font-label-md text-label-md text-[11px]">256-bit SSL Banking Protocol</span>
-            </div>
-            <div class="flex items-center gap-xs text-on-surface-variant">
-              <span class="material-symbols-outlined text-[16px]">shield</span>
-              <span class="font-label-md text-label-md text-[11px]">SOC2 Type II</span>
-            </div>
-          </div>
         </div>
 
         <div class="text-center mt-lg">
@@ -131,6 +111,9 @@ form.addEventListener('submit', async function (e) {
   btnIcon.textContent = 'sync';
   btnIcon.classList.add('animate-spin');
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+
   try {
     const res = await fetch('/api/auth/login', {
       method: 'POST',
@@ -140,16 +123,17 @@ form.addEventListener('submit', async function (e) {
         email: document.getElementById('email').value.trim(),
         password: document.getElementById('password').value,
       }),
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
 
-    // ⭐ Read as text first, then try to parse as JSON
+    // Read as text first — protects against HTML error pages
     const raw = await res.text();
     let data;
     try {
       data = JSON.parse(raw);
     } catch {
-      // Server returned non-JSON (probably an HTML error page)
-      throw new Error('Server error — please try again in a moment.');
+      throw new Error("Service temporarily unavailable. Please try again.");
     }
 
     if (!res.ok || !data.success) {
@@ -162,8 +146,12 @@ form.addEventListener('submit', async function (e) {
     window.location.href = '/dashboard';
 
   } catch (err) {
-    // Show error in the alert box, reset button
-    errorBox.textContent = err.message;
+    clearTimeout(timeout);
+    const msg = err.name === 'AbortError'
+      ? 'Request timed out. Check your connection.'
+      : (err.message || 'Login failed');
+
+    errorBox.textContent = msg;
     errorBox.classList.remove('hidden');
 
     btn.disabled = false;

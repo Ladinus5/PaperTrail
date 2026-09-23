@@ -1,0 +1,164 @@
+<%
+  const defaults = {
+    primaryColor: "#000000",
+    accentColor: "#ffffff",
+    textColor: "#111111",
+    mutedColor: "#666666",
+    borderColor: "#dddddd",
+    logoUrl: null,
+    companyDisplayName: null,
+    showLogo: false,
+    showQR: false,
+    headerStyle: "compact",
+    fontFamily: "Courier Prime",
+    footerText: "Goods sold in good condition",
+    watermarkText: null,
+    showTaxBreakdown: false,
+    showPaymentMethod: true,
+  };
+  const s = { ...defaults, ...(settings || {}) };
+  const symbolMap = { NGN: "₦", USD: "$", GBP: "£", GHS: "₵" };
+  const sym = symbolMap[company.currency] || "₦";
+  const fmt = (n) => sym + Number(n || 0).toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const dateStr = new Date(receipt.createdAt).toLocaleString("en-NG", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+  const displayName = s.companyDisplayName || company.name;
+  const eqLine = "=".repeat(40);
+  const dashLine = "-".repeat(40);
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Receipt <%= receipt.receiptNumber %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      color: <%= s.textColor %>;
+      background: #ffffff;
+      margin: 0;
+      padding: 20px 16px;
+      font-size: 12px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .receipt { max-width: 340px; margin: 0 auto; }
+    .center { text-align: center; }
+    .line { text-align: center; overflow: hidden; white-space: nowrap; user-select: none; color: <%= s.mutedColor %>; letter-spacing: 1px; margin: 6px 0; font-size: 11px; }
+    .row { display: flex; justify-content: space-between; margin: 3px 0; }
+    .bold { font-weight: bold; }
+    .logo-circle {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: <%= s.textColor %>; color: #ffffff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: bold; font-size: 14px; margin-bottom: 6px;
+    }
+    .logo-img { height: 36px; width: auto; object-fit: contain; margin-bottom: 6px; }
+    .barcode { display: flex; align-items: stretch; gap: 1.5px; justify-content: center; height: 32px; margin-top: 8px; }
+    .barcode span { background: #000; }
+    .barcode span.w { background: #fff; }
+    .barcode-label { font-size: 10px; text-align: center; letter-spacing: 2px; color: <%= s.mutedColor %>; margin-top: 4px; }
+    .policy { font-size: 9px; text-align: center; color: <%= s.mutedColor %>; margin-top: 8px; }
+    .total-row { font-weight: bold; font-size: 14px; }
+    .total-row .amt { color: <%= s.primaryColor %>; }
+  </style>
+</head>
+<body>
+  <div class="receipt">
+
+    <div class="center">
+      <% if (s.showLogo && s.logoUrl) { %>
+        <img src="<%= s.logoUrl %>" alt="Logo" class="logo-img"/>
+      <% } else { %>
+        <div class="logo-circle"><%= displayName.charAt(0).toUpperCase() %></div>
+      <% } %>
+      <div class="bold" style="font-size:13px;"><%= displayName.toUpperCase() %></div>
+      <% if (company.address) { %><div style="font-size:10px; color:<%= s.mutedColor %>;"><%= company.address %></div><% } %>
+      <% if (company.phone) { %><div style="font-size:10px; color:<%= s.mutedColor %>;">TEL: <%= company.phone %></div><% } %>
+    </div>
+
+    <div class="line"><%= eqLine %></div>
+
+    <div class="row"><span>DATE</span><span><%= dateStr %></span></div>
+    <div class="row"><span>RECEIPT</span><span><%= receipt.receiptNumber %></span></div>
+    <% if (customer) { %>
+      <div class="row"><span>CUSTOMER</span><span><%= customer.name %></span></div>
+    <% } %>
+    <% if (s.showPaymentMethod) { %>
+      <div class="row"><span>PAYMENT</span><span><%= receipt.paymentMethod %></span></div>
+    <% } %>
+
+    <div class="line"><%= eqLine %></div>
+
+    <div class="row bold" style="font-size:11px;">
+      <span style="flex:2;">ITEM</span>
+      <span style="flex:0 0 30px; text-align:center;">QTY</span>
+      <span style="flex:1; text-align:right;">PRICE</span>
+      <span style="flex:1; text-align:right;">TOTAL</span>
+    </div>
+    <div class="line"><%= dashLine %></div>
+
+    <% items.forEach(item => { %>
+      <div class="row">
+        <span style="flex:2;"><%= item.name %></span>
+        <span style="flex:0 0 30px; text-align:center;"><%= item.quantity %></span>
+        <span style="flex:1; text-align:right;"><%= Number(item.unitPrice).toLocaleString() %></span>
+        <span style="flex:1; text-align:right;"><%= Number(item.total).toLocaleString() %></span>
+      </div>
+    <% }) %>
+
+    <div class="line"><%= dashLine %></div>
+
+    <div class="row"><span>SUBTOTAL</span><span><%= fmt(receipt.subtotal) %></span></div>
+    <% if (Number(receipt.discount) > 0) { %>
+      <div class="row"><span>DISCOUNT</span><span>-<%= fmt(receipt.discount) %></span></div>
+    <% } %>
+    <% if (s.showTaxBreakdown && Number(receipt.tax) > 0) { %>
+      <div class="row"><span>TAX</span><span><%= fmt(receipt.tax) %></span></div>
+    <% } %>
+
+    <div class="line"><%= eqLine %></div>
+
+    <div class="row total-row">
+      <span>TOTAL QTY: <%= items.reduce((s,i) => s + i.quantity, 0) %></span>
+      <span class="amt"><%= fmt(receipt.total) %></span>
+    </div>
+
+    <div class="row bold" style="margin-top:6px;">
+      <span>STATUS</span>
+      <span><%= receipt.paymentStatus %></span>
+    </div>
+
+    <% if (s.showQR) { %>
+      <div class="barcode">
+        <span style="width:2px;"></span><span class="w" style="width:1px;"></span>
+        <span style="width:3px;"></span><span class="w" style="width:1px;"></span>
+        <span style="width:1px;"></span><span class="w" style="width:2px;"></span>
+        <span style="width:4px;"></span><span class="w" style="width:1px;"></span>
+        <span style="width:2px;"></span><span class="w" style="width:3px;"></span>
+        <span style="width:1px;"></span><span class="w" style="width:1px;"></span>
+        <span style="width:3px;"></span><span class="w" style="width:2px;"></span>
+        <span style="width:1px;"></span><span class="w" style="width:1px;"></span>
+        <span style="width:4px;"></span><span class="w" style="width:2px;"></span>
+        <span style="width:2px;"></span><span class="w" style="width:1px;"></span>
+        <span style="width:3px;"></span><span class="w" style="width:2px;"></span>
+      </div>
+      <div class="barcode-label"><%= receipt.receiptNumber %></div>
+    <% } %>
+
+    <% if (receipt.notes) { %>
+      <div class="line"><%= dashLine %></div>
+      <div class="center" style="font-size:10px;">NOTES: <%= receipt.notes %></div>
+    <% } %>
+
+    <div class="line"><%= eqLine %></div>
+
+    <% if (s.footerText) { %>
+      <div class="policy"><%= s.footerText %></div>
+    <% } %>
+    <div class="policy">THANK YOU • PLEASE COME AGAIN</div>
+
+  </div>
+</body>
+</html>

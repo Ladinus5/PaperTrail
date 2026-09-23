@@ -38,8 +38,11 @@ model Company {
   ownerId String @unique
   owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
+  defaultTemplateId String?   @unique
+  defaultTemplate   ReceiptTemplate? @relation("DefaultTemplate", fields: [defaultTemplateId], references: [id], onDelete: SetNull)
+
   customers Customer[]
-  templates ReceiptTemplate[]
+  templates ReceiptTemplate[] @relation("CompanyTemplates")
   receipts  Receipt[]
 }
 
@@ -66,7 +69,9 @@ model ReceiptTemplate {
   updatedAt DateTime @updatedAt
 
   companyId String
-  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company   Company @relation("CompanyTemplates", fields: [companyId], references: [id], onDelete: Cascade)
+
+  defaultFor Company? @relation("DefaultTemplate")
 
   receipts Receipt[]
 }

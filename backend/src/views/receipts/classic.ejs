@@ -1,0 +1,120 @@
+<%
+  const defaults = {
+    primaryColor: "#1e293b",
+    accentColor: "#f8fafc",
+    textColor: "#191b22",
+    mutedColor: "#585f6c",
+    borderColor: "#c3c6d5",
+    logoUrl: null,
+    companyDisplayName: null,
+    showLogo: false,
+    showQR: false,
+    headerStyle: "centered",
+    fontFamily: "Courier Prime",
+    footerText: "Retain this receipt for your records",
+    watermarkText: null,
+    showTaxBreakdown: true,
+    showPaymentMethod: true,
+  };
+  const s = { ...defaults, ...(settings || {}) };
+  const symbolMap = { NGN: "₦", USD: "$", GBP: "£", GHS: "₵" };
+  const sym = symbolMap[company.currency] || "₦";
+  const fmt = (n) => sym + Number(n || 0).toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const dateStr = new Date(receipt.createdAt).toLocaleString("en-NG", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+  const displayName = s.companyDisplayName || company.name;
+  const dashLine = "- ".repeat(48);
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Receipt <%= receipt.receiptNumber %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      color: <%= s.textColor %>;
+      background: #ffffff;
+      margin: 0;
+      padding: 40px 32px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .container { max-width: 640px; margin: 0 auto; position: relative; }
+    .dashed { color: <%= s.borderColor %>; font-size: 11px; letter-spacing: 2px; text-align: center; overflow: hidden; white-space: nowrap; user-select: none; margin: 10px 0; }
+    .row { display: flex; justify-content: space-between; font-size: 12px; margin: 4px 0; }
+    .row.muted { color: <%= s.mutedColor %>; }
+    .total-row { border-top: 2px solid <%= s.primaryColor %>; padding-top: 8px; margin-top: 8px; font-size: 14px; font-weight: bold; }
+    .header-center { text-align: center; }
+    .header-center .name { font-size: 15px; font-weight: bold; letter-spacing: 3px; text-transform: uppercase; }
+    .header-center .meta { font-size: 10px; color: <%= s.mutedColor %>; margin-top: 2px; }
+    .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 110px; font-weight: 900; color: <%= s.primaryColor %>; opacity: 0.05; pointer-events: none; white-space: nowrap; z-index: 0; }
+    .content { position: relative; z-index: 1; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <% if (s.watermarkText) { %><div class="watermark"><%= s.watermarkText %></div><% } %>
+    <div class="content">
+
+      <div class="header-center">
+        <% if (s.showLogo && s.logoUrl) { %>
+          <img src="<%= s.logoUrl %>" alt="Logo" style="height:40px;width:auto;object-fit:contain;margin-bottom:8px;"/>
+        <% } %>
+        <div class="name">Receipt Voucher</div>
+        <div class="meta"><%= displayName.toUpperCase() %></div>
+        <% if (company.address) { %><div class="meta"><%= company.address %></div><% } %>
+        <% if (company.phone) { %><div class="meta">TEL: <%= company.phone %></div><% } %>
+      </div>
+
+      <div class="dashed"><%= dashLine %></div>
+
+      <div class="row muted"><span>SER NO: <%= receipt.receiptNumber %></span><span>DATE: <%= dateStr %></span></div>
+      <% if (customer) { %><div class="row muted"><span>CUSTOMER: <%= customer.name %></span><span>PHONE: <%= customer.phone || '-' %></span></div><% } %>
+      <% if (s.showPaymentMethod) { %><div class="row muted"><span>MODE: <%= receipt.paymentMethod %></span><span>STATUS: <%= receipt.paymentStatus %></span></div><% } %>
+
+      <div class="dashed"><%= dashLine %></div>
+
+      <div class="row" style="font-weight:bold; text-transform:uppercase;">
+        <span style="flex:2;">ITEM</span>
+        <span style="flex:1; text-align:center;">QTY</span>
+        <span style="flex:1; text-align:right;">PRICE</span>
+        <span style="flex:1; text-align:right;">TOTAL</span>
+      </div>
+
+      <% items.forEach(item => { %>
+        <div class="row">
+          <span style="flex:2;"><%= item.name %></span>
+          <span style="flex:1; text-align:center;"><%= item.quantity %></span>
+          <span style="flex:1; text-align:right;"><%= fmt(item.unitPrice) %></span>
+          <span style="flex:1; text-align:right;"><%= fmt(item.total) %></span>
+        </div>
+      <% }) %>
+
+      <div class="dashed"><%= dashLine %></div>
+
+      <div class="row muted"><span>SUBTOTAL</span><span><%= fmt(receipt.subtotal) %></span></div>
+      <% if (Number(receipt.discount) > 0) { %>
+        <div class="row muted"><span>DISCOUNT</span><span>-<%= fmt(receipt.discount) %></span></div>
+      <% } %>
+      <% if (s.showTaxBreakdown && Number(receipt.tax) > 0) { %>
+        <div class="row muted"><span>TAX</span><span><%= fmt(receipt.tax) %></span></div>
+      <% } %>
+      <div class="row total-row"><span>NET CLEARED</span><span style="color: <%= s.primaryColor %>;"><%= fmt(receipt.total) %></span></div>
+
+      <% if (receipt.notes) { %>
+        <div class="dashed"><%= dashLine %></div>
+        <div class="row muted" style="flex-direction:column;"><span>NOTES:</span><span><%= receipt.notes %></span></div>
+      <% } %>
+
+      <div class="dashed"><%= dashLine %></div>
+      <div class="header-center" style="margin-top:12px;">
+        <div style="font-size:10px;"><%= s.footerText || 'THANK YOU FOR YOUR PATRONAGE' %></div>
+        <div style="font-size:9px; color:<%= s.mutedColor %>; margin-top:6px;">RETAIN SLIP FOR STATUTORY TAX FILING</div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

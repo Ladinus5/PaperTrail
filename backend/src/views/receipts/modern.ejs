@@ -1,437 +1,246 @@
+<%
+  // Merge defaults with the template's settings
+  const defaults = {
+    primaryColor: "#004aad",
+    accentColor: "#f3f3fc",
+    textColor: "#191b22",
+    mutedColor: "#585f6c",
+    borderColor: "#c3c6d5",
+    logoUrl: null,
+    companyDisplayName: null,
+    showLogo: true,
+    showQR: true,
+    headerStyle: "bar",
+    fontFamily: "Inter",
+    footerText: "Thank you for your business",
+    watermarkText: null,
+    showTaxBreakdown: true,
+    showPaymentMethod: true,
+  };
+
+  const s = { ...defaults, ...(settings || {}) };
+
+  const symbolMap = { NGN: "₦", USD: "$", GBP: "£", GHS: "₵" };
+  const sym = symbolMap[company.currency] || "₦";
+
+  const fmt = (n) => sym + Number(n || 0).toLocaleString("en-NG", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  const dateStr = new Date(receipt.createdAt).toLocaleString("en-NG", {
+    year: "numeric", month: "short", day: "numeric",
+    hour: "2-digit", minute: "2-digit",
+  });
+
+  const displayName = s.companyDisplayName || company.name;
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        Receipt <%= receipt.receiptNumber %>
-    </title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 40px 20px;
-            background: #f5f7fa;
-            font-family: Arial, sans-serif;
-            color: #222;
-        }
-
-        .receipt {
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            gap: 30px;
-            padding-bottom: 25px;
-            border-bottom: 3px solid <%= settings.primaryColor || "#004AAD" %>;
-        }
-
-        .company-name {
-            font-size: 28px;
-            font-weight: 700;
-            color: <%= settings.primaryColor || "#004AAD" %>;
-            margin-bottom: 10px;
-        }
-
-        .company-details {
-            color: #666;
-            line-height: 1.6;
-            font-size: 14px;
-        }
-
-        .receipt-title {
-            text-align: right;
-        }
-
-        .receipt-title h1 {
-            margin: 0;
-            font-size: 32px;
-            color: <%= settings.primaryColor || "#004AAD" %>;
-        }
-
-        .receipt-number {
-            margin-top: 8px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .section {
-            margin-top: 30px;
-        }
-
-        .section-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #777;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .customer {
-            line-height: 1.6;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        th {
-            text-align: left;
-            padding: 12px 8px;
-            background: <%= settings.primaryColor || "#004AAD" %>;
-            color: white;
-            font-size: 13px;
-        }
-
-        td {
-            padding: 14px 8px;
-            border-bottom: 1px solid #eee;
-            font-size: 14px;
-        }
-
-        .right {
-            text-align: right;
-        }
-
-        .summary {
-            width: 320px;
-            margin-left: auto;
-            margin-top: 25px;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            color: #555;
-        }
-
-        .total {
-            margin-top: 10px;
-            padding-top: 15px;
-            border-top: 2px solid #ddd;
-            font-size: 20px;
-            font-weight: 700;
-            color: <%= settings.primaryColor || "#004AAD" %>;
-        }
-
-        .payment {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 7px 14px;
-            border-radius: 20px;
-            background: #e8f5e9;
-            color: #2e7d32;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            text-align: center;
-            color: #777;
-            font-size: 14px;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-
-            .receipt {
-                padding: 20px;
-            }
-
-            .header {
-                flex-direction: column;
-            }
-
-            .receipt-title {
-                text-align: left;
-            }
-
-            .summary {
-                width: 100%;
-            }
-
-            table {
-                font-size: 12px;
-            }
-        }
-
-        @media print {
-            body {
-                padding: 0;
-                background: white;
-            }
-
-            .receipt {
-                max-width: none;
-                box-shadow: none;
-                border-radius: 0;
-            }
-        }
-    </style>
+  <meta charset="UTF-8"/>
+  <title>Receipt <%= receipt.receiptNumber %></title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --primary: <%= s.primaryColor %>;
+      --accent: <%= s.accentColor %>;
+      --text: <%= s.textColor %>;
+      --muted: <%= s.mutedColor %>;
+      --border: <%= s.borderColor %>;
+      --font-family: <%= s.fontFamily %>, Inter, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: var(--font-family);
+      color: var(--text);
+      background: #ffffff;
+      margin: 0;
+      padding: 40px 32px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .receipt-container { max-width: 720px; margin: 0 auto; position: relative; }
+    .header-bar { height: 8px; background: var(--primary); border-radius: 999px; }
+    .primary-text { color: var(--primary); }
+    .primary-bg { background: var(--primary); color: #fff; }
+    .accent-bg { background: var(--accent); }
+    .muted-text { color: var(--muted); }
+    .border-line { border-color: var(--border); }
+    .total-row { border-top: 2px solid var(--primary); }
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-30deg);
+      font-size: 120px;
+      font-weight: 900;
+      color: var(--primary);
+      opacity: 0.06;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 0;
+    }
+    .content { position: relative; z-index: 1; }
+  </style>
 </head>
-
 <body>
-
-<div class="receipt">
-
-    <!-- HEADER -->
-    <div class="header">
-
-        <div>
-
-            <% if (settings.showLogo && company.logoUrl) { %>
-
-                <img
-                    src="<%= company.logoUrl %>"
-                    alt="<%= company.name %>"
-                    style="max-width: 180px; max-height: 70px; margin-bottom: 10px;"
-                >
-
-            <% } %>
-
-            <div class="company-name">
-                <%= company.name %>
-            </div>
-
-            <div class="company-details">
-
-                <% if (settings.showAddress && company.address) { %>
-                    <div><%= company.address %></div>
-                <% } %>
-
-                <% if (settings.showPhone && company.phone) { %>
-                    <div><%= company.phone %></div>
-                <% } %>
-
-                <% if (company.email) { %>
-                    <div><%= company.email %></div>
-                <% } %>
-
-                <% if (settings.showWebsite && company.website) { %>
-                    <div><%= company.website %></div>
-                <% } %>
-
-            </div>
-
-        </div>
-
-        <div class="receipt-title">
-
-            <h1>RECEIPT</h1>
-
-            <div class="receipt-number">
-                <strong>#<%= receipt.receiptNumber %></strong>
-            </div>
-
-            <div class="receipt-number">
-                <%= new Date(receipt.createdAt).toLocaleDateString() %>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- CUSTOMER -->
-    <div class="section">
-
-        <div class="section-title">
-            Bill To
-        </div>
-
-        <% if (customer) { %>
-
-            <div class="customer">
-
-                <strong>
-                    <%= customer.name %>
-                </strong>
-
-                <% if (customer.email) { %>
-                    <div><%= customer.email %></div>
-                <% } %>
-
-                <% if (customer.phone) { %>
-                    <div><%= customer.phone %></div>
-                <% } %>
-
-            </div>
-
-        <% } else { %>
-
-            <div class="customer">
-                Walk-in Customer
-            </div>
-
-        <% } %>
-
-    </div>
-
-
-    <!-- ITEMS -->
-    <div class="section">
-
-        <div class="section-title">
-            Items
-        </div>
-
-        <table>
-
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Qty</th>
-                    <th class="right">Unit Price</th>
-                    <th class="right">Total</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                <% items.forEach(item => { %>
-
-                    <tr>
-
-                        <td>
-                            <%= item.name %>
-                        </td>
-
-                        <td>
-                            <%= item.quantity %>
-                        </td>
-
-                        <td class="right">
-                            <%= company.currency %>
-                            <%= Number(item.unitPrice).toLocaleString() %>
-                        </td>
-
-                        <td class="right">
-                            <%= company.currency %>
-                            <%= Number(item.total).toLocaleString() %>
-                        </td>
-
-                    </tr>
-
-                <% }) %>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-
-    <!-- SUMMARY -->
-    <div class="summary">
-
-        <div class="summary-row">
-            <span>Subtotal</span>
-            <span>
-                <%= company.currency %>
-                <%= Number(receipt.subtotal).toLocaleString() %>
-            </span>
-        </div>
-
-        <div class="summary-row">
-            <span>Discount</span>
-            <span>
-                <%= company.currency %>
-                <%= Number(receipt.discount).toLocaleString() %>
-            </span>
-        </div>
-
-        <div class="summary-row">
-            <span>Tax</span>
-            <span>
-                <%= company.currency %>
-                <%= Number(receipt.tax).toLocaleString() %>
-            </span>
-        </div>
-
-        <div class="summary-row total">
-            <span>Total</span>
-            <span>
-                <%= company.currency %>
-                <%= Number(receipt.total).toLocaleString() %>
-            </span>
-        </div>
-
-    </div>
-
-
-    <!-- PAYMENT -->
-    <div class="section">
-
-        <div class="section-title">
-            Payment
-        </div>
-
-        <div>
-            Method:
-            <strong>
-                <%= receipt.paymentMethod %>
-            </strong>
-        </div>
-
-        <div class="payment">
-            <%= receipt.paymentStatus %>
-        </div>
-
-    </div>
-
-
-    <!-- NOTES -->
-    <% if (receipt.notes) { %>
-
-        <div class="section">
-
-            <div class="section-title">
-                Notes
-            </div>
-
-            <div>
-                <%= receipt.notes %>
-            </div>
-
-        </div>
-
+  <div class="receipt-container">
+    <% if (s.watermarkText) { %>
+      <div class="watermark"><%= s.watermarkText %></div>
     <% } %>
 
+    <div class="content">
+      <% if (s.headerStyle === "bar") { %>
+        <div class="header-bar mb-6"></div>
+      <% } %>
 
-    <!-- FOOTER -->
-    <div class="footer">
+      <!-- Header -->
+      <div class="flex justify-between items-start mb-8">
+        <div class="flex items-start gap-4">
+          <% if (s.showLogo && s.logoUrl) { %>
+            <img src="<%= s.logoUrl %>" alt="Logo" style="height:56px;width:auto;object-fit:contain;"/>
+          <% } else if (s.showLogo) { %>
+            <div class="w-12 h-12 rounded-lg primary-bg flex items-center justify-center text-2xl font-bold">
+              <%= displayName.charAt(0).toUpperCase() %>
+            </div>
+          <% } %>
+          <div>
+            <div class="text-xl font-bold primary-text"><%= displayName %></div>
+            <% if (company.address) { %>
+              <div class="text-xs muted-text mt-1 leading-relaxed whitespace-pre-line"><%= company.address %></div>
+            <% } %>
+            <% if (company.email) { %>
+              <div class="text-xs muted-text"><%= company.email %></div>
+            <% } %>
+            <% if (company.phone) { %>
+              <div class="text-xs muted-text"><%= company.phone %></div>
+            <% } %>
+            <% if (company.website) { %>
+              <div class="text-xs muted-text"><%= company.website %></div>
+            <% } %>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-2xl font-black primary-text tracking-tight">RECEIPT</div>
+          <div class="text-xs muted-text font-mono mt-1"><%= receipt.receiptNumber %></div>
+          <div class="text-xs muted-text mt-0.5"><%= dateStr %></div>
+          <div class="inline-block mt-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider
+            <%= receipt.paymentStatus === 'PAID' ? 'bg-[#dcfce7] text-[#15803d]' : 'bg-gray-100 text-gray-600' %>">
+            <%= receipt.paymentStatus %>
+          </div>
+        </div>
+      </div>
 
-        <%= settings.footerText || "Thank you for your business!" %>
+      <!-- Billed To -->
+      <div class="grid grid-cols-2 gap-6 mb-8">
+        <div>
+          <div class="text-[10px] font-bold uppercase tracking-wider muted-text mb-1">Billed To</div>
+          <% if (customer) { %>
+            <div class="font-semibold text-sm"><%= customer.name %></div>
+            <% if (customer.email) { %><div class="text-xs muted-text"><%= customer.email %></div><% } %>
+            <% if (customer.phone) { %><div class="text-xs muted-text"><%= customer.phone %></div><% } %>
+          <% } else { %>
+            <div class="font-semibold text-sm">Walk-in Customer</div>
+          <% } %>
+        </div>
+        <div class="text-right">
+          <div class="text-[10px] font-bold uppercase tracking-wider muted-text mb-1">Payment Method</div>
+          <% if (s.showPaymentMethod) { %>
+            <div class="font-medium text-sm"><%= receipt.paymentMethod %></div>
+          <% } %>
+        </div>
+      </div>
 
+      <!-- Items Table -->
+      <table class="w-full text-left border-collapse mb-6">
+        <thead>
+          <tr class="border-y border-line" style="border-color: var(--border);">
+            <th class="py-2 text-[10px] font-bold uppercase tracking-wider muted-text">Description</th>
+            <th class="py-2 text-[10px] font-bold uppercase tracking-wider muted-text text-center">Qty</th>
+            <th class="py-2 text-[10px] font-bold uppercase tracking-wider muted-text text-right">Unit Price</th>
+            <th class="py-2 text-[10px] font-bold uppercase tracking-wider muted-text text-right">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.forEach(item => { %>
+            <tr class="border-b" style="border-color: var(--border); opacity: 0.6;">
+              <td class="py-3 text-sm"><%= item.name %></td>
+              <td class="py-3 text-sm text-center muted-text"><%= item.quantity %></td>
+              <td class="py-3 text-sm text-right muted-text font-mono"><%= fmt(item.unitPrice) %></td>
+              <td class="py-3 text-sm text-right font-semibold font-mono"><%= fmt(item.total) %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <!-- Totals -->
+      <div class="flex justify-end mb-8">
+        <div class="w-full max-w-xs space-y-2">
+          <div class="flex justify-between text-sm muted-text">
+            <span>Subtotal</span>
+            <span class="font-mono"><%= fmt(receipt.subtotal) %></span>
+          </div>
+          <% if (Number(receipt.discount) > 0) { %>
+            <div class="flex justify-between text-sm muted-text">
+              <span>Discount</span>
+              <span class="font-mono">-<%= fmt(receipt.discount) %></span>
+            </div>
+          <% } %>
+          <% if (s.showTaxBreakdown && Number(receipt.tax) > 0) { %>
+            <div class="flex justify-between text-sm muted-text">
+              <span>Tax</span>
+              <span class="font-mono"><%= fmt(receipt.tax) %></span>
+            </div>
+          <% } %>
+          <div class="flex justify-between pt-3 total-row text-base font-bold" style="border-color: var(--primary);">
+            <span>Total</span>
+            <span class="primary-text font-mono"><%= fmt(receipt.total) %></span>
+          </div>
+        </div>
+      </div>
+
+      <% if (receipt.notes) { %>
+        <div class="accent-bg p-4 rounded-lg mb-6">
+          <div class="text-[10px] font-bold uppercase tracking-wider muted-text mb-1">Notes</div>
+          <div class="text-sm"><%= receipt.notes %></div>
+        </div>
+      <% } %>
+
+      <!-- Footer -->
+      <div class="pt-6 border-t text-center" style="border-color: var(--border);">
+        <% if (s.footerText) { %>
+          <div class="text-xs muted-text mb-3"><%= s.footerText %></div>
+        <% } %>
+        <% if (s.showQR) { %>
+          <div class="inline-block p-2 border rounded" style="border-color: var(--border);">
+            <svg viewBox="0 0 100 100" width="80" height="80">
+              <rect width="100" height="100" fill="white"/>
+              <rect x="5" y="5" width="30" height="30" fill="none" stroke="black" stroke-width="3"/>
+              <rect x="12" y="12" width="16" height="16" fill="black"/>
+              <rect x="65" y="5" width="30" height="30" fill="none" stroke="black" stroke-width="3"/>
+              <rect x="72" y="12" width="16" height="16" fill="black"/>
+              <rect x="5" y="65" width="30" height="30" fill="none" stroke="black" stroke-width="3"/>
+              <rect x="12" y="72" width="16" height="16" fill="black"/>
+              <rect x="45" y="15" width="5" height="5" fill="black"/>
+              <rect x="55" y="25" width="5" height="5" fill="black"/>
+              <rect x="45" y="45" width="5" height="5" fill="black"/>
+              <rect x="65" y="55" width="5" height="5" fill="black"/>
+              <rect x="75" y="45" width="5" height="5" fill="black"/>
+              <rect x="45" y="65" width="5" height="5" fill="black"/>
+              <rect x="65" y="75" width="5" height="5" fill="black"/>
+              <rect x="85" y="85" width="5" height="5" fill="black"/>
+            </svg>
+          </div>
+          <div class="text-[10px] muted-text mt-2">Scan to verify</div>
+        <% } %>
+        <div class="text-[10px] muted-text mt-3">Powered by Papertrail</div>
+      </div>
     </div>
-
-</div>
-
+  </div>
 </body>
 </html>

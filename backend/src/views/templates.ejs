@@ -17,12 +17,12 @@
         </div>
         <div class="flex flex-wrap items-center gap-sm">
           <button type="button"
-            class="inline-flex items-center gap-xs px-md py-sm rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-title-md text-title-md text-[14px] font-medium shadow-sm transition-all">
+            class="inline-flex items-center gap-xs px-md py-sm rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-title-md text-[14px] font-medium shadow-sm transition-all">
             <span class="material-symbols-outlined text-[18px]">visibility</span>
             <span>Live Preview</span>
           </button>
           <button type="button" id="create-template-btn"
-            class="inline-flex items-center gap-xs px-md py-sm rounded-xl bg-primary-container hover:bg-primary text-on-primary font-title-md text-title-md text-[14px] font-medium shadow-md transition-all">
+            class="inline-flex items-center gap-xs px-md py-sm rounded-xl bg-primary-container hover:bg-primary text-on-primary font-title-md text-[14px] font-medium shadow-md transition-all">
             <span class="material-symbols-outlined text-[18px]">add_circle</span>
             <span>+ Create Custom Template</span>
           </button>
@@ -30,6 +30,12 @@
       </div>
 
       <!-- Brand Palette Bar -->
+      <%
+        const defaultTpl = templates.find(t => t.isDefault) || templates[0];
+        const defaultSettings = defaultTpl?.settings || {};
+        const brandColor = defaultSettings.primaryColor || '#004aad';
+        const sym = ({ NGN: '₦', USD: '$', GBP: '£', GHS: '₵' })[company.currency] || '₦';
+      %>
       <div class="bg-surface-container-lowest rounded-xl shadow-sm p-md sm:p-lg flex flex-col gap-lg relative overflow-hidden">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-sm">
           <div class="flex items-center gap-sm">
@@ -38,12 +44,12 @@
             </div>
             <div>
               <h2 class="font-title-md text-title-md text-on-surface font-semibold text-[16px]">Global Brand Preset</h2>
-              <p class="font-label-md text-label-md text-on-surface-variant">Changes applied here dynamically populate all receipt drafts and downloads</p>
+              <p class="font-label-md text-label-md text-on-surface-variant">Changes applied here update your default template instantly</p>
             </div>
           </div>
           <span class="inline-flex items-center gap-xs px-sm py-xs rounded-full bg-surface-container-low text-on-surface-variant font-label-md text-label-md">
             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            Sync Active (Nigeria Workspace)
+            Sync Active
           </span>
         </div>
 
@@ -51,16 +57,16 @@
           <!-- Logo -->
           <div class="flex items-center gap-md p-md bg-surface-container-low rounded-xl">
             <div class="relative group cursor-pointer w-14 h-14 rounded-xl bg-surface-container-lowest flex items-center justify-center shadow-sm overflow-hidden flex-shrink-0">
-              <img class="w-10 h-10 object-contain" alt="Brand logo"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdFC1uDNezorp1tybFIBjh1uxSoERxTHmas6eTEXtR8ZOGW2SjP_xA0Kk6PHAtxiuZQLlnQQOqXQ8iAdC061m4jrG556hMKJVhNKtXLcoEWgsIssr92nUTLN4V47uBk4PbhRUc2HfUnlYgy7IUwbXQWr-bgCy35P2UkeX8uDlRp0glL8XqEqWyFQgsg_rMFDg6Ww31SFf7N2yVaxGEJXh_Eqgc6Ona1kI0tVbBCfIBu9Vi37NGZw"/>
-              <div class="absolute inset-0 bg-primary/70 opacity-0 group-hover:opacity-100 flex items-center justify-center text-on-primary transition-opacity">
-                <span class="material-symbols-outlined text-[18px]">upload</span>
-              </div>
+              <% if (defaultSettings.logoUrl) { %>
+                <img class="w-10 h-10 object-contain" alt="Brand logo" src="<%= defaultSettings.logoUrl %>"/>
+              <% } else { %>
+                <span class="material-symbols-outlined text-[28px] text-primary">business</span>
+              <% } %>
             </div>
             <div class="flex flex-col min-w-0">
               <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Business Logo</span>
-              <span class="font-title-md text-title-md text-[14px] text-on-surface font-medium truncate">papertrail-mark.svg</span>
-              <span class="font-label-md text-label-md text-primary hover:underline cursor-pointer">Replace PNG/SVG</span>
+              <span class="font-title-md text-title-md text-[14px] text-on-surface font-medium truncate"><%= defaultSettings.logoUrl ? 'Uploaded' : 'Not set' %></span>
+              <span class="font-label-md text-label-md text-primary hover:underline cursor-pointer" id="changeLogoBtn">Change logo</span>
             </div>
           </div>
 
@@ -68,20 +74,24 @@
           <div class="flex flex-col justify-center p-md bg-surface-container-low rounded-xl gap-xs">
             <div class="flex items-center justify-between">
               <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Brand Color</span>
-              <span class="font-code-md text-code-md text-[12px] text-primary font-semibold">#004AAD</span>
+              <span class="font-code-md text-code-md text-[12px] text-primary font-semibold" id="brandColorHex"><%= brandColor.toUpperCase() %></span>
             </div>
             <div class="flex items-center gap-xs pt-xs flex-wrap">
-              <button type="button" aria-label="Sapphire" class="w-7 h-7 rounded-full bg-[#004aad] shadow-sm flex items-center justify-center ring-2 ring-primary ring-offset-2 ring-offset-surface">
-                <span class="material-symbols-outlined text-[14px] text-on-primary">check</span>
-              </button>
-              <button type="button" aria-label="Indigo" class="w-7 h-7 rounded-full bg-[#002b66] hover:scale-105 transition-transform"></button>
-              <button type="button" aria-label="Teal" class="w-7 h-7 rounded-full bg-[#00685f] hover:scale-105 transition-transform"></button>
-              <button type="button" aria-label="Charcoal" class="w-7 h-7 rounded-full bg-[#1e293b] hover:scale-105 transition-transform"></button>
-              <button type="button" aria-label="Amber" class="w-7 h-7 rounded-full bg-[#8e3100] hover:scale-105 transition-transform"></button>
+              <% const swatches = ['#004aad', '#002b66', '#00685f', '#1e293b', '#8e3100']; %>
+              <% swatches.forEach(c => { %>
+                <button type="button" data-color-swatch="<%= c %>"
+                  aria-label="<%= c %>"
+                  class="w-7 h-7 rounded-full shadow-sm hover:scale-105 transition-transform flex items-center justify-center <%= brandColor.toLowerCase() === c.toLowerCase() ? 'ring-2 ring-primary ring-offset-2 ring-offset-surface' : '' %>"
+                  style="background: <%= c %>;">
+                  <% if (brandColor.toLowerCase() === c.toLowerCase()) { %>
+                    <span class="material-symbols-outlined text-[14px] text-white">check</span>
+                  <% } %>
+                </button>
+              <% }) %>
               <div class="w-px h-5 bg-outline-variant/50 mx-xs"></div>
               <label class="cursor-pointer p-xs rounded-lg hover:bg-surface-container-high transition-colors flex items-center" title="Custom Hex">
                 <span class="material-symbols-outlined text-[18px] text-on-surface-variant">colorize</span>
-                <input class="sr-only" type="color" value="#004AAD"/>
+                <input class="sr-only" type="color" id="customColorInput" value="<%= brandColor %>"/>
               </label>
             </div>
           </div>
@@ -90,12 +100,12 @@
           <div class="flex items-center justify-between p-md bg-surface-container-low rounded-xl">
             <div class="flex flex-col min-w-0 pr-xs">
               <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Entity Header</span>
-              <span class="font-title-md text-title-md text-[14px] text-on-surface font-medium truncate">Papertrail Inc.</span>
-              <span class="font-label-md text-label-md text-secondary truncate">Victoria Island, Lagos</span>
+              <span class="font-title-md text-title-md text-[14px] text-on-surface font-medium truncate"><%= company.name %></span>
+              <span class="font-label-md text-label-md text-secondary truncate"><%= company.address || '—' %></span>
             </div>
-            <button type="button" class="p-xs hover:bg-surface-container-high rounded-lg text-primary transition-colors flex-shrink-0" title="Edit">
+            <a href="/settings" class="p-xs hover:bg-surface-container-high rounded-lg text-primary transition-colors flex-shrink-0" title="Edit">
               <span class="material-symbols-outlined text-[18px]">edit</span>
-            </button>
+            </a>
           </div>
 
           <!-- Currency -->
@@ -103,319 +113,269 @@
             <div class="flex flex-col">
               <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Default Currency</span>
               <div class="flex items-center gap-xs mt-xs">
-                <span class="font-headline-md text-headline-md text-[18px] font-bold text-primary">₦</span>
-                <span class="font-title-md text-title-md text-[14px] font-medium text-on-surface">NGN (Naira)</span>
+                <span class="font-headline-md text-[18px] font-bold text-primary"><%= sym %></span>
+                <span class="font-title-md text-[14px] font-medium text-on-surface"><%= company.currency %> Naira</span>
               </div>
             </div>
-            <span class="material-symbols-outlined text-[20px] text-on-surface-variant">expand_more</span>
           </div>
         </div>
       </div>
 
       <!-- Gallery Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-xl">
+        <% if (templates.length === 0) { %>
+          <div class="lg:col-span-2 p-xl text-center bg-surface-container-lowest rounded-xl border border-outline-variant/40">
+            <span class="material-symbols-outlined text-[48px] text-on-surface-variant/40 mb-sm block">style</span>
+            <p class="text-body-md text-on-surface-variant">No templates yet.</p>
+          </div>
+        <% } else { %>
 
-        <!-- Card 1: Modern -->
-        <div class="bg-surface-container-lowest rounded-xl shadow-md p-md sm:p-lg flex flex-col justify-between group transition-all">
-          <div class="flex flex-col gap-md">
-            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-sm">
-              <div class="flex flex-col">
-                <div class="flex items-center gap-xs flex-wrap">
-                  <h3 class="font-headline-md text-headline-md text-[20px] text-on-surface font-bold">Modern Corporate</h3>
-                  <span class="inline-flex items-center gap-xs px-xs py-0.5 rounded-full bg-primary/10 text-primary font-label-md text-label-md font-semibold">
-                    <span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Default • Active
-                  </span>
-                </div>
-                <p class="font-body-md text-body-md text-on-surface-variant text-[13px] mt-xs">
-                  Structured column hierarchy with bold colored headers, tax itemization, and verified WhatsApp QR link.
-                </p>
-              </div>
-              <span class="inline-block px-sm py-xs rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md font-medium whitespace-nowrap self-start">
-                Best for WhatsApp &amp; B2B
-              </span>
-            </div>
+          <% templates.forEach(t => { %>
+            <%
+              const st = t.settings || {};
+              const tColor = st.primaryColor || '#004aad';
+              const isDefault = t.isDefault;
+              const badgeLabel = ({
+                modern: 'Best for WhatsApp & B2B',
+                classic: 'Best for Accounting & Audit',
+                minimal: 'Best for Digital Delivery',
+                thermal: 'Best for In-Store Retail'
+              })[t.type] || 'Custom';
+              const tagLabel = ({
+                modern: 'Modern',
+                classic: 'Archival',
+                minimal: 'Digital Pure',
+                thermal: 'POS Print Ready'
+              })[t.type] || 'Custom';
+            %>
+            <div class="template-card bg-surface-container-lowest rounded-xl p-md sm:p-lg flex flex-col justify-between group transition-all
+              <%= isDefault ? 'ring-2 ring-primary-container shadow-md' : 'shadow-sm hover:shadow-md' %>"
+              data-template-id="<%= t.id %>">
 
-            <!-- Preview: Modern -->
-            <div class="w-full bg-surface-container-low rounded-xl p-xs sm:p-md shadow-inner flex justify-center">
-              <div class="w-full max-w-sm bg-surface-container-lowest rounded-lg shadow-md p-md flex flex-col gap-sm relative overflow-hidden">
-                <div class="h-1.5 bg-primary absolute top-0 left-0 right-0"></div>
-                <div class="flex justify-between items-start pt-xs">
+              <div class="flex flex-col gap-md">
+                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-sm">
                   <div class="flex flex-col">
-                    <span class="font-headline-md text-headline-md text-[15px] font-bold text-primary tracking-tight">PAPERTRAIL LTD</span>
-                    <span class="font-label-md text-label-md text-[10px] text-secondary">RC: 1948502 • TIN: 23940192-001</span>
-                    <span class="font-label-md text-label-md text-[10px] text-on-surface-variant">Lagos, Nigeria</span>
-                  </div>
-                  <div class="flex flex-col items-end">
-                    <span class="font-code-md text-code-md text-[11px] font-semibold text-on-surface">#PPT-2025-0921</span>
-                    <span class="font-label-md text-label-md text-[10px] text-secondary">24 Oct 2025, 14:32</span>
-                    <span class="mt-xs inline-block px-1.5 py-0.5 rounded text-[9px] font-bold uppercase bg-emerald-100 text-emerald-800 tracking-wider">PAID IN FULL</span>
-                  </div>
-                </div>
-
-                <div class="flex flex-col gap-xs mt-xs bg-surface-container-lowest">
-                  <div class="grid grid-cols-12 text-[10px] font-semibold text-secondary uppercase pb-xs bg-surface-container-low px-xs rounded">
-                    <span class="col-span-6">Description</span>
-                    <span class="col-span-2 text-center">Qty</span>
-                    <span class="col-span-4 text-right">Amount (₦)</span>
-                  </div>
-                  <div class="grid grid-cols-12 text-[11px] text-on-surface px-xs py-0.5">
-                    <span class="col-span-6 font-medium truncate">Cloud Infra Advisory</span>
-                    <span class="col-span-2 text-center text-secondary">1</span>
-                    <span class="col-span-4 text-right font-code-md font-medium">185,000.00</span>
-                  </div>
-                  <div class="grid grid-cols-12 text-[11px] text-on-surface px-xs py-0.5">
-                    <span class="col-span-6 font-medium truncate">API Token Quota (50k)</span>
-                    <span class="col-span-2 text-center text-secondary">2</span>
-                    <span class="col-span-4 text-right font-code-md font-medium">30,000.00</span>
-                  </div>
-                </div>
-
-                <div class="flex flex-col gap-xs pt-xs bg-surface-container-low/50 p-xs rounded">
-                  <div class="flex justify-between text-[10px] text-secondary">
-                    <span>Subtotal</span>
-                    <span class="font-code-md">₦215,000.00</span>
-                  </div>
-                  <div class="flex justify-between text-[10px] text-secondary">
-                    <span>VAT (7.5%)</span>
-                    <span class="font-code-md">₦16,125.00</span>
-                  </div>
-                  <div class="flex justify-between text-[12px] font-bold text-on-surface pt-xs">
-                    <span>Total Due</span>
-                    <span class="text-primary font-code-md">₦231,125.00</span>
-                  </div>
-                </div>
-
-                <div class="flex items-center justify-between pt-xs">
-                  <div class="flex items-center gap-xs">
-                    <svg class="w-8 h-8 text-on-surface" fill="currentColor" viewBox="0 0 32 32">
-                      <rect fill="none" height="10" stroke="currentColor" stroke-width="2" width="10" x="2" y="2"></rect>
-                      <rect height="4" width="4" x="5" y="5"></rect>
-                      <rect fill="none" height="10" stroke="currentColor" stroke-width="2" width="10" x="20" y="2"></rect>
-                      <rect height="4" width="4" x="23" y="5"></rect>
-                      <rect fill="none" height="10" stroke="currentColor" stroke-width="2" width="10" x="2" y="20"></rect>
-                      <rect height="4" width="4" x="5" y="23"></rect>
-                      <rect height="6" width="2" x="15" y="4"></rect>
-                      <rect height="4" width="4" x="14" y="14"></rect>
-                      <rect height="2" width="6" x="22" y="16"></rect>
-                      <rect height="4" width="4" x="20" y="22"></rect>
-                      <rect height="4" width="4" x="14" y="24"></rect>
-                    </svg>
-                    <div class="flex flex-col">
-                      <span class="text-[9px] font-semibold text-on-surface">Scan to verify</span>
-                      <span class="text-[8px] text-secondary">Instant settlement link</span>
+                    <div class="flex items-center gap-xs flex-wrap">
+                      <h3 class="font-headline-md text-[20px] text-on-surface font-bold"><%= t.name %></h3>
+                      <% if (isDefault) { %>
+                        <span class="inline-flex items-center gap-xs px-xs py-0.5 rounded-full bg-primary/10 text-primary font-label-md font-semibold">
+                          <span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Default • Active
+                        </span>
+                      <% } else { %>
+                        <span class="inline-flex items-center px-xs py-0.5 rounded-full bg-surface-container text-secondary font-label-md"><%= tagLabel %></span>
+                      <% } %>
                     </div>
+                    <p class="font-body-md text-on-surface-variant text-[13px] mt-xs">
+                      <%= ({
+                        modern: 'Structured column hierarchy with bold colored headers, tax itemization, and verified QR link.',
+                        classic: 'Traditional voucher aesthetic with dotted accounting divider lines and monospaced indexing.',
+                        minimal: 'Restrained typography and high contrast whitespace. Tailored for mobile and WhatsApp.',
+                        thermal: 'Condensed thermal roll slip layout with barcode simulation and exchange policy.'
+                      })[t.type] || 'Custom template.' %>
+                    </p>
                   </div>
-                  <span class="text-[9px] text-secondary font-medium">Powered by Papertrail</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex items-center justify-between pt-md flex-wrap gap-xs">
-            <span class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs">
-              <span class="material-symbols-outlined text-[16px] text-emerald-600">verified</span>
-              Current Default
-            </span>
-            <div class="flex items-center gap-xs">
-              <button type="button" class="px-md py-xs rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-title-md text-[13px] font-medium transition-colors">Preview Sample</button>
-              <button type="button" class="px-md py-xs rounded-xl bg-primary-container hover:bg-primary text-on-primary font-title-md text-[13px] font-medium transition-colors">Edit Template</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 2: Classic -->
-        <div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md p-md sm:p-lg flex flex-col justify-between group transition-all">
-          <div class="flex flex-col gap-md">
-            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-sm">
-              <div class="flex flex-col">
-                <div class="flex items-center gap-xs flex-wrap">
-                  <h3 class="font-headline-md text-headline-md text-[20px] text-on-surface font-bold">Classic Ledger</h3>
-                  <span class="inline-flex items-center px-xs py-0.5 rounded-full bg-surface-container text-secondary font-label-md text-label-md">Archival</span>
-                </div>
-                <p class="font-body-md text-body-md text-on-surface-variant text-[13px] mt-xs">
-                  Traditional voucher aesthetic with dotted accounting divider lines and monospaced serial indexing.
-                </p>
-              </div>
-              <span class="inline-block px-sm py-xs rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md font-medium whitespace-nowrap self-start">
-                Best for Accounting &amp; Audit
-              </span>
-            </div>
-
-            <div class="w-full bg-surface-container-low rounded-xl p-xs sm:p-md shadow-inner flex justify-center">
-              <div class="w-full max-w-sm bg-surface-container-lowest rounded shadow-md p-md flex flex-col gap-xs font-code-md text-on-surface">
-                <div class="text-center flex flex-col items-center">
-                  <span class="text-[13px] font-bold uppercase tracking-widest">RECEIPT VOUCHER</span>
-                  <span class="text-[11px] text-secondary">PAPERTRAIL TECHCORP HQ</span>
-                  <span class="text-[9px] text-on-surface-variant">Plot 4B, Admiralty Way, Lekki Phase 1</span>
-                </div>
-                <div class="py-xs text-center text-[10px] text-secondary tracking-widest select-none overflow-hidden whitespace-nowrap">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</div>
-                <div class="flex justify-between text-[10px] text-secondary">
-                  <span>SER NO: 00982741</span>
-                  <span>DATE: 2025-10-24 11:15</span>
-                </div>
-                <div class="flex justify-between text-[10px] text-secondary">
-                  <span>CASHIER: POS_04 (Louis)</span>
-                  <span>MODE: Bank Transfer</span>
-                </div>
-                <div class="py-xs text-center text-[10px] text-secondary tracking-widest select-none overflow-hidden whitespace-nowrap">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</div>
-                <div class="flex flex-col gap-xs text-[11px]">
-                  <div class="flex justify-between"><span>1x Premium Enterprise Tier</span><span class="font-semibold">₦450,000.00</span></div>
-                  <div class="flex justify-between"><span>1x Setup &amp; Custom Onboarding</span><span class="font-semibold">₦75,000.00</span></div>
-                </div>
-                <div class="py-xs text-center text-[10px] text-secondary tracking-widest select-none overflow-hidden whitespace-nowrap">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</div>
-                <div class="flex flex-col gap-0.5 text-[11px]">
-                  <div class="flex justify-between text-secondary"><span>SUBTOTAL</span><span>₦525,000.00</span></div>
-                  <div class="flex justify-between text-secondary"><span>WHT DEDUCT (5%)</span><span>-₦26,250.00</span></div>
-                  <div class="flex justify-between text-[13px] font-bold text-on-surface pt-xs"><span>NET CLEARED</span><span class="text-primary">₦498,750.00</span></div>
-                </div>
-                <div class="mt-xs pt-xs text-center flex flex-col text-[9px] text-secondary">
-                  <span>THANK YOU FOR YOUR PATRONAGE</span>
-                  <span>RETAIN SLIP FOR STATUTORY TAX FILING</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex items-center justify-between pt-md flex-wrap gap-xs">
-            <button type="button" class="font-label-md text-label-md text-primary font-semibold hover:underline">Customize Styles</button>
-            <div class="flex items-center gap-xs">
-              <button type="button" class="px-md py-xs rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-title-md text-[13px] font-medium transition-colors">Preview Sample</button>
-              <button type="button" class="set-default-btn px-md py-xs rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-title-md text-[13px] font-medium shadow-sm transition-colors">Set as Default</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 3: Minimal -->
-        <div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md p-md sm:p-lg flex flex-col justify-between group transition-all">
-          <div class="flex flex-col gap-md">
-            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-sm">
-              <div class="flex flex-col">
-                <div class="flex items-center gap-xs flex-wrap">
-                  <h3 class="font-headline-md text-headline-md text-[20px] text-on-surface font-bold">Minimalist Clean</h3>
-                  <span class="inline-flex items-center px-xs py-0.5 rounded-full bg-surface-container text-secondary font-label-md text-label-md">Digital Pure</span>
-                </div>
-                <p class="font-body-md text-body-md text-on-surface-variant text-[13px] mt-xs">
-                  Restrained typography and high contrast whitespace. Tailored for mobile screens and WhatsApp chat bubbles.
-                </p>
-              </div>
-              <span class="inline-block px-sm py-xs rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md font-medium whitespace-nowrap self-start">
-                Best for Digital Delivery
-              </span>
-            </div>
-
-            <div class="w-full bg-surface-container-low rounded-xl p-xs sm:p-md shadow-inner flex justify-center">
-              <div class="w-full max-w-sm bg-surface-container-lowest rounded-lg shadow-md p-lg flex flex-col justify-between">
-                <div class="flex flex-col gap-xs">
-                  <div class="flex justify-between items-baseline">
-                    <span class="font-display-lg text-[22px] font-bold tracking-tight text-on-surface">Papertrail</span>
-                    <span class="font-label-md text-label-md text-secondary">#6704</span>
-                  </div>
-                  <span class="font-label-md text-label-md text-secondary">Receipt for Olumide Adeleke</span>
-                </div>
-                <div class="my-md flex flex-col gap-sm">
-                  <div class="flex justify-between items-baseline">
-                    <span class="text-[13px] text-on-surface">Design System Kit (Enterprise)</span>
-                    <span class="font-code-md text-[13px] font-medium text-on-surface">₦95,000</span>
-                  </div>
-                  <div class="flex justify-between items-baseline">
-                    <span class="text-[13px] text-on-surface">Typography Licenses x 3</span>
-                    <span class="font-code-md text-[13px] font-medium text-on-surface">₦42,000</span>
-                  </div>
-                </div>
-                <div class="pt-sm bg-surface-container-low/40 p-sm rounded-lg flex flex-col gap-xs">
-                  <span class="text-[10px] text-secondary uppercase tracking-wider font-semibold">Total Paid</span>
-                  <span class="font-headline-lg text-[28px] font-bold text-on-surface leading-tight">₦137,000<span class="text-[14px] text-secondary font-normal">.00</span></span>
-                  <span class="text-[10px] text-emerald-600 font-medium flex items-center gap-xs pt-xs">
-                    <span class="material-symbols-outlined text-[14px]">check_circle</span>
-                    Settled via NIBSS Instant Payment
+                  <span class="inline-block px-sm py-xs rounded-full bg-surface-container text-on-surface-variant font-label-md font-medium whitespace-nowrap self-start">
+                    <%= badgeLabel %>
                   </span>
                 </div>
-                <div class="mt-md text-[10px] text-on-surface-variant flex justify-between items-center">
-                  <span>Oct 24, 2025</span>
-                  <span>receipt.papertrail.co/r/6704</span>
+
+                <!-- Preview thumbnail — distinct per type -->
+                <div class="w-full bg-surface-container-low rounded-xl p-xs sm:p-md shadow-inner flex justify-center min-h-[260px] items-center">
+
+                  <% if (t.type === 'modern') { %>
+                    <!-- Modern: bold colored header bar, clean table -->
+                    <div class="w-full max-w-sm bg-white rounded-lg shadow-md p-md flex flex-col gap-sm relative overflow-hidden" style="border-top: 5px solid <%= tColor %>;">
+                      <div class="flex justify-between items-start">
+                        <div class="flex flex-col">
+                          <span class="font-bold text-[15px] tracking-tight" style="color: <%= tColor %>;"><%= company.name.toUpperCase() %></span>
+                          <span class="text-[9px] text-gray-500">RC: 1948502 • TIN: 23940192-001</span>
+                          <span class="text-[9px] text-gray-500">Lagos, Nigeria</span>
+                        </div>
+                        <div class="flex flex-col items-end">
+                          <span class="font-mono text-[10px] font-semibold text-gray-800">REC-000042</span>
+                          <span class="text-[9px] text-gray-400">24 Oct 2025</span>
+                          <span class="mt-1 inline-block px-1.5 py-0.5 rounded text-[8px] font-bold uppercase bg-emerald-100 text-emerald-800">PAID</span>
+                        </div>
+                      </div>
+                      <div class="border-t border-gray-200 pt-2">
+                        <div class="grid grid-cols-12 text-[9px] font-semibold text-gray-500 uppercase pb-1">
+                          <span class="col-span-6">Description</span>
+                          <span class="col-span-2 text-center">Qty</span>
+                          <span class="col-span-4 text-right">Amount</span>
+                        </div>
+                        <div class="grid grid-cols-12 text-[10px] text-gray-800 py-0.5">
+                          <span class="col-span-6">Cloud Advisory</span>
+                          <span class="col-span-2 text-center text-gray-500">1</span>
+                          <span class="col-span-4 text-right font-mono">185,000.00</span>
+                        </div>
+                        <div class="grid grid-cols-12 text-[10px] text-gray-800 py-0.5">
+                          <span class="col-span-6">API Quota</span>
+                          <span class="col-span-2 text-center text-gray-500">2</span>
+                          <span class="col-span-4 text-right font-mono">30,000.00</span>
+                        </div>
+                      </div>
+                      <div class="flex justify-between text-[11px] font-bold pt-1 border-t-2" style="border-color: <%= tColor %>;">
+                        <span>Total Due</span>
+                        <span class="font-mono" style="color: <%= tColor %>;"><%= sym %>231,125.00</span>
+                      </div>
+                    </div>
+
+                  <% } else if (t.type === 'classic') { %>
+                    <!-- Classic: monospace voucher with dashed lines -->
+                    <div class="w-full max-w-sm bg-white rounded shadow-md p-md flex flex-col gap-1 font-mono text-gray-800">
+                      <div class="text-center flex flex-col items-center">
+                        <span class="text-[12px] font-bold uppercase tracking-widest">RECEIPT VOUCHER</span>
+                        <span class="text-[9px] text-gray-500"><%= company.name.toUpperCase() %></span>
+                        <span class="text-[8px] text-gray-400">Lagos, Nigeria</span>
+                      </div>
+                      <div class="py-1 text-center text-[8px] text-gray-400 tracking-widest whitespace-nowrap overflow-hidden">- - - - - - - - - - - - - - - - - - - - - - -</div>
+                      <div class="flex justify-between text-[8px] text-gray-500">
+                        <span>SER NO: 00982741</span>
+                        <span>DATE: 2025-10-24</span>
+                      </div>
+                      <div class="flex justify-between text-[8px] text-gray-500">
+                        <span>CASHIER: POS_04</span>
+                        <span>MODE: Transfer</span>
+                      </div>
+                      <div class="py-1 text-center text-[8px] text-gray-400 tracking-widest whitespace-nowrap overflow-hidden">- - - - - - - - - - - - - - - - - - - - - - -</div>
+                      <div class="flex justify-between text-[10px]">
+                        <span>1x Enterprise Tier</span>
+                        <span class="font-semibold">450,000.00</span>
+                      </div>
+                      <div class="flex justify-between text-[10px]">
+                        <span>1x Setup</span>
+                        <span class="font-semibold">75,000.00</span>
+                      </div>
+                      <div class="py-1 text-center text-[8px] text-gray-400 tracking-widest whitespace-nowrap overflow-hidden">- - - - - - - - - - - - - - - - - - - - - - -</div>
+                      <div class="flex justify-between text-[9px] text-gray-500">
+                        <span>SUBTOTAL</span>
+                        <span>525,000.00</span>
+                      </div>
+                      <div class="flex justify-between text-[9px] text-gray-500">
+                        <span>WHT 5%</span>
+                        <span>-26,250.00</span>
+                      </div>
+                      <div class="flex justify-between text-[11px] font-bold pt-1">
+                        <span>NET CLEARED</span>
+                        <span style="color: <%= tColor %>;"><%= sym %>498,750.00</span>
+                      </div>
+                      <div class="mt-1 pt-1 text-center text-[7px] text-gray-400">
+                        <div>THANK YOU FOR YOUR PATRONAGE</div>
+                        <div>RETAIN SLIP FOR TAX FILING</div>
+                      </div>
+                    </div>
+
+                  <% } else if (t.type === 'minimal') { %>
+                    <!-- Minimal: big numbers, lots of whitespace -->
+                    <div class="w-full max-w-sm bg-white rounded-lg shadow-md p-lg flex flex-col justify-between">
+                      <div class="flex justify-between items-baseline">
+                        <span class="text-[22px] font-bold tracking-tight text-gray-900"><%= company.name %></span>
+                        <span class="text-[9px] text-gray-400">#6704</span>
+                      </div>
+                      <div class="text-[10px] text-gray-400 mt-0.5">Receipt for Olumide A.</div>
+                      <div class="my-3 flex flex-col gap-2">
+                        <div class="flex justify-between items-baseline">
+                          <span class="text-[12px] text-gray-700">Design System Kit</span>
+                          <span class="font-mono text-[12px] text-gray-900"><%= sym %>95,000</span>
+                        </div>
+                        <div class="flex justify-between items-baseline">
+                          <span class="text-[12px] text-gray-700">Type Licenses x3</span>
+                          <span class="font-mono text-[12px] text-gray-900"><%= sym %>42,000</span>
+                        </div>
+                      </div>
+                      <div class="pt-2 bg-gray-50 p-2 rounded-lg">
+                        <span class="text-[9px] text-gray-500 uppercase tracking-wider font-semibold">Total Paid</span>
+                        <div class="text-[26px] font-bold leading-tight" style="color: <%= tColor %>;">
+                          <%= sym %>137,000<span class="text-[12px] text-gray-400 font-normal">.00</span>
+                        </div>
+                        <span class="text-[9px] text-emerald-600 font-medium flex items-center gap-1 pt-1">
+                          <span class="material-symbols-outlined text-[12px]">check_circle</span>
+                          Settled via transfer
+                        </span>
+                      </div>
+                      <div class="mt-3 text-[9px] text-gray-400 flex justify-between">
+                        <span>Oct 24, 2025</span>
+                        <span>papertrail.co/r/6704</span>
+                      </div>
+                    </div>
+
+                  <% } else if (t.type === 'thermal') { %>
+                    <!-- Thermal: narrow roll receipt -->
+                    <div class="w-full max-w-[260px] bg-white shadow-md p-md flex flex-col gap-1 font-mono text-gray-800 rounded-sm">
+                      <div class="flex flex-col items-center text-center">
+                        <div class="w-6 h-6 rounded-full bg-gray-900 text-white flex items-center justify-center font-bold text-[11px] mb-1">P</div>
+                        <span class="font-bold text-[11px]"><%= company.name.toUpperCase() %></span>
+                        <span class="text-[8px] text-gray-500">PALMS SHOPPING MALL</span>
+                        <span class="text-[8px] text-gray-500">TEL: 08012345678</span>
+                      </div>
+                      <div class="py-1 text-center text-[8px] text-gray-400 tracking-widest whitespace-nowrap overflow-hidden">================================</div>
+                      <div class="flex flex-col text-[9px]">
+                        <div class="flex justify-between font-bold"><span>ITEM</span><span>PRICE</span></div>
+                        <div class="flex justify-between pt-0.5"><span>Espresso 1KG</span><span>14,500</span></div>
+                        <div class="flex justify-between pt-0.5"><span>Oat Milk 1L x2</span><span>6,800</span></div>
+                        <div class="flex justify-between pt-0.5"><span>Bagel Box</span><span>5,200</span></div>
+                      </div>
+                      <div class="py-1 text-center text-[8px] text-gray-400 tracking-widest whitespace-nowrap overflow-hidden">--------------------------------</div>
+                      <div class="flex justify-between text-[10px] font-bold">
+                        <span>TOTAL QTY: 4</span>
+                        <span class="text-[12px]" style="color: <%= tColor %>;"><%= sym %>26,500</span>
+                      </div>
+                      <div class="pt-1 flex flex-col items-center gap-1">
+                        <div class="h-7 w-40 flex items-stretch gap-[1.5px] justify-center">
+                          <span class="w-[2px] bg-black"></span><span class="w-[1px] bg-white"></span>
+                          <span class="w-[3px] bg-black"></span><span class="w-[1px] bg-white"></span>
+                          <span class="w-[1px] bg-black"></span><span class="w-[2px] bg-white"></span>
+                          <span class="w-[4px] bg-black"></span><span class="w-[1px] bg-white"></span>
+                          <span class="w-[2px] bg-black"></span><span class="w-[3px] bg-white"></span>
+                          <span class="w-[3px] bg-black"></span><span class="w-[1px] bg-white"></span>
+                          <span class="w-[4px] bg-black"></span><span class="w-[2px] bg-white"></span>
+                          <span class="w-[2px] bg-black"></span><span class="w-[1px] bg-white"></span>
+                          <span class="w-[3px] bg-black"></span>
+                        </div>
+                        <span class="text-[8px] tracking-widest text-gray-500">TRX-9940124801</span>
+                      </div>
+                    </div>
+
+                  <% } else { %>
+                    <!-- Fallback for custom template types -->
+                    <div class="w-full max-w-sm bg-white rounded-lg shadow-md p-md" style="border-top: 4px solid <%= tColor %>;">
+                      <div class="text-[13px] font-bold" style="color: <%= tColor %>;"><%= t.name %></div>
+                      <div class="text-[9px] text-gray-500 mt-1">Custom template preview</div>
+                    </div>
+                  <% } %>
+
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-md flex-wrap gap-xs">
+                <% if (isDefault) { %>
+                  <span class="font-label-md text-on-surface-variant flex items-center gap-xs">
+                    <span class="material-symbols-outlined text-[16px] text-emerald-600">verified</span>
+                    Current Default
+                  </span>
+                <% } else { %>
+                  <button type="button" class="set-default-btn font-label-md text-primary font-semibold hover:underline"
+                    data-id="<%= t.id %>">
+                    Set as Default
+                  </button>
+                <% } %>
+                <div class="flex items-center gap-xs">
+                  <a href="/r/template/<%= t.id %>" target="_blank"
+                     class="px-md py-xs rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-title-md text-[13px] font-medium transition-colors">
+                    Preview
+                  </a>
+                  <% if (isDefault) { %>
+                    <a href="/receipts/new"
+                       class="px-md py-xs rounded-xl bg-primary-container hover:bg-primary text-on-primary font-title-md text-[13px] font-medium transition-colors">
+                      Use Template
+                    </a>
+                  <% } %>
                 </div>
               </div>
             </div>
-          </div>
+          <% }) %>
 
-          <div class="flex items-center justify-between pt-md flex-wrap gap-xs">
-            <button type="button" class="font-label-md text-label-md text-primary font-semibold hover:underline">Customize Styles</button>
-            <div class="flex items-center gap-xs">
-              <button type="button" class="px-md py-xs rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-title-md text-[13px] font-medium transition-colors">Preview Sample</button>
-              <button type="button" class="set-default-btn px-md py-xs rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-title-md text-[13px] font-medium shadow-sm transition-colors">Set as Default</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4: Retail & Thermal -->
-        <div class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md p-md sm:p-lg flex flex-col justify-between group transition-all">
-          <div class="flex flex-col gap-md">
-            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-sm">
-              <div class="flex flex-col">
-                <div class="flex items-center gap-xs flex-wrap">
-                  <h3 class="font-headline-md text-headline-md text-[20px] text-on-surface font-bold">Retail &amp; Thermal 80mm</h3>
-                  <span class="inline-flex items-center px-xs py-0.5 rounded-full bg-surface-container text-secondary font-label-md text-label-md">POS Print Ready</span>
-                </div>
-                <p class="font-body-md text-body-md text-on-surface-variant text-[13px] mt-xs">
-                  Condensed thermal roll slip layout featuring Code-128 barcode simulation and exchange policy clauses.
-                </p>
-              </div>
-              <span class="inline-block px-sm py-xs rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md font-medium whitespace-nowrap self-start">
-                Best for In-Store Retail
-              </span>
-            </div>
-
-            <div class="w-full bg-surface-container-low rounded-xl p-xs sm:p-md shadow-inner flex justify-center">
-              <div class="w-full max-w-[280px] bg-surface-container-lowest shadow-md p-md flex flex-col gap-xs font-code-md text-on-surface rounded-sm relative">
-                <div class="flex flex-col items-center text-center">
-                  <div class="w-8 h-8 rounded-full bg-on-surface text-surface-container-lowest flex items-center justify-center font-bold text-sm mb-xs">P</div>
-                  <span class="font-bold text-[13px]">PAPERTRAIL STORE #01</span>
-                  <span class="text-[9px] text-secondary">PALMS SHOPPING MALL, ONIRU</span>
-                  <span class="text-[9px] text-secondary">TEL: 08012345678</span>
-                </div>
-                <div class="py-xs text-center text-[10px] text-secondary tracking-widest select-none overflow-hidden whitespace-nowrap">================================</div>
-                <div class="flex flex-col text-[10px]">
-                  <div class="flex justify-between font-bold"><span>ITEM</span><span>PRICE</span></div>
-                  <div class="flex justify-between pt-0.5"><span class="truncate">Espresso Roast 1KG</span><span>14,500</span></div>
-                  <div class="flex justify-between pt-0.5"><span class="truncate">Oat Milk Barista 1L x2</span><span>6,800</span></div>
-                  <div class="flex justify-between pt-0.5"><span class="truncate">Pastry Bagel Box</span><span>5,200</span></div>
-                </div>
-                <div class="py-xs text-center text-[10px] text-secondary tracking-widest select-none overflow-hidden whitespace-nowrap">--------------------------------</div>
-                <div class="flex flex-col text-[11px] font-bold">
-                  <div class="flex justify-between"><span>TOTAL QTY: 4</span><span class="text-sm">₦26,500.00</span></div>
-                  <div class="flex justify-between text-[9px] font-normal text-secondary mt-xs"><span>TENDER: CARD VISA (***9102)</span><span>AUTH: OK_889</span></div>
-                </div>
-                <div class="mt-xs pt-xs flex flex-col items-center gap-xs">
-                  <div class="h-9 w-44 flex items-stretch gap-[1.5px] justify-center overflow-hidden">
-                    <span class="w-[2px] bg-black"></span><span class="w-[1px] bg-white"></span>
-                    <span class="w-[3px] bg-black"></span><span class="w-[1px] bg-white"></span>
-                    <span class="w-[1px] bg-black"></span><span class="w-[2px] bg-white"></span>
-                    <span class="w-[4px] bg-black"></span><span class="w-[1px] bg-white"></span>
-                    <span class="w-[2px] bg-black"></span><span class="w-[3px] bg-white"></span>
-                    <span class="w-[1px] bg-black"></span><span class="w-[1px] bg-white"></span>
-                    <span class="w-[3px] bg-black"></span><span class="w-[2px] bg-white"></span>
-                    <span class="w-[1px] bg-black"></span><span class="w-[1px] bg-white"></span>
-                    <span class="w-[4px] bg-black"></span><span class="w-[2px] bg-white"></span>
-                    <span class="w-[2px] bg-black"></span><span class="w-[1px] bg-white"></span>
-                    <span class="w-[3px] bg-black"></span><span class="w-[2px] bg-white"></span>
-                    <span class="w-[1px] bg-black"></span><span class="w-[1px] bg-white"></span>
-                    <span class="w-[2px] bg-black"></span>
-                  </div>
-                  <span class="text-[9px] tracking-widest text-secondary font-code-md">TRX-9940124801</span>
-                  <span class="text-[8px] text-secondary text-center">Goods received in sound condition. 7 days exchange with receipt slip.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex items-center justify-between pt-md flex-wrap gap-xs">
-            <button type="button" class="font-label-md text-label-md text-primary font-semibold hover:underline">Thermal Setup (80mm / 58mm)</button>
-            <div class="flex items-center gap-xs">
-              <button type="button" class="px-md py-xs rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface font-title-md text-[13px] font-medium transition-colors">Preview Sample</button>
-              <button type="button" class="set-default-btn px-md py-xs rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-title-md text-[13px] font-medium shadow-sm transition-colors">Set as Default</button>
-            </div>
-          </div>
-        </div>
+        <% } %>
       </div>
 
       <!-- Custom Template Banner -->
@@ -426,21 +386,10 @@
             <span class="material-symbols-outlined text-[28px]">design_services</span>
           </div>
           <div class="flex flex-col gap-xs">
-            <h3 class="font-headline-md text-headline-md text-on-surface font-bold text-[20px]">Need a fully custom layout or multi-page invoice?</h3>
-            <p class="font-body-md text-body-md text-on-surface-variant max-w-xl">
-              Our visual drag-and-drop template designer allows custom CSS, regulatory VAT compliance tags for FIRS, watermarking, and dynamic custom field bindings.
+            <h3 class="font-headline-md text-[20px] text-on-surface font-bold">Need a fully custom layout?</h3>
+            <p class="font-body-md text-on-surface-variant max-w-xl">
+              Our visual designer allows custom CSS, regulatory VAT compliance tags, watermarking, and dynamic custom field bindings.
             </p>
-            <div class="flex flex-wrap items-center gap-md mt-xs">
-              <span class="font-label-md text-label-md text-secondary flex items-center gap-xs">
-                <span class="material-symbols-outlined text-[16px] text-primary">check_circle</span> Raw HTML/CSS Import
-              </span>
-              <span class="font-label-md text-label-md text-secondary flex items-center gap-xs">
-                <span class="material-symbols-outlined text-[16px] text-primary">check_circle</span> Dynamic JSON Variables
-              </span>
-              <span class="font-label-md text-label-md text-secondary flex items-center gap-xs">
-                <span class="material-symbols-outlined text-[16px] text-primary">check_circle</span> Multi-Currency Formats
-              </span>
-            </div>
           </div>
         </div>
         <div class="flex flex-wrap items-center gap-sm z-10 flex-shrink-0 w-full md:w-auto">
@@ -457,20 +406,83 @@
 </main>
 
 <script>
+  const DEFAULT_TEMPLATE_ID = '<%= defaultTpl?.id || "" %>';
+
   document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.set-default-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = e.currentTarget.dataset.id;
+        if (!id) return;
+        const orig = e.currentTarget.textContent;
+        e.currentTarget.disabled = true;
+        e.currentTarget.textContent = 'Setting...';
+        try {
+          const res = await fetch(`/api/templates/${id}/set-default`, {
+            method: 'POST',
+            credentials: 'include',
+          });
+          const data = await res.json();
+          if (!res.ok || !data.success) throw new Error(data.message || 'Failed');
+          window.location.reload();
+        } catch (err) {
+          alert(err.message);
+          e.currentTarget.disabled = false;
+          e.currentTarget.textContent = orig;
+        }
+      });
+    });
+
+    async function updateColor(color) {
+      if (!DEFAULT_TEMPLATE_ID || !color) return;
+      try {
+        const res = await fetch(`/api/templates/${DEFAULT_TEMPLATE_ID}/settings`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ settings: { primaryColor: color } }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) throw new Error(data.message || 'Failed');
+        window.location.reload();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    document.querySelectorAll('[data-color-swatch]').forEach(btn => {
+      btn.addEventListener('click', () => updateColor(btn.dataset.colorSwatch));
+    });
+
+    const customInput = document.getElementById('customColorInput');
+    if (customInput) {
+      customInput.addEventListener('change', (e) => updateColor(e.target.value));
+    }
+
     const createBtn = document.getElementById('create-template-btn');
     if (createBtn) {
       createBtn.addEventListener('click', () => {
-        alert('Launching Template Designer workspace with active brand tokens...');
+        alert('Custom template builder coming soon. For now, pick one of the built-in templates.');
       });
     }
 
-    document.querySelectorAll('.set-default-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const card = e.target.closest('.rounded-xl');
-        const title = card ? card.querySelector('h3').innerText : 'Template';
-        alert(`'${title}' set as default receipt layout for subsequent sales!`);
+    const logoBtn = document.getElementById('changeLogoBtn');
+    if (logoBtn) {
+      logoBtn.addEventListener('click', () => {
+        const url = prompt('Paste a hosted logo URL (PNG/SVG):');
+        if (!url || !DEFAULT_TEMPLATE_ID) return;
+        fetch(`/api/templates/${DEFAULT_TEMPLATE_ID}/settings`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ settings: { logoUrl: url } }),
+        })
+          .then(r => r.json())
+          .then(d => {
+            if (d.success) window.location.reload();
+            else alert(d.message || 'Failed');
+          })
+          .catch(err => alert(err.message));
       });
-    });
+    }
   });
 </script>

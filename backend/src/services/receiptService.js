@@ -68,13 +68,19 @@ const createReceipt = async ({
         throw new Error("Receipt total cannot be negative");
     }
 
-    // 6. Generate receipt number using company prefix
+    // 6. Fetch company (prefix + default template)
     const company = await prisma.company.findUnique({
         where: { id: companyId },
-        select: { receiptPrefix: true },
+        select: {
+            receiptPrefix: true,
+            defaultTemplateId: true,     // ⭐ added
+        },
     });
-    const prefix = company?.receiptPrefix || "REC";
 
+    const prefix = company?.receiptPrefix || "REC";
+    const defaultTemplateId = company?.defaultTemplateId || null;   // ⭐ added
+
+    // 7. Generate next receipt number
     const lastReceipt = await prisma.receipt.findFirst({
         where: { companyId },
         orderBy: { createdAt: "desc" },
@@ -89,10 +95,10 @@ const createReceipt = async ({
         }
     }
 
-    // 7. Public token
+    // 8. Public token
     const publicToken = crypto.randomBytes(32).toString("hex");
 
-    // 8. Create receipt + items (nested create is atomic)
+    // 9. Create receipt + items (nested create is atomic)
     const receipt = await prisma.receipt.create({
         data: {
             receiptNumber: nextNumber,
@@ -100,6 +106,8 @@ const createReceipt = async ({
 
             companyId,
             customerId: customer ? customer.id : null,
+
+            templateId: defaultTemplateId,     // ⭐ attach default template
 
             subtotal,
             discount: discountAmount,
@@ -115,6 +123,7 @@ const createReceipt = async ({
         include: {
             customer: true,
             items: true,
+            template: true,                    // ⭐ include for the response
         },
     });
 
@@ -155,7 +164,7 @@ const getReceipts = async (companyId) => {
 const getReceipt = async (companyId, receiptId) => {
     const receipt = await prisma.receipt.findFirst({
         where: { id: receiptId, companyId },
-        include: { customer: true, items: true, company: true },
+        include: { customer: true, items: true, company: true, template: true },
     });
     if (!receipt) throw new Error("Receipt not found");
     return receipt;

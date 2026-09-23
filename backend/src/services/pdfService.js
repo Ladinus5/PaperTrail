@@ -49,9 +49,12 @@ const generateReceiptPdf = async (html, receiptNumber) => {
         const page = await browser.newPage();
 
         await page.setContent(html, {
-            waitUntil: "domcontentloaded",
-            timeout: 30000,
+        waitUntil: "networkidle0",
+        timeout: 30000,
         });
+
+        // Give fonts + images an extra moment
+        await page.evaluateHandle("document.fonts.ready");
 
         const pdfBuffer = await page.pdf({
             format: "A4",

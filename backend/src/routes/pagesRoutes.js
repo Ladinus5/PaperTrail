@@ -35,27 +35,19 @@ router.get("/signup", (req, res) => {
 // ---- Protected pages ----
 router.get("/dashboard", protectPage, async (req, res, next) => {
   try {
-    const userId = req.user.id;
-    const companyId = req.user.companyId;
+    const companyId = req.user.company.id;   // ⭐ fixed
 
     const [totalSales, receiptCount, customerCount, recentReceipts] = await Promise.all([
-      // Sum of all receipt totals
       prisma.receipt.aggregate({
         where: { companyId },
         _sum: { total: true },
       }),
-
-      // Count of receipts
       prisma.receipt.count({
         where: { companyId },
       }),
-
-      // Count of customers
       prisma.customer.count({
         where: { companyId },
       }),
-
-      // Last 5 receipts with customer info
       prisma.receipt.findMany({
         where: { companyId },
         orderBy: { createdAt: "desc" },
@@ -64,7 +56,6 @@ router.get("/dashboard", protectPage, async (req, res, next) => {
       }),
     ]);
 
-    // Greeting based on server time
     const hour = new Date().getHours();
     const greeting =
       hour < 12 ? "Good morning" :
@@ -219,12 +210,75 @@ router.get("/customers", protectPage, async (req, res, next) => {
   }
 });
 
-router.get("/templates", protectPage, (req, res) => {
-  res.render("templates", {
-    title: "Templates",
-    activePage: "templates",
-    layout: "layouts/main",
-  });
+router.get("/templates", protectPage, async (req, res, next) => {
+  try {
+    const companyId = req.user.company.id;
+
+    const [templates, company] = await Promise.all([
+      prisma.receiptTemplate.findMany({
+        where: { companyId },
+        orderBy: { createdAt: "asc" },
+      }),
+      prisma.company.findUnique({
+        where: { id: companyId },
+      }),
+    ]);
+
+    res.render("templates", {
+      title: "Templates",
+      activePage: "templates",
+      layout: "layouts/main",
+      templates: templates.map(t => ({
+        ...t,
+        isDefault: t.id === company.defaultTemplateId,
+      })),
+      company,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Add to pagesRoutes.js (or a dedicated route file)
+router.get("/r/template/:templateId", protectPage, async (req, res, next) => {
+  try {
+    const companyId = req.user.company.id;
+    const template = await prisma.receiptTemplate.findFirst({
+      where: { id: req.params.templateId, companyId },
+    });
+    if (!template) return res.status(404).send("Template not found");
+
+    const fakeReceipt = {
+      receiptNumber: "PREVIEW-0001",
+      subtotal: 1000,
+      discount: 0,
+      tax: 0,
+      total: 1000,
+      paymentMethod: "Bank Transfer",
+      paymentStatus: "PAID",
+      notes: null,
+      createdAt: new Date(),
+      publicToken: "preview",
+    };
+    const fakeCustomer = { name: "Sample Customer", email: "sample@example.com", phone: "08012345678" };
+    const fakeItems = [
+      { name: "Sample Item", quantity: 1, unitPrice: 1000, total: 1000 },
+      { name: "Second Item", quantity: 2, unitPrice: 500, total: 1000 },
+    ];
+
+    const type = template.type || "modern";
+    res.render(`receipts/${type}`, {
+      receipt: fakeReceipt,
+      company: req.user.company,
+      customer: fakeCustomer,
+      items: fakeItems,
+      template: { name: template.name, type: template.type, settings: template.settings || {} },
+      settings: template.settings || {},
+      layout: false,          // ⭐ receipt view has its own <html>
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.get("/settings", protectPage, (req, res) => {

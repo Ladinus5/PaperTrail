@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
 const prisma = require("../config/database");
 
-const registerUser = async ({ name, email, password }) => {
+const registerUser = async ({ name, email, password, company }) => {
     const existingUser = await prisma.user.findUnique({
         where: { email },
     });
@@ -18,17 +18,79 @@ const registerUser = async ({ name, email, password }) => {
             name,
             email,
             passwordHash,
-
             company: {
                 create: {
-                    name: `${name}'s Company`,
+                    name: company?.trim() || `${name}'s Company`,
+                    templates: {
+                        create: [
+                            {
+                                name: "Modern Corporate",
+                                type: "modern",
+                                settings: {
+                                    primaryColor: "#004aad",
+                                    accentColor: "#f3f3fc",
+                                    headerStyle: "bar",
+                                    fontFamily: "Inter",
+                                    showLogo: true,
+                                    showQR: true,
+                                    footerText: "Thank you for your business",
+                                },
+                            },
+                            {
+                                name: "Classic Ledger",
+                                type: "classic",
+                                settings: {
+                                    primaryColor: "#1e293b",
+                                    accentColor: "#f8fafc",
+                                    headerStyle: "centered",
+                                    fontFamily: "Courier Prime",
+                                    showLogo: false,
+                                    showQR: false,
+                                    footerText: "Retain this receipt for your records",
+                                },
+                            },
+                            {
+                                name: "Minimalist Clean",
+                                type: "minimal",
+                                settings: {
+                                    primaryColor: "#0f172a",
+                                    accentColor: "#ffffff",
+                                    headerStyle: "simple",
+                                    fontFamily: "Inter",
+                                    showLogo: true,
+                                    showQR: true,
+                                    footerText: "",
+                                },
+                            },
+                            {
+                                name: "Retail Thermal",
+                                type: "thermal",
+                                settings: {
+                                    primaryColor: "#000000",
+                                    accentColor: "#ffffff",
+                                    headerStyle: "compact",
+                                    fontFamily: "Courier Prime",
+                                    showLogo: false,
+                                    showQR: false,
+                                    footerText: "Goods sold in good condition",
+                                },
+                            },
+                        ],
+                    },
                 },
             },
         },
-
         include: {
-            company: true,
+            company: {
+                include: { templates: true },
+            },
         },
+    });
+
+    // Set the first template as default
+    await prisma.company.update({
+        where: { id: user.company.id },
+        data: { defaultTemplateId: user.company.templates[0].id },
     });
 
     const token = generateToken(user.id);
