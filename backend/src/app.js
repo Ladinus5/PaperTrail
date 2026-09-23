@@ -13,6 +13,7 @@ const customerRoutes = require("./routes/customerRoutes");
 const receiptRoutes = require("./routes/receiptRoutes");
 const publicReceiptRoutes = require("./routes/publicReceiptRoutes");
 const templateRoutes = require("./routes/templateRoutes");
+const companyRoutes = require("./routes/companyRoutes")
 const { formatCurrency, timeAgo } = require("./utils/format");
 
 const app = express();
@@ -53,6 +54,7 @@ app.use("/api/customers", customerRoutes);
 app.use("/api/receipts", receiptRoutes);
 app.use("/api/public/receipts", publicReceiptRoutes);
 app.use("/api/templates", templateRoutes);
+app.use("/api/company", companyRoutes);
 
 // Logout — clears cookie, redirects
 app.get("/logout", (req, res) => {

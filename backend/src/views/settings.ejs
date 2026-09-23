@@ -8,135 +8,98 @@
           <div class="flex items-center gap-sm">
             <span class="font-label-md text-label-md uppercase tracking-wider text-primary font-semibold">Workspace Settings</span>
             <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-            <span class="font-code-md text-code-md text-on-surface-variant">v2.4.1</span>
+            <span class="font-code-md text-code-md text-on-surface-variant"></span>
           </div>
           <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight text-[24px] sm:text-[32px]">Settings</h1>
-          <p class="font-body-md text-body-md text-on-surface-variant text-[13px] sm:text-[14px]">Manage your business profile, receipt defaults, tax preferences, and WhatsApp notifications.</p>
+          <p class="font-body-md text-body-md text-on-surface-variant text-[13px] sm:text-[14px]">Manage your business profile, receipt defaults, and preferences.</p>
         </div>
         <div class="flex items-center gap-sm self-start md:self-auto bg-surface-container-low px-md py-xs rounded-full">
-          <span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
-          <span class="font-label-md text-label-md text-on-surface-variant" id="autosave-indicator">Last saved 2 minutes ago</span>
+          <span class="w-2 h-2 rounded-full bg-primary-container" id="autosave-dot"></span>
+          <span class="font-label-md text-label-md text-on-surface-variant" id="autosave-indicator">Ready</span>
         </div>
       </div>
 
       <!-- Tabs -->
       <div class="bg-surface-container p-xs rounded-xl flex items-center gap-xs overflow-x-auto whitespace-nowrap">
-        <button type="button" class="tab-btn active-tab flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-title-md text-title-md text-[13px] sm:text-[14px] font-medium bg-surface-container-lowest text-on-surface shadow-sm transition-all shrink-0" data-tab="profile">
+        <button type="button" class="tab-btn active-tab flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-title-md text-[13px] sm:text-[14px] font-medium bg-surface-container-lowest text-on-surface shadow-sm transition-all shrink-0" data-tab="profile">
           <span class="material-symbols-outlined text-[18px] text-primary">storefront</span>
           <span>Business Profile</span>
         </button>
-        <button type="button" class="tab-btn flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-body-md text-body-md text-[13px] sm:text-[14px] text-on-surface-variant hover:text-on-surface transition-all shrink-0" data-tab="receipts">
+        <button type="button" class="tab-btn flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-body-md text-[13px] sm:text-[14px] text-on-surface-variant hover:text-on-surface transition-all shrink-0" data-tab="receipts">
           <span class="material-symbols-outlined text-[18px]">receipt_long</span>
           <span>Receipt Preferences</span>
         </button>
-        <button type="button" class="tab-btn flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-body-md text-body-md text-[13px] sm:text-[14px] text-on-surface-variant hover:text-on-surface transition-all shrink-0" data-tab="whatsapp">
+        <button type="button" class="tab-btn flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-body-md text-[13px] sm:text-[14px] text-on-surface-variant hover:text-on-surface transition-all shrink-0" data-tab="coming-soon">
           <span class="material-symbols-outlined text-[18px]">chat</span>
           <span>WhatsApp &amp; Delivery</span>
-        </button>
-        <button type="button" class="tab-btn flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-body-md text-body-md text-[13px] sm:text-[14px] text-on-surface-variant hover:text-on-surface transition-all shrink-0" data-tab="team">
-          <span class="material-symbols-outlined text-[18px]">shield_person</span>
-          <span>Team &amp; Security</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] bg-secondary-container text-on-secondary-container font-semibold">Soon</span>
         </button>
       </div>
 
-      <form class="flex flex-col gap-xl sm:gap-2xl" id="settings-form">
+      <form class="flex flex-col gap-xl" id="settings-form">
+
+        <div id="settings-error" class="hidden p-md rounded-xl bg-error-container text-on-error-container font-body-md"></div>
 
         <!-- SECTION 1: Business Profile -->
         <section class="flex flex-col gap-md sm:gap-lg" id="section-business">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div class="flex flex-col">
               <span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">01. Identity &amp; Legal</span>
-              <h2 class="font-headline-md text-headline-md text-on-surface text-[20px] sm:text-[24px]">Business Information</h2>
+              <h2 class="font-headline-md text-on-surface text-[20px] sm:text-[24px]">Business Information</h2>
             </div>
             <span class="font-label-md text-label-md px-sm py-xs rounded-lg bg-surface-container-high text-on-surface-variant font-medium self-start sm:self-auto">Public in Receipts</span>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-md sm:gap-lg">
-            <!-- Logo Card -->
-            <div class="lg:col-span-4 bg-surface-container-lowest p-md sm:p-lg rounded-xl flex flex-col justify-between shadow-sm relative overflow-hidden group">
+          <div class="bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col gap-md">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+              <div class="flex flex-col gap-xs md:col-span-2">
+                <label class="font-label-md text-label-md text-on-surface-variant" for="biz_name">Registered Business Name</label>
+                <input id="biz_name" name="name" type="text"
+                  class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
+                  value="<%= company.name || '' %>"/>
+              </div>
+
               <div class="flex flex-col gap-xs">
-                <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Brand Identity</label>
-                <span class="font-title-md text-title-md text-on-surface font-medium">Logo &amp; Watermark</span>
-                <p class="font-body-md text-body-md text-on-surface-variant text-[13px]">Shown on PDF receipts, dynamic URLs, and WhatsApp headers.</p>
+                <label class="font-label-md text-label-md text-on-surface-variant" for="biz_email">Official Billing Email</label>
+                <input id="biz_email" name="email" type="email"
+                  class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
+                  value="<%= company.email || '' %>"/>
               </div>
 
-              <div class="my-md sm:my-lg flex flex-col items-center justify-center p-md sm:p-lg rounded-xl bg-surface-container-low text-center cursor-pointer hover:bg-surface-container transition-colors">
-                <div class="relative w-20 h-20 sm:w-24 sm:h-24 mb-md rounded-xl overflow-hidden bg-surface-container-lowest flex items-center justify-center shadow-sm">
-                  <img class="w-full h-full object-cover" alt="Brand logo"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkgndcYpMXI2bf6UdldnLHnDnfgFo0VVXhJ0rx1csccwtztx_K_MVQHcpodPWlAi198fn_99pIsgMPL4VQTO_FZ5LP8VzfA8XV-O_RAF5SioFZJLHQZ0-MkJG0Y1yg9xhS72Ia9_IYNrtslgQv6LPnXya86VZlcUE7NBt3G-N-fNR3AypaDWGPwm0Jq39WiV1CMszdhHySmGG94RJx5Hh3W8qZKsBgmKNCiYxULMRwJkVY_cEwwA"/>
-                  <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                    <span class="material-symbols-outlined text-on-primary">photo_camera</span>
-                  </div>
-                </div>
-                <span class="font-title-md text-title-md text-[14px] text-on-surface font-medium">Papertrail / Louis Enterprise</span>
-                <span class="font-label-md text-label-md text-on-surface-variant mt-xs">Click to upload SVG, PNG (max 2MB)</span>
+              <div class="flex flex-col gap-xs">
+                <label class="font-label-md text-label-md text-on-surface-variant" for="biz_phone">Customer Support Phone</label>
+                <input id="biz_phone" name="phone" type="tel"
+                  class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
+                  value="<%= company.phone || '' %>"/>
               </div>
 
-              <div class="flex items-center justify-between pt-sm">
-                <span class="font-label-md text-label-md text-on-surface-variant">Recommended: 512x512px</span>
-                <button type="button" class="text-error font-label-md text-label-md hover:underline">Remove</button>
+              <div class="flex flex-col gap-xs md:col-span-2">
+                <label class="font-label-md text-label-md text-on-surface-variant" for="biz_addr">Physical Store / Headquarters Address</label>
+                <input id="biz_addr" name="address" type="text"
+                  class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
+                  value="<%= company.address || '' %>"/>
               </div>
-            </div>
 
-            <!-- Fields -->
-            <div class="lg:col-span-8 bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col gap-md sm:gap-lg">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
-                <div class="flex flex-col gap-xs md:col-span-2">
-                  <label class="font-label-md text-label-md text-on-surface-variant" for="biz_name">Registered Business Name</label>
-                  <input id="biz_name" type="text"
-                    class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
-                    value="Papertrail Inc. / Louis Enterprise"/>
-                </div>
+              <div class="flex flex-col gap-xs">
+                <label class="font-label-md text-label-md text-on-surface-variant" for="biz_web">Website or Social Handle</label>
+                <input id="biz_web" name="website" type="text"
+                  class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
+                  value="<%= company.website || '' %>"/>
+              </div>
 
-                <div class="flex flex-col gap-xs">
-                  <label class="font-label-md text-label-md text-on-surface-variant" for="biz_email">Official Billing Email</label>
-                  <div class="relative flex items-center">
-                    <span class="material-symbols-outlined absolute left-sm text-on-surface-variant text-[18px]">mail</span>
-                    <input id="biz_email" type="email"
-                      class="h-10 w-full pl-9 pr-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
-                      value="louis@business.co"/>
-                  </div>
-                </div>
+              <div class="flex flex-col gap-xs">
+                <label class="font-label-md text-label-md text-on-surface-variant" for="biz_tin">Tax ID (TIN) / RC Number</label>
+                <input id="biz_tin" name="tin" type="text"
+                  class="h-10 px-md rounded-lg bg-surface-container-low font-code-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all uppercase"
+                  value="<%= company.tin || '' %>"/>
+              </div>
 
-                <div class="flex flex-col gap-xs">
-                  <label class="font-label-md text-label-md text-on-surface-variant" for="biz_phone">Customer Support Phone</label>
-                  <div class="relative flex items-center">
-                    <span class="material-symbols-outlined absolute left-sm text-on-surface-variant text-[18px]">call</span>
-                    <input id="biz_phone" type="tel"
-                      class="h-10 w-full pl-9 pr-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
-                      value="+234 801 234 5678"/>
-                  </div>
-                </div>
-
-                <div class="flex flex-col gap-xs md:col-span-2">
-                  <label class="font-label-md text-label-md text-on-surface-variant" for="biz_addr">Physical Store / Headquarters Address</label>
-                  <input id="biz_addr" type="text"
-                    class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
-                    value="Plot 4B, Admiralty Way, Lekki Phase 1, Lagos, Nigeria"/>
-                </div>
-
-                <div class="flex flex-col gap-xs">
-                  <label class="font-label-md text-label-md text-on-surface-variant" for="biz_web">Website or Social Handle</label>
-                  <div class="relative flex items-center">
-                    <span class="material-symbols-outlined absolute left-sm text-on-surface-variant text-[18px]">globe</span>
-                    <input id="biz_web" type="text"
-                      class="h-10 w-full pl-9 pr-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
-                      value="instagram.com/papertrail_ng"/>
-                  </div>
-                </div>
-
-                <div class="flex flex-col gap-xs">
-                  <div class="flex items-center justify-between">
-                    <label class="font-label-md text-label-md text-on-surface-variant" for="biz_tin">Tax ID (TIN) / RC Number</label>
-                    <span class="material-symbols-outlined text-[14px] text-on-surface-variant" title="Required for compliant fiscal receipts">info</span>
-                  </div>
-                  <div class="relative flex items-center">
-                    <span class="material-symbols-outlined absolute left-sm text-on-surface-variant text-[18px]">badge</span>
-                    <input id="biz_tin" type="text"
-                      class="h-10 w-full pl-9 pr-md rounded-lg bg-surface-container-low font-code-md text-code-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all uppercase"
-                      value="RC-1948502"/>
-                  </div>
-                </div>
+              <div class="flex flex-col gap-xs md:col-span-2">
+                <label class="font-label-md text-label-md text-on-surface-variant" for="biz_logo">Logo URL (PNG/SVG)</label>
+                <input id="biz_logo" name="logoUrl" type="text"
+                  class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all"
+                  placeholder="https://..."
+                  value="<%= company.logoUrl || '' %>"/>
               </div>
             </div>
           </div>
@@ -147,315 +110,149 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div class="flex flex-col">
               <span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">02. Formatting &amp; Ledger</span>
-              <h2 class="font-headline-md text-headline-md text-on-surface text-[20px] sm:text-[24px]">Receipt Configuration</h2>
+              <h2 class="font-headline-md text-on-surface text-[20px] sm:text-[24px]">Receipt Configuration</h2>
             </div>
-            <span class="font-label-md text-label-md px-sm py-xs rounded-lg bg-secondary-container text-on-secondary-container font-medium self-start sm:self-auto">Applied to new receipts</span>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-md sm:gap-lg">
-
-            <!-- Left: numbering -->
-            <div class="lg:col-span-6 flex flex-col gap-md sm:gap-lg">
-              <div class="bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col gap-md">
-                <span class="font-title-md text-title-md text-on-surface font-medium">General Numbering &amp; Denomination</span>
-
-                <div class="flex flex-col gap-xs">
-                  <label class="font-label-md text-label-md text-on-surface-variant" for="currency_select">Primary Currency</label>
-                  <div class="relative flex items-center">
-                    <select id="currency_select"
-                      class="h-10 w-full px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface appearance-none focus:outline-none focus:bg-surface-container-lowest transition-all">
-                      <option selected value="NGN">NGN (₦) - Nigerian Naira</option>
-                      <option value="USD">USD ($) - United States Dollar</option>
-                      <option value="GBP">GBP (£) - British Pound</option>
-                      <option value="GHS">GHS (₵) - Ghanaian Cedi</option>
-                    </select>
-                    <span class="material-symbols-outlined absolute right-sm text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-md pt-xs">
-                  <div class="flex flex-col gap-xs">
-                    <label class="font-label-md text-label-md text-on-surface-variant" for="receipt_prefix">Receipt Prefix Code</label>
-                    <div class="relative flex items-center">
-                      <span class="absolute left-sm font-code-md text-code-md text-on-surface-variant font-bold">[</span>
-                      <input id="receipt_prefix" type="text"
-                        class="h-10 w-full pl-6 pr-6 rounded-lg bg-surface-container-low font-code-md text-code-md text-on-surface uppercase tracking-wider focus:outline-none focus:bg-surface-container-lowest transition-all text-center font-bold"
-                        value="REC"/>
-                      <span class="absolute right-sm font-code-md text-code-md text-on-surface-variant font-bold">]</span>
-                    </div>
-                  </div>
-                  <div class="flex flex-col justify-end">
-                    <div class="bg-surface-container p-sm rounded-lg flex flex-col justify-center h-10">
-                      <span class="font-label-md text-[10px] uppercase text-on-surface-variant">Generated Preview</span>
-                      <span class="font-code-md text-code-md text-primary font-bold tracking-wider" id="prefix-preview">REC-000043</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mt-xs pt-md flex items-center justify-between bg-surface-container-low p-md rounded-xl gap-sm">
-                  <div class="flex items-center gap-sm sm:gap-md">
-                    <div class="w-9 h-9 rounded-lg bg-primary-fixed flex items-center justify-center text-primary-container shrink-0">
-                      <span class="material-symbols-outlined text-[20px]">percent</span>
-                    </div>
-                    <div class="flex flex-col">
-                      <span class="font-title-md text-title-md text-[13px] sm:text-[14px] text-on-surface font-medium">Default FIRS VAT (7.5%)</span>
-                      <span class="font-label-md text-label-md text-on-surface-variant">Auto-apply standard sales levy</span>
-                    </div>
-                  </div>
-                  <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                    <input id="vat-toggle" type="checkbox" class="sr-only peer" checked/>
-                    <div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
-                  </label>
-                </div>
-              </div>
-
-              <div class="bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col gap-md">
-                <div class="flex items-center justify-between">
-                  <span class="font-title-md text-title-md text-on-surface font-medium">Bank Transfer Instructions</span>
-                  <span class="material-symbols-outlined text-[18px] text-on-surface-variant">account_balance</span>
-                </div>
-                <p class="font-body-md text-body-md text-on-surface-variant text-[13px]">Printed on unpaid invoices and digital receipts for instant settlement.</p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-md">
-                  <div class="flex flex-col gap-xs">
-                    <label class="font-label-md text-label-md text-on-surface-variant">Bank Name</label>
-                    <input type="text" class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none" value="GTBank"/>
-                  </div>
-                  <div class="flex flex-col gap-xs">
-                    <label class="font-label-md text-label-md text-on-surface-variant">Account Name</label>
-                    <input type="text" class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none truncate" value="Papertrail Technologies Ltd"/>
-                  </div>
-                  <div class="flex flex-col gap-xs">
-                    <label class="font-label-md text-label-md text-on-surface-variant">Account Number</label>
-                    <input type="text" class="h-10 px-md rounded-lg bg-surface-container-low font-code-md text-code-md text-on-surface focus:outline-none font-bold tracking-wider" value="0123456789"/>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Right: template picker -->
-            <div class="lg:col-span-6 bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col justify-between gap-md">
+          <div class="bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col gap-md">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
               <div class="flex flex-col gap-xs">
-                <div class="flex items-center justify-between">
-                  <span class="font-title-md text-title-md text-on-surface font-medium">Default Receipt Template</span>
-                  <a href="/templates" class="font-label-md text-label-md text-primary font-medium hover:underline flex items-center gap-xs">
-                    <span>Customizer</span>
-                    <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
-                  </a>
-                </div>
-                <p class="font-body-md text-body-md text-on-surface-variant text-[13px]">Select the base visual layout for generated PDFs and customer downloads.</p>
+                <label class="font-label-md text-label-md text-on-surface-variant" for="currency_select">Primary Currency</label>
+                <select id="currency_select" name="currency"
+                  class="h-10 px-md rounded-lg bg-surface-container-low font-body-md text-on-surface appearance-none focus:outline-none focus:bg-surface-container-lowest transition-all">
+                  <option value="NGN" <%= company.currency === 'NGN' ? 'selected' : '' %>>NGN (₦) - Nigerian Naira</option>
+                  <option value="USD" <%= company.currency === 'USD' ? 'selected' : '' %>>USD ($) - United States Dollar</option>
+                  <option value="GBP" <%= company.currency === 'GBP' ? 'selected' : '' %>>GBP (£) - British Pound</option>
+                  <option value="GHS" <%= company.currency === 'GHS' ? 'selected' : '' %>>GHS (₵) - Ghanaian Cedi</option>
+                </select>
               </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-md my-xs sm:my-md">
-                <!-- Modern (selected) -->
-                <div class="template-card relative flex flex-col rounded-xl overflow-hidden cursor-pointer bg-surface-container-lowest shadow-md ring-2 ring-primary-container transition-all" data-tpl="modern">
-                  <div class="h-28 bg-surface-container-low p-xs flex flex-col justify-between overflow-hidden">
-                    <div class="flex items-center justify-between">
-                      <div class="w-6 h-2 rounded bg-primary-container"></div>
-                      <div class="w-4 h-1.5 rounded bg-outline-variant"></div>
-                    </div>
-                    <div class="space-y-1">
-                      <div class="w-full h-1 bg-surface-container-highest rounded"></div>
-                      <div class="w-3/4 h-1 bg-surface-container-highest rounded"></div>
-                      <div class="w-1/2 h-1 bg-surface-container-highest rounded"></div>
-                    </div>
-                    <div class="w-full pt-1 flex justify-between items-center">
-                      <div class="w-5 h-1.5 bg-outline-variant rounded"></div>
-                      <div class="w-8 h-2 bg-primary-fixed-dim rounded"></div>
-                    </div>
-                  </div>
-                  <div class="p-sm bg-surface-container-lowest flex flex-col gap-xs">
-                    <div class="flex items-center justify-between">
-                      <span class="font-title-md text-[12px] font-semibold text-on-surface truncate">Modern Corp</span>
-                      <span class="w-2 h-2 rounded-full bg-primary-container"></span>
-                    </div>
-                    <span class="font-label-md text-[10px] text-primary font-bold">Selected</span>
-                  </div>
-                </div>
-
-                <div class="template-card relative flex flex-col rounded-xl overflow-hidden cursor-pointer bg-surface-container-lowest hover:shadow-md transition-all opacity-80 hover:opacity-100" data-tpl="classic">
-                  <div class="h-28 bg-surface-container p-xs flex flex-col justify-between overflow-hidden">
-                    <div class="flex flex-col items-center gap-1 pt-1">
-                      <div class="w-12 h-1.5 rounded bg-secondary"></div>
-                      <div class="w-6 h-1 rounded bg-outline"></div>
-                    </div>
-                    <div class="space-y-1.5">
-                      <div class="w-full h-0.5 bg-outline-variant"></div>
-                      <div class="w-full h-0.5 bg-outline-variant"></div>
-                      <div class="w-full h-0.5 bg-outline-variant"></div>
-                    </div>
-                    <div class="w-full pt-1 flex justify-end">
-                      <div class="w-10 h-2 bg-secondary-fixed-dim rounded"></div>
-                    </div>
-                  </div>
-                  <div class="p-sm bg-surface-container-lowest flex flex-col gap-xs">
-                    <span class="font-title-md text-[12px] font-medium text-on-surface truncate">Classic Ledger</span>
-                    <span class="font-label-md text-[10px] text-on-surface-variant">Traditional format</span>
-                  </div>
-                </div>
-
-                <div class="template-card relative flex flex-col rounded-xl overflow-hidden cursor-pointer bg-surface-container-lowest hover:shadow-md transition-all opacity-80 hover:opacity-100" data-tpl="minimal">
-                  <div class="h-28 bg-surface-container-lowest p-xs flex flex-col justify-between">
-                    <div class="w-3 h-3 rounded-full bg-on-surface"></div>
-                    <div class="space-y-1">
-                      <div class="w-full h-1 bg-surface-container rounded"></div>
-                      <div class="w-2/3 h-1 bg-surface-container rounded"></div>
-                    </div>
-                    <div class="w-full pt-1">
-                      <div class="w-7 h-1.5 bg-surface-dim rounded"></div>
-                    </div>
-                  </div>
-                  <div class="p-sm bg-surface-container-lowest flex flex-col gap-xs">
-                    <span class="font-title-md text-[12px] font-medium text-on-surface truncate">Minimal Clean</span>
-                    <span class="font-label-md text-[10px] text-on-surface-variant">Ultra-light</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="bg-surface-container-low p-md rounded-xl flex items-center justify-between gap-md">
-                <div class="flex items-center gap-sm">
-                  <span class="material-symbols-outlined text-primary text-[22px]">visibility</span>
-                  <div class="flex flex-col">
-                    <span class="font-title-md text-[13px] font-medium text-on-surface">Customer View Layout</span>
-                    <span class="font-label-md text-label-md text-on-surface-variant">Dynamic responsive web view enabled</span>
-                  </div>
-                </div>
-                <button type="button" class="px-md py-xs bg-surface-container-lowest font-label-md text-label-md text-on-surface rounded-lg shadow-sm hover:bg-surface transition-colors shrink-0">Test Preview</button>
+              <div class="flex flex-col gap-xs">
+                <label class="font-label-md text-label-md text-on-surface-variant" for="receipt_prefix">Receipt Prefix Code</label>
+                <input id="receipt_prefix" name="receiptPrefix" type="text"
+                  class="h-10 px-md rounded-lg bg-surface-container-low font-code-md text-on-surface uppercase tracking-wider focus:outline-none focus:bg-surface-container-lowest transition-all"
+                  value="<%= company.receiptPrefix || 'REC' %>"/>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- SECTION 3: WhatsApp -->
-        <section class="flex flex-col gap-md sm:gap-lg" id="section-whatsapp">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div class="flex flex-col">
-              <span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">03. Messaging &amp; Automated Pipeline</span>
-              <h2 class="font-headline-md text-headline-md text-on-surface text-[20px] sm:text-[24px]">WhatsApp &amp; Delivery</h2>
-            </div>
-            <span class="flex items-center gap-xs px-sm py-xs rounded-lg bg-surface-container-highest text-on-surface font-label-md text-label-md self-start sm:self-auto">
-              <span class="w-2 h-2 rounded-full bg-primary-container"></span>
-              Meta Cloud API Connected
-            </span>
+        <!-- SECTION 3: Coming Soon -->
+        <section class="flex flex-col gap-md sm:gap-lg">
+          <div class="flex flex-col">
+            <span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">03. Messaging &amp; Automated Pipeline</span>
+            <h2 class="font-headline-md text-on-surface text-[20px] sm:text-[24px]">WhatsApp &amp; Delivery</h2>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-md sm:gap-lg">
-            <!-- Gateway status -->
-            <div class="lg:col-span-5 bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col justify-between gap-md sm:gap-lg">
-              <div class="flex flex-col gap-md">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-sm">
-                    <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary-container shrink-0">
-                      <span class="material-symbols-outlined text-[24px]">chat_bubble</span>
-                    </div>
-                    <div class="flex flex-col">
-                      <span class="font-title-md text-title-md text-on-surface font-medium">WhatsApp Gateway</span>
-                      <span class="font-label-md text-label-md text-on-surface-variant">Verified WhatsApp Business API</span>
-                    </div>
-                  </div>
-                  <span class="material-symbols-outlined text-primary-container text-[20px]" title="Verified badge">verified</span>
-                </div>
-
-                <div class="bg-surface-container-low p-md rounded-xl flex flex-col gap-sm">
-                  <div class="flex items-center justify-between">
-                    <span class="font-label-md text-label-md text-on-surface-variant">Dedicated Sender Number</span>
-                    <span class="font-code-md text-code-md font-bold text-on-surface">+234 801 234 5678</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="font-label-md text-label-md text-on-surface-variant">Business Tier</span>
-                    <span class="font-label-md text-label-md font-semibold text-primary">Enterprise Tier 1 (1k msgs/day)</span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="font-label-md text-label-md text-on-surface-variant">Quality Rating</span>
-                    <div class="flex items-center gap-xs">
-                      <span class="w-2 h-2 rounded-full bg-primary-container"></span>
-                      <span class="font-label-md text-label-md text-on-surface font-medium">High</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="flex items-center justify-between pt-xs gap-sm">
-                  <div class="flex flex-col">
-                    <span class="font-title-md text-title-md text-[13px] sm:text-[14px] text-on-surface font-medium">Auto-send On Creation</span>
-                    <span class="font-body-md text-body-md text-on-surface-variant text-[12px] sm:text-[13px]">Dispatch receipt PDF &amp; link right after generation</span>
-                  </div>
-                  <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                    <input id="autosend-toggle" type="checkbox" class="sr-only peer" checked/>
-                    <div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
-                  </label>
-                </div>
-              </div>
-
-              <div class="bg-surface-container p-md rounded-xl flex items-center justify-between">
-                <div class="flex flex-col">
-                  <span class="font-label-md text-[11px] text-on-surface-variant uppercase font-medium">Delivery Success (30d)</span>
-                  <span class="font-headline-md text-headline-md text-on-surface leading-tight">99.4%</span>
-                  <span class="font-label-md text-label-md text-primary font-medium">1,429 sent • 0 bounced</span>
-                </div>
-                <div class="w-16 h-16 relative flex items-center justify-center shrink-0">
-                  <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                    <path class="text-surface-variant" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
-                    <path class="text-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="99, 100" stroke-linecap="round" stroke-width="3.5"></path>
-                  </svg>
-                  <span class="material-symbols-outlined text-[18px] text-primary absolute">done_all</span>
-                </div>
-              </div>
+          <div class="bg-surface-container-lowest p-md sm:p-xl rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center gap-lg relative overflow-hidden">
+            <div class="w-14 h-14 rounded-2xl bg-secondary-container flex items-center justify-center text-primary flex-shrink-0 shadow-sm">
+              <span class="material-symbols-outlined text-[28px]">chat</span>
             </div>
-
-            <!-- Template editor + preview -->
-            <div class="lg:col-span-7 bg-surface-container-lowest p-md sm:p-lg rounded-xl shadow-sm flex flex-col md:flex-row gap-md sm:gap-lg">
-              <div class="flex-1 flex flex-col justify-between gap-md">
-                <div class="flex flex-col gap-xs">
-                  <label class="font-title-md text-title-md text-[14px] text-on-surface font-medium" for="wa_template">WhatsApp Notification Copy</label>
-                  <span class="font-body-md text-body-md text-on-surface-variant text-[13px]">
-                    Personalize customer greeting. Use variables:
-                    <code class="bg-surface-container px-xs rounded text-primary">{customer_name}</code>,
-                    <code class="bg-surface-container px-xs rounded text-primary">{receipt_number}</code>,
-                    <code class="bg-surface-container px-xs rounded text-primary">{amount}</code>
-                  </span>
-                </div>
-                <textarea id="wa_template" rows="5"
-                  class="w-full p-md rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all resize-none">Hello {customer_name}, thank you for your patronage! Your official receipt {receipt_number} for {amount} is ready. View and download your copy here: {receipt_link}</textarea>
-                <div class="flex flex-wrap items-center gap-xs">
-                  <button type="button" class="px-sm py-xs rounded bg-surface-container font-code-md text-[11px] text-on-surface hover:bg-surface-container-high transition-colors" onclick="insertVar('{customer_name}')">+ Name</button>
-                  <button type="button" class="px-sm py-xs rounded bg-surface-container font-code-md text-[11px] text-on-surface hover:bg-surface-container-high transition-colors" onclick="insertVar('{receipt_number}')">+ Rec #</button>
-                  <button type="button" class="px-sm py-xs rounded bg-surface-container font-code-md text-[11px] text-on-surface hover:bg-surface-container-high transition-colors" onclick="insertVar('{amount}')">+ Amount</button>
-                  <button type="button" class="px-sm py-xs rounded bg-surface-container font-code-md text-[11px] text-on-surface hover:bg-surface-container-high transition-colors" onclick="insertVar('{receipt_link}')">+ Link</button>
-                </div>
+            <div class="flex flex-col gap-xs flex-1">
+              <div class="flex items-center gap-xs">
+                <h3 class="font-headline-md text-on-surface font-bold text-[18px]">Automated WhatsApp Delivery</h3>
+                <span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[11px] font-semibold">Coming Soon</span>
               </div>
-
-              <div class="w-full md:w-64 bg-[#E5DDD5] p-md rounded-2xl flex flex-col justify-end shadow-inner relative select-none shrink-0 min-h-[220px]">
-                <div class="absolute top-2 left-3 right-3 flex items-center justify-between pb-1 border-b border-[#D1D7DB]/50">
-                  <div class="flex items-center gap-1">
-                    <div class="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-[10px] text-white font-bold">P</div>
-                    <span class="font-body-md text-[11px] font-semibold text-[#111B21] truncate">Papertrail Inc.</span>
-                  </div>
-                  <span class="material-symbols-outlined text-[12px] text-[#54656F]">more_vert</span>
-                </div>
-                <div class="bg-white p-sm rounded-lg shadow-sm text-[#111B21] flex flex-col gap-1 mt-6">
-                  <span class="font-body-md text-[11px] leading-snug" id="wa-preview-text">
-                    Hello <strong>Amara Okafor</strong>, thank you for your patronage! Your official receipt <strong>REC-000043</strong> for <strong>₦45,000.00</strong> is ready. View and download your copy here: <u>ptrail.co/r/43a9</u>
-                  </span>
-                  <div class="flex items-center justify-end gap-1 text-[9px] text-[#667781]">
-                    <span>14:24</span>
-                    <span class="material-symbols-outlined text-[13px] text-primary-container">done_all</span>
-                  </div>
-                </div>
-              </div>
+              <p class="font-body-md text-on-surface-variant text-[13px]">
+                Send receipt PDFs directly to customers via WhatsApp the moment a sale is made. No clicks, no links needed. Currently in development.
+              </p>
             </div>
           </div>
         </section>
 
-        <!-- Sticky Footer -->
+        <!-- Save Bar -->
         <div class="sticky bottom-4 z-30 bg-surface-container-lowest/95 backdrop-blur-md p-sm sm:p-md rounded-2xl shadow-xl flex items-center justify-between mt-lg border border-outline-variant/30 gap-xs">
           <div class="flex items-center gap-sm sm:gap-md">
             <div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant shrink-0">
-              <span class="material-symbols-outlined text-[18px]">history</span>
+              <span class="material-symbols-outlined text-[18px]">save</span>
             </div>
             <div class="flex flex-col">
-              <span class="font-title-md text-[12px] sm:text-[13px] text-on-surface font-medium leading-tight">Unsaved changes</span>
-              <span class="font-label-md text-label-md text-on-surface-variant hidden sm:inline">Updates reflect on next receipt dispatch</span>
+              <span class="font-title-md text-[12px] sm:text-[13px] text-on-surface font-medium leading-tight" id="save-status-text">Changes not saved</span>
+              <span class="font-label-md text-label-md text-on-surface-variant hidden sm:inline">Applies to new receipts</span>
             </div>
           </div>
           <div class="flex items-center gap-xs sm:gap-sm">
-            <button id="discard-btn" type="button"
-              class="px-md sm:px-lg py-sm rounded-xl font-title-md text-title-md text-[13px] sm:text-[14px
+            <button id="discard-btn" type="reset"
+              class="px-md sm:px-lg py-sm rounded-xl font-title-md text-[13px] sm:text-[14px] text-on-surface-variant hover:bg-surface-container-high transition-colors">
+              Discard
+            </button>
+            <button id="save-btn" type="submit"
+              class="inline-flex items-center gap-xs px-md sm:px-xl py-sm rounded-xl bg-primary-container hover:bg-primary text-on-primary font-title-md text-[13px] sm:text-[14px] font-medium shadow-md transition-all active:scale-[0.98]">
+              <span class="material-symbols-outlined text-[18px]">save</span>
+              <span id="save-btn-text">Save Changes</span>
+            </button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.className = 'tab-btn flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-body-md text-[13px] sm:text-[14px] text-on-surface-variant hover:text-on-surface transition-all shrink-0';
+      });
+      btn.className = 'tab-btn active-tab flex items-center gap-xs px-md sm:px-lg py-sm rounded-lg font-title-md text-[13px] sm:text-[14px] font-medium bg-surface-container-lowest text-on-surface shadow-sm transition-all shrink-0';
+    });
+  });
+
+  const form = document.getElementById('settings-form');
+  const saveBtn = document.getElementById('save-btn');
+  const saveBtnText = document.getElementById('save-btn-text');
+  const statusText = document.getElementById('save-status-text');
+  const indicator = document.getElementById('autosave-indicator');
+  const errorBox = document.getElementById('settings-error');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.classList.add('hidden');
+    saveBtn.disabled = true;
+    saveBtnText.textContent = 'Saving...';
+    indicator.textContent = 'Saving...';
+
+    const payload = {
+      name:          form.name.value.trim(),
+      email:         form.email.value.trim() || null,
+      phone:         form.phone.value.trim() || null,
+      address:       form.address.value.trim() || null,
+      website:       form.website.value.trim() || null,
+      tin:           form.tin.value.trim() || null,
+      logoUrl:       form.logoUrl.value.trim() || null,
+      currency:      form.currency.value,
+      receiptPrefix: form.receiptPrefix.value.trim().toUpperCase() || 'REC',
+    };
+
+    try {
+      const res = await fetch('/api/company', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+      const raw = await res.text();
+      let data;
+      try { data = JSON.parse(raw); } catch { throw new Error('Server error.'); }
+      if (!res.ok || !data.success) throw new Error(data.message || 'Save failed');
+
+      saveBtnText.textContent = 'Saved!';
+      statusText.textContent = 'Saved just now';
+      indicator.textContent = 'Saved just now';
+      setTimeout(() => {
+        saveBtn.disabled = false;
+        saveBtnText.textContent = 'Save Changes';
+      }, 1500);
+    } catch (err) {
+      errorBox.textContent = err.message;
+      errorBox.classList.remove('hidden');
+      saveBtn.disabled = false;
+      saveBtnText.textContent = 'Save Changes';
+      indicator.textContent = 'Save failed';
+    }
+  });
+});
+</script>

@@ -2091,6 +2091,9 @@
     --tw-outline-style: none;
     outline-style: none;
   }
+  .active\:scale-\[0\.98\]:active {
+    scale: 0.98;
+  }
   .active\:scale-\[0\.99\]:active {
     scale: 0.99;
   }
