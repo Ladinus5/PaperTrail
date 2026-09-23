@@ -158,6 +158,80 @@ router.get("/receipts", protectPage, async (req, res, next) => {
   }
 });
 
+router.get("/receipts/:id", protectPage, async (req, res, next) => {
+  try {
+    const companyId = req.user.company.id;
+
+    const receipt = await prisma.receipt.findFirst({
+      where: { id: req.params.id, companyId },
+      include: {
+        company: true,
+        customer: true,
+        items: true,
+        template: true,
+      },
+    });
+
+    if (!receipt) {
+      return res.status(404).send("Receipt not found");
+    }
+
+    const settings = receipt.template?.settings || {};
+    const type = receipt.template?.type || "modern";
+
+    // ⭐ Important: render the receipt view WITHOUT the app layout
+    // because receipt views are complete HTML documents
+    res.render(`receipts/${type}`, {
+      receipt: {
+        id: receipt.id,
+        receiptNumber: receipt.receiptNumber,
+        subtotal: receipt.subtotal,
+        discount: receipt.discount,
+        tax: receipt.tax,
+        total: receipt.total,
+        paymentMethod: receipt.paymentMethod,
+        paymentStatus: receipt.paymentStatus,
+        notes: receipt.notes,
+        createdAt: receipt.createdAt,
+        publicToken: receipt.publicToken,
+      },
+      company: {
+        name: receipt.company.name,
+        email: receipt.company.email,
+        phone: receipt.company.phone,
+        address: receipt.company.address,
+        website: receipt.company.website,
+        logoUrl: receipt.company.logoUrl,
+        currency: receipt.company.currency,
+      },
+      customer: receipt.customer
+        ? {
+            name: receipt.customer.name,
+            email: receipt.customer.email,
+            phone: receipt.customer.phone,
+          }
+        : null,
+      items: receipt.items.map((item) => ({
+        name: item.name,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        total: item.total,
+      })),
+      template: receipt.template
+        ? {
+            name: receipt.template.name,
+            type: receipt.template.type,
+            settings: receipt.template.settings || {},
+          }
+        : null,
+      settings,
+      layout: false,   // ⭐ no app layout — receipt is its own full page
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get("/customers", protectPage, async (req, res, next) => {
   try {
     const companyId = req.user.company.id;
