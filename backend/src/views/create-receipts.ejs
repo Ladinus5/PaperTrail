@@ -43,9 +43,7 @@
               <div class="col-span-1"></div>
             </div>
 
-            <div id="itemsList" class="space-y-3">
-              <!-- Rows are appended by JS -->
-            </div>
+            <div id="itemsList" class="space-y-3"></div>
 
             <button type="button" id="addItemBtn"
               class="w-full mt-sm h-10 border-2 border-dashed border-primary-fixed-dim hover:border-primary-container hover:bg-primary-fixed/30 text-primary-container rounded-xl font-medium text-body-md flex items-center justify-center transition-all">
@@ -139,9 +137,7 @@
                     <th class="pb-1 text-right">Amount</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-outline-variant/20" id="previewItems">
-                  <!-- rendered by JS -->
-                </tbody>
+                <tbody class="divide-y divide-outline-variant/20" id="previewItems"></tbody>
               </table>
             </div>
 
@@ -247,7 +243,6 @@
     const tax = 0;
     const total = subtotal + tax;
 
-    // Preview table
     previewItems.innerHTML = items.length
       ? items.map(i => `
           <tr>
@@ -263,13 +258,11 @@
     document.getElementById('footerTotal').textContent = SYM + Number(total).toLocaleString('en-NG', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
   }
 
-  // Customer preview
   document.getElementById('customerId').addEventListener('change', (e) => {
     const sel = e.target.selectedOptions[0];
     document.getElementById('previewCustomer').textContent = sel && sel.value ? sel.textContent : 'Walk-in Customer';
   });
 
-  // Status preview
   document.getElementById('paymentStatus').addEventListener('change', (e) => {
     const el = document.getElementById('previewStatus');
     const v = e.target.value;
@@ -280,10 +273,8 @@
 
   document.getElementById('addItemBtn').addEventListener('click', makeRow);
 
-  // Start with one row
   makeRow();
 
-  // Submit
   document.getElementById('receiptForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const errorBox = document.getElementById('receiptError');
@@ -324,7 +315,13 @@
 
       if (!res.ok || !data.success) throw new Error(data.message || 'Failed to create receipt');
 
-      window.location.href = '/receipts';
+      // ⭐ Redirect to the receipt detail page so the user can download / share
+      const newReceiptId = data.data?.receipt?.id || data.data?.id;
+      if (newReceiptId) {
+        window.location.href = '/receipts/' + newReceiptId;
+      } else {
+        window.location.href = '/receipts';
+      }
     } catch (err) {
       errorBox.textContent = err.message;
       errorBox.classList.remove('hidden');

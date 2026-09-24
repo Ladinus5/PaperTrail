@@ -1024,6 +1024,10 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
+  .border-0 {
+    border-style: var(--tw-border-style);
+    border-width: 0px;
+  }
   .border-2 {
     border-style: var(--tw-border-style);
     border-width: 2px;
@@ -2327,6 +2331,9 @@
     }
     .sm\:text-\[24px\] {
       font-size: 24px;
+    }
+    .sm\:text-\[26px\] {
+      font-size: 26px;
     }
     .sm\:text-\[28px\] {
       font-size: 28px;

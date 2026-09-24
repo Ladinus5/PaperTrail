@@ -32,6 +32,75 @@ router.get("/signup", (req, res) => {
   });
 });
 
+// Public receipt view (no auth) — customers view this via share link
+router.get("/r/:token", async (req, res, next) => {
+  try {
+    const receipt = await prisma.receipt.findUnique({
+      where: { publicToken: req.params.token },
+      include: {
+        company: true,
+        customer: true,
+        items: true,
+        template: true,
+      },
+    });
+
+    if (!receipt) return res.status(404).send("Receipt not found");
+
+    const settings = receipt.template?.settings || {};
+    const type = receipt.template?.type || "modern";
+
+    res.render(`receipts/${type}`, {
+      receipt: {
+        id: receipt.id,
+        receiptNumber: receipt.receiptNumber,
+        subtotal: receipt.subtotal,
+        discount: receipt.discount,
+        tax: receipt.tax,
+        total: receipt.total,
+        paymentMethod: receipt.paymentMethod,
+        paymentStatus: receipt.paymentStatus,
+        notes: receipt.notes,
+        createdAt: receipt.createdAt,
+        publicToken: receipt.publicToken,
+      },
+      company: {
+        name: receipt.company.name,
+        email: receipt.company.email,
+        phone: receipt.company.phone,
+        address: receipt.company.address,
+        website: receipt.company.website,
+        logoUrl: receipt.company.logoUrl,
+        currency: receipt.company.currency,
+      },
+      customer: receipt.customer
+        ? {
+            name: receipt.customer.name,
+            email: receipt.customer.email,
+            phone: receipt.customer.phone,
+          }
+        : null,
+      items: receipt.items.map((item) => ({
+        name: item.name,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        total: item.total,
+      })),
+      template: receipt.template
+        ? {
+            name: receipt.template.name,
+            type: receipt.template.type,
+            settings: receipt.template.settings || {},
+          }
+        : null,
+      settings,
+      layout: false,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // ---- Protected pages ----
 router.get("/dashboard", protectPage, async (req, res, next) => {
   try {
@@ -122,6 +191,36 @@ router.get("/receipts/new", protectPage, async (req, res, next) => {
   }
 });
 
+
+router.get("/receipts/:id", protectPage, async (req, res, next) => {
+  try {
+    const companyId = req.user.company.id;
+
+    const receipt = await prisma.receipt.findFirst({
+      where: { id: req.params.id, companyId },
+      include: {
+        company: true,
+        customer: true,
+        items: true,
+        template: true,
+      },
+    });
+
+    if (!receipt) {
+      return res.status(404).send("Receipt not found");
+    }
+
+    res.render("receipt-detail", {
+      title: `Receipt ${receipt.receiptNumber}`,
+      activePage: "receipts",
+      layout: "layouts/main",
+      receipt,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get("/receipts", protectPage, async (req, res, next) => {
   try {
     const companyId = req.user.company.id;
@@ -152,80 +251,6 @@ router.get("/receipts", protectPage, async (req, res, next) => {
       totalCount,
       totalValue: totals._sum.total || 0,
       customerFilter,
-    });
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.get("/receipts/:id", protectPage, async (req, res, next) => {
-  try {
-    const companyId = req.user.company.id;
-
-    const receipt = await prisma.receipt.findFirst({
-      where: { id: req.params.id, companyId },
-      include: {
-        company: true,
-        customer: true,
-        items: true,
-        template: true,
-      },
-    });
-
-    if (!receipt) {
-      return res.status(404).send("Receipt not found");
-    }
-
-    const settings = receipt.template?.settings || {};
-    const type = receipt.template?.type || "modern";
-
-    // ⭐ Important: render the receipt view WITHOUT the app layout
-    // because receipt views are complete HTML documents
-    res.render(`receipts/${type}`, {
-      receipt: {
-        id: receipt.id,
-        receiptNumber: receipt.receiptNumber,
-        subtotal: receipt.subtotal,
-        discount: receipt.discount,
-        tax: receipt.tax,
-        total: receipt.total,
-        paymentMethod: receipt.paymentMethod,
-        paymentStatus: receipt.paymentStatus,
-        notes: receipt.notes,
-        createdAt: receipt.createdAt,
-        publicToken: receipt.publicToken,
-      },
-      company: {
-        name: receipt.company.name,
-        email: receipt.company.email,
-        phone: receipt.company.phone,
-        address: receipt.company.address,
-        website: receipt.company.website,
-        logoUrl: receipt.company.logoUrl,
-        currency: receipt.company.currency,
-      },
-      customer: receipt.customer
-        ? {
-            name: receipt.customer.name,
-            email: receipt.customer.email,
-            phone: receipt.customer.phone,
-          }
-        : null,
-      items: receipt.items.map((item) => ({
-        name: item.name,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        total: item.total,
-      })),
-      template: receipt.template
-        ? {
-            name: receipt.template.name,
-            type: receipt.template.type,
-            settings: receipt.template.settings || {},
-          }
-        : null,
-      settings,
-      layout: false,   // ⭐ no app layout — receipt is its own full page
     });
   } catch (err) {
     next(err);

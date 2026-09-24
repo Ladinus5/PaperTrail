@@ -1,0 +1,94 @@
+<main class="w-full pt-16 bg-surface px-md sm:px-lg py-md sm:py-xl min-h-screen pb-40">
+  <div class="max-w-[1400px] w-full mx-auto">
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-md mb-lg">
+      <div class="flex items-center gap-sm">
+        <a href="/receipts" class="p-2 rounded-lg hover:bg-surface-container-low transition-colors text-on-surface-variant">
+          <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+        </a>
+        <div>
+          <div class="flex items-center gap-sm flex-wrap">
+            <span class="font-headline-lg text-on-surface tracking-tight text-[22px] sm:text-[26px]"><%= receipt.receiptNumber %></span>
+            <%
+              const statusColor = receipt.paymentStatus === "PAID"
+                ? "bg-[#dcfce7] text-[#15803d]"
+                : receipt.paymentStatus === "PENDING"
+                ? "bg-secondary-container text-on-secondary-container"
+                : "bg-surface-container text-on-surface-variant";
+            %>
+            <span class="px-2.5 py-0.5 rounded-full text-label-md font-semibold <%= statusColor %>">
+              <%= receipt.paymentStatus %>
+            </span>
+          </div>
+          <p class="font-body-md text-on-surface-variant text-[13px] mt-1">
+            Created <%= new Date(receipt.createdAt).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" }) %>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-sm">
+        <button type="button" id="copyLinkBtn"
+          class="h-10 px-md rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface font-title-md text-[13px] font-medium inline-flex items-center gap-1.5 transition-colors">
+          <span class="material-symbols-outlined text-[18px]">link</span>
+          <span>Copy Link</span>
+        </button>
+        <a href="/api/public/receipts/<%= receipt.publicToken %>/pdf" target="_blank"
+          class="h-10 px-md rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface font-title-md text-[13px] font-medium inline-flex items-center gap-1.5 transition-colors">
+          <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+          <span>Open PDF</span>
+        </a>
+        <a href="/r/<%= receipt.publicToken %>" target="_blank"
+          class="h-10 px-md rounded-lg bg-primary-container hover:bg-primary text-on-primary font-title-md text-[13px] font-medium inline-flex items-center gap-1.5 transition-colors">
+          <span class="material-symbols-outlined text-[18px]">open_in_new</span>
+          <span>View Receipt</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Receipt Preview -->
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 shadow-sm overflow-hidden">
+      <div class="px-lg py-md border-b border-outline-variant/30 flex items-center justify-between bg-surface">
+        <span class="font-title-md text-on-surface font-semibold">Receipt Preview</span>
+        <a href="/r/<%= receipt.publicToken %>" target="_blank"
+          class="font-label-md text-primary hover:underline inline-flex items-center gap-1">
+          <span>Open full screen</span>
+          <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+        </a>
+      </div>
+      <iframe src="/r/<%= receipt.publicToken %>" class="w-full border-0" style="height: 900px;"></iframe>
+    </div>
+
+    <!-- Share Help -->
+    <div class="mt-lg p-md bg-surface-container-low rounded-xl flex items-start gap-md">
+      <span class="material-symbols-outlined text-primary text-[22px] mt-0.5">info</span>
+      <div class="flex flex-col gap-xs">
+        <span class="font-title-md text-[14px] font-medium text-on-surface">How to send this receipt to your customer</span>
+        <p class="font-body-md text-[13px] text-on-surface-variant leading-relaxed">
+          <strong>Send Link:</strong> Copy the link and paste it into WhatsApp, SMS, or email. The customer sees the receipt on their phone.<br/>
+          <strong>Send PDF:</strong> Click "Open PDF" then use your browser's download / share buttons to save the file, then attach it in WhatsApp or email.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('copyLinkBtn');
+  if (!btn) return;
+
+  btn.addEventListener('click', async () => {
+    const url = window.location.origin + '/r/<%= receipt.publicToken %>';
+    try {
+      await navigator.clipboard.writeText(url);
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>Copied!</span>';
+      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+    } catch {
+      prompt('Copy this link:', url);
+    }
+  });
+});
+</script>
