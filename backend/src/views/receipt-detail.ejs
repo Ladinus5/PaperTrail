@@ -33,12 +33,12 @@
           <span class="material-symbols-outlined text-[18px]">link</span>
           <span>Copy Link</span>
         </button>
-        <a href="/api/public/receipts/<%= receipt.publicToken %>/pdf" target="_blank"
+        <a href="/api/public/receipts/<%= receipt.publicToken %>/pdf" target="_blank" rel="noopener"
           class="h-10 px-md rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface font-title-md text-[13px] font-medium inline-flex items-center gap-1.5 transition-colors">
           <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
           <span>Open PDF</span>
         </a>
-        <a href="/r/<%= receipt.publicToken %>" target="_blank"
+        <a href="/r/<%= receipt.publicToken %>" target="_blank" rel="noopener"
           class="h-10 px-md rounded-lg bg-primary-container hover:bg-primary text-on-primary font-title-md text-[13px] font-medium inline-flex items-center gap-1.5 transition-colors">
           <span class="material-symbols-outlined text-[18px]">open_in_new</span>
           <span>View Receipt</span>
@@ -50,7 +50,7 @@
     <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 shadow-sm overflow-hidden">
       <div class="px-lg py-md border-b border-outline-variant/30 flex items-center justify-between bg-surface">
         <span class="font-title-md text-on-surface font-semibold">Receipt Preview</span>
-        <a href="/r/<%= receipt.publicToken %>" target="_blank"
+        <a href="/r/<%= receipt.publicToken %>" target="_blank" rel="noopener"
           class="font-label-md text-primary hover:underline inline-flex items-center gap-1">
           <span>Open full screen</span>
           <span class="material-symbols-outlined text-[14px]">open_in_new</span>
@@ -66,7 +66,7 @@
         <span class="font-title-md text-[14px] font-medium text-on-surface">How to send this receipt to your customer</span>
         <p class="font-body-md text-[13px] text-on-surface-variant leading-relaxed">
           <strong>Send Link:</strong> Copy the link and paste it into WhatsApp, SMS, or email. The customer sees the receipt on their phone.<br/>
-          <strong>Send PDF:</strong> Click "Open PDF" then use your browser's download / share buttons to save the file, then attach it in WhatsApp or email.
+          <strong>Send PDF:</strong> Tap <strong>"Open PDF"</strong> and then use your phone's share button (or download icon) to save or send the file.
         </p>
       </div>
     </div>
@@ -87,7 +87,22 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>Copied!</span>';
       setTimeout(() => { btn.innerHTML = orig; }, 2000);
     } catch {
-      prompt('Copy this link:', url);
+      // Fallback for browsers without clipboard API (older mobile Safari)
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>Copied!</span>';
+        setTimeout(() => { btn.innerHTML = orig; }, 2000);
+      } catch {
+        prompt('Copy this link:', url);
+      }
+      document.body.removeChild(ta);
     }
   });
 });
