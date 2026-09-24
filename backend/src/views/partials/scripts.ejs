@@ -1,23 +1,16 @@
 <script>
-  function openSidebar() {
-    const sb = document.getElementById('sidebar');
-    const bd = document.getElementById('sidebar-backdrop');
-    if (!sb || !bd) return;
-    sb.classList.remove('hidden');
-    sb.classList.add('flex');
-    bd.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  }
+  document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('userMenuBtn');
+    const menu = document.getElementById('userMenu');
+    if (!btn || !menu) return;
 
-  function closeSidebar() {
-    const sb = document.getElementById('sidebar');
-    const bd = document.getElementById('sidebar-backdrop');
-    if (!sb || !bd) return;
-    sb.classList.add('hidden');
-    sb.classList.remove('flex');
-    bd.classList.add('hidden');
-    document.body.style.overflow = '';
-  }
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      menu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function () {
+      menu.classList.add('hidden');
+    });
+  });
 </script>
-
-<%- typeof script !== 'undefined' ? script : '' %>
