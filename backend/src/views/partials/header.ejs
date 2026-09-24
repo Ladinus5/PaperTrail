@@ -1,51 +1,37 @@
-<header class="h-16 bg-surface-container-lowest border-b border-outline-variant/30 flex items-center justify-between w-full px-md sm:px-lg shrink-0 sticky top-0 z-30">
+<header class="h-16 bg-surface-container-lowest border-b border-outline-variant/30 flex items-center justify-between w-full px-md sm:px-lg sticky top-0 z-30">
 
-  <!-- Left: mobile menu + brand + search -->
-  <div class="flex items-center gap-sm">
+  <div class="flex items-center gap-sm flex-1 max-w-md">
     <button type="button"
-      class="md:hidden p-sm text-on-surface-variant hover:bg-surface-container rounded-lg"
-      onclick="document.getElementById('sidebar').classList.remove('-translate-x-full'); document.getElementById('sidebar-backdrop').classList.remove('hidden');">
+      class="lg:hidden p-sm text-on-surface-variant hover:bg-surface-container rounded-lg"
+      onclick="openSidebar()">
       <span class="material-symbols-outlined text-[24px]">menu</span>
     </button>
 
-    <span class="md:hidden text-title-md font-bold text-primary">Papertrail</span>
+    <span class="lg:hidden text-title-md font-bold text-primary">Papertrail</span>
 
     <form action="/receipts" method="GET" class="relative w-full">
-  <span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">search</span>
-  <input name="q" type="text" placeholder="Search receipts..."
-         value="<%= typeof query !== 'undefined' && query ? query : '' %>"
-         class="w-full h-10 pl-9 pr-md bg-surface-container-low rounded-xl border border-outline-variant/50 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/70 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-container/20 transition-all"/>
-</form>
+      <span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">search</span>
+      <input name="q" type="text" placeholder="Search receipts..."
+             value="<%= typeof query !== 'undefined' ? query : '' %>"
+             class="w-full h-10 pl-9 pr-md bg-surface-container-low rounded-xl border border-outline-variant/50 font-body-md text-on-surface placeholder:text-on-surface-variant/70 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-container/20 transition-all"/>
+    </form>
   </div>
 
-  <!-- Right: create + actions + avatar -->
-  <div class="flex items-center gap-3 sm:gap-md">
+  <div class="flex items-center gap-xs sm:gap-md shrink-0">
     <a href="/receipts/new"
-      class="hidden md:flex bg-primary-container hover:bg-primary text-on-primary text-label-md font-semibold rounded-lg py-2 px-4 transition-colors items-center gap-1 shadow-sm">
+      class="hidden lg:flex bg-primary-container hover:bg-primary text-on-primary text-label-md font-semibold rounded-lg py-2 px-4 transition-colors items-center gap-1 shadow-sm">
       + Create Receipt
     </a>
 
-    <div class="flex items-center gap-1">
-      <button type="button" class="p-sm text-primary hover:bg-surface-container rounded-full transition-colors">
-        <span class="material-symbols-outlined">notifications</span>
-      </button>
-      <button type="button" class="p-sm text-primary hover:bg-surface-container rounded-full transition-colors">
-        <span class="material-symbols-outlined">help_outline</span>
-      </button>
-    </div>
+    <button type="button" aria-label="Notifications" class="p-sm text-on-surface-variant hover:bg-surface-container rounded-full transition-colors hidden sm:flex">
+      <span class="material-symbols-outlined text-[20px]">notifications</span>
+    </button>
+    <button type="button" aria-label="Help" class="p-sm text-on-surface-variant hover:bg-surface-container rounded-full transition-colors hidden sm:flex">
+      <span class="material-symbols-outlined text-[20px]">help_outline</span>
+    </button>
 
-    <div class="relative">
-  <button type="button" id="userMenuBtn"
-    class="w-8 h-8 rounded-full bg-primary flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-primary-container transition-all">
-    <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
-  </button>
-  <div id="userMenu" class="hidden absolute right-0 top-11 w-56 bg-surface-container-lowest rounded-xl shadow-xl border border-outline-variant/30 overflow-hidden z-50">
-    <a href="/settings" class="flex items-center gap-sm px-md py-sm text-body-md text-on-surface hover:bg-surface-container-low transition-colors">
-      <span class="material-symbols-outlined text-[18px]">settings</span> Settings
-    </a>
-    <a href="/logout" class="flex items-center gap-sm px-md py-sm text-body-md text-error hover:bg-error-container/40 transition-colors">
-      <span class="material-symbols-outlined text-[18px]">logout</span> Log out
+    <a href="/settings" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-primary-container transition-all">
+      <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
     </a>
   </div>
-</div>
 </header>

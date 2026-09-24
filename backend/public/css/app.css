@@ -2417,6 +2417,9 @@
     .lg\:mt-0 {
       margin-top: 0px;
     }
+    .lg\:flex {
+      display: flex;
+    }
     .lg\:hidden {
       display: none;
     }

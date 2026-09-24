@@ -1,38 +1,23 @@
-<!-- Mobile drawer toggle -->
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const openBtn = document.getElementById('open-drawer-btn');
-    const closeBtn = document.getElementById('close-drawer-btn');
-    const drawer = document.getElementById('mobile-nav-drawer');
-    const overlay = document.getElementById('mobile-nav-overlay');
+  function openSidebar() {
+    const sb = document.getElementById('sidebar');
+    const bd = document.getElementById('sidebar-backdrop');
+    if (!sb || !bd) return;
+    sb.classList.remove('hidden');
+    sb.classList.add('flex');
+    bd.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
 
-    if (!openBtn || !drawer || !overlay) return;
-
-    function toggleDrawer() {
-      const isClosed = drawer.classList.contains('-translate-x-full');
-      if (isClosed) {
-        drawer.classList.remove('-translate-x-full');
-        overlay.classList.remove('hidden');
-      } else {
-        drawer.classList.add('-translate-x-full');
-        overlay.classList.add('hidden');
-      }
-    }
-
-    openBtn.addEventListener('click', toggleDrawer);
-    if (closeBtn) closeBtn.addEventListener('click', toggleDrawer);
-    overlay.addEventListener('click', toggleDrawer);
-  });
-
-  
-  document.addEventListener('DOMContentLoaded', function () {
-    const btn = document.getElementById('userMenuBtn');
-    const menu = document.getElementById('userMenu');
-    if (!btn || !menu) return;
-    btn.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('hidden'); });
-    document.addEventListener('click', () => menu.classList.add('hidden'));
-  });
-
+  function closeSidebar() {
+    const sb = document.getElementById('sidebar');
+    const bd = document.getElementById('sidebar-backdrop');
+    if (!sb || !bd) return;
+    sb.classList.add('hidden');
+    sb.classList.remove('flex');
+    bd.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
 </script>
 
 <%- typeof script !== 'undefined' ? script : '' %>

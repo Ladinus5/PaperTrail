@@ -1,6 +1,6 @@
 <% if (user) { %>
 <aside id="sidebar"
-  class="fixed left-0 top-0 h-screen w-64 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between select-none -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out">
+  class="hidden lg:flex fixed left-0 top-0 h-screen w-64 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex-col justify-between select-none">
 
   <div class="flex flex-col">
     <div class="h-16 flex items-center justify-between px-lg border-b border-outline-variant/30">
@@ -9,13 +9,11 @@
           <span class="material-symbols-outlined text-[20px]">receipt_long</span>
         </div>
         <div class="flex flex-col">
-          <span class="font-headline-md text-headline-md text-on-surface tracking-tight leading-none text-[18px]">Papertrail</span>
-          <span class="font-label-md text-label-md text-on-surface-variant leading-tight">e-receipts</span>
+          <span class="font-headline-md text-on-surface tracking-tight leading-none text-[18px]">Papertrail</span>
+          <span class="font-label-md text-on-surface-variant leading-tight">e-receipts</span>
         </div>
       </div>
-      <button class="lg:hidden text-on-surface-variant hover:text-on-surface p-1 rounded-lg"
-        onclick="document.getElementById('sidebar').classList.add('-translate-x-full'); document.getElementById('sidebar-backdrop').classList.add('hidden');"
-        type="button">
+      <button class="lg:hidden text-on-surface-variant hover:text-on-surface p-1 rounded-lg" onclick="closeSidebar()" type="button">
         <span class="material-symbols-outlined text-[20px]">close</span>
       </button>
     </div>
@@ -36,7 +34,7 @@
            class="flex items-center gap-md px-md py-sm rounded-xl transition-colors
              <%= active
                 ? 'bg-primary-container text-on-primary font-title-md font-medium shadow-sm'
-                : 'font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface' %>">
+                : 'font-body-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface' %>">
           <span class="material-symbols-outlined text-[20px]"><%= item.icon %></span>
           <span><%= item.label %></span>
         </a>
@@ -51,14 +49,12 @@
           <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
         </div>
         <div class="flex flex-col truncate">
-          <span class="font-title-md text-title-md text-[14px] text-on-surface font-medium truncate"><%= user.name %></span>
-          <span class="font-label-md text-label-md text-on-surface-variant truncate"><%= user.email %></span>
+          <span class="font-title-md text-[14px] text-on-surface font-medium truncate"><%= user.name %></span>
+          <span class="font-label-md text-on-surface-variant truncate"><%= user.email %></span>
         </div>
       </div>
       <form action="/logout" method="POST" class="inline">
-        <button type="submit"
-          class="text-on-surface-variant hover:text-error p-xs rounded-lg transition-colors flex items-center"
-          title="Logout">
+        <button type="submit" class="text-on-surface-variant hover:text-error p-xs rounded-lg transition-colors flex items-center" title="Logout">
           <span class="material-symbols-outlined text-[20px]">logout</span>
         </button>
       </form>
