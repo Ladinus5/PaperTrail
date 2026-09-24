@@ -3,22 +3,18 @@
 <head>
   <%- include('../partials/head') %>
 </head>
-<body class="bg-surface font-body-md text-body-md text-on-surface antialiased overflow-x-hidden">
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
 
   <%- include('../partials/sidebar') %>
 
   <div id="sidebar-backdrop"
-       class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 hidden md:hidden"
+       class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden transition-opacity"
        onclick="document.getElementById('sidebar').classList.add('-translate-x-full'); this.classList.add('hidden');"></div>
 
-  <div class="md:pl-64 flex flex-col h-screen">
+  <div class="lg:pl-64">
     <%- include('../partials/header') %>
     <%- body %>
   </div>
-   <style>
-    /* Hide scrollbar on app pages only (sidebar layout) */
-    ::-webkit-scrollbar { display: none; }
-  </style>
 
   <%- include('../partials/scripts') %>
 </body>
