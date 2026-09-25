@@ -33,11 +33,11 @@
           <span class="material-symbols-outlined text-[18px]">link</span>
           <span>Copy Link</span>
         </button>
-        <a href="/api/public/receipts/<%= receipt.publicToken %>/pdf" target="_blank" rel="noopener"
+        <button type="button" id="shareBtn"
           class="h-10 px-md rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface font-title-md text-[13px] font-medium inline-flex items-center gap-1.5 transition-colors">
-          <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
-          <span>Open PDF</span>
-        </a>
+          <span class="material-symbols-outlined text-[18px]">share</span>
+          <span>Share</span>
+        </button>
         <a href="/r/<%= receipt.publicToken %>" target="_blank" rel="noopener"
           class="h-10 px-md rounded-lg bg-primary-container hover:bg-primary text-on-primary font-title-md text-[13px] font-medium inline-flex items-center gap-1.5 transition-colors">
           <span class="material-symbols-outlined text-[18px]">open_in_new</span>
@@ -65,8 +65,22 @@
       <div class="flex flex-col gap-xs">
         <span class="font-title-md text-[14px] font-medium text-on-surface">How to send this receipt to your customer</span>
         <p class="font-body-md text-[13px] text-on-surface-variant leading-relaxed">
-          <strong>Send Link:</strong> Copy the link and paste it into WhatsApp, SMS, or email. The customer sees the receipt on their phone.<br/>
-          <strong>Send PDF:</strong> Tap <strong>"Open PDF"</strong> and then use your phone's share button (or download icon) to save or send the file.
+          <strong>Best way (link):</strong> Tap <strong>"Share"</strong> or <strong>"Copy Link"</strong> and send it via WhatsApp, SMS, or email. Your customer gets a live receipt they can view anytime on any device.
+        </p>
+        <p class="font-body-md text-[13px] text-on-surface-variant leading-relaxed mt-2">
+          <strong>To save as PDF on mobile:</strong><br/>
+          <span class="inline-flex items-center gap-1 mt-1">
+            <span class="material-symbols-outlined text-[14px]">iphone</span>
+            <strong>iPhone:</strong> Open the receipt → tap <strong>Share</strong> → <strong>Print</strong> → pinch out on the preview → <strong>Save to Files</strong>
+          </span><br/>
+          <span class="inline-flex items-center gap-1 mt-1">
+            <span class="material-symbols-outlined text-[14px]">android</span>
+            <strong>Android:</strong> Open the receipt → tap <strong>⋮ menu</strong> → <strong>Share</strong> → <strong>Print</strong> → <strong>Save as PDF</strong>
+          </span><br/>
+          <span class="inline-flex items-center gap-1 mt-1">
+            <span class="material-symbols-outlined text-[14px]">computer</span>
+            <strong>Desktop:</strong> Open the receipt → press <strong>Ctrl+P</strong> (or <strong>⌘+P</strong>) → <strong>Save as PDF</strong>
+          </span>
         </p>
       </div>
     </div>
@@ -76,34 +90,65 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('copyLinkBtn');
-  if (!btn) return;
+  const copyBtn = document.getElementById('copyLinkBtn');
+  const shareBtn = document.getElementById('shareBtn');
+  const shareUrl = window.location.origin + '/r/<%= receipt.publicToken %>';
+  const shareTitle = 'Receipt <%= receipt.receiptNumber %>';
 
-  btn.addEventListener('click', async () => {
-    const url = window.location.origin + '/r/<%= receipt.publicToken %>';
-    try {
-      await navigator.clipboard.writeText(url);
-      const orig = btn.innerHTML;
-      btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>Copied!</span>';
-      setTimeout(() => { btn.innerHTML = orig; }, 2000);
-    } catch {
-      // Fallback for browsers without clipboard API (older mobile Safari)
-      const ta = document.createElement('textarea');
-      ta.value = url;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
+  // ─── Copy Link (with mobile fallback) ───
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
       try {
-        document.execCommand('copy');
-        const orig = btn.innerHTML;
-        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>Copied!</span>';
-        setTimeout(() => { btn.innerHTML = orig; }, 2000);
+        await navigator.clipboard.writeText(shareUrl);
+        const orig = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>Copied!</span>';
+        setTimeout(() => { copyBtn.innerHTML = orig; }, 2000);
       } catch {
-        prompt('Copy this link:', url);
+        const ta = document.createElement('textarea');
+        ta.value = shareUrl;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          const orig = copyBtn.innerHTML;
+          copyBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>Copied!</span>';
+          setTimeout(() => { copyBtn.innerHTML = orig; }, 2000);
+        } catch {
+          prompt('Copy this link:', shareUrl);
+        }
+        document.body.removeChild(ta);
       }
-      document.body.removeChild(ta);
-    }
-  });
+    });
+  }
+
+  // ─── Share (native share sheet on mobile, fallback to copy) ───
+  if (shareBtn) {
+    shareBtn.addEventListener('click', async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: shareTitle,
+            text: 'Here is your receipt:',
+            url: shareUrl,
+          });
+        } catch (err) {
+          // User cancelled — do nothing
+          if (err.name !== 'AbortError') console.error(err);
+        }
+      } else {
+        // Fallback: copy to clipboard
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          const orig = shareBtn.innerHTML;
+          shareBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>Link copied!</span>';
+          setTimeout(() => { shareBtn.innerHTML = orig; }, 2000);
+        } catch {
+          prompt('Copy this link:', shareUrl);
+        }
+      }
+    });
+  }
 });
 </script>

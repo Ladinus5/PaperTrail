@@ -150,27 +150,47 @@ const generatePublicReceiptPdf = async (req, res) => {
             return res.status(404).send("Receipt not found");
         }
 
-        const { data } = buildReceiptRenderData(receipt);
+        const { data, settings, viewName } = buildReceiptRenderData(receipt);
 
-        const { pdfBuffer, filename } = await generateReceiptPdf(data);
+        // Render the receipt template to HTML, then send to PDFMonkey
+        res.render(
+            viewName,
+            { ...data, settings, layout: false },
+            async (renderError, html) => {
+                if (renderError) {
+                    console.error("[render]", renderError);
+                    return res.status(500).send("Failed to render receipt");
+                }
 
-        await prisma.receipt.update({
-            where: { id: receipt.id },
-            data: {
-                pdfUrl: `/api/public/receipts/${receipt.publicToken}/pdf`,
-            },
-        });
+                try {
+                    const { pdfBuffer, filename } = await generateReceiptPdf(
+                        html,
+                        receipt.receiptNumber
+                    );
 
-        res.set({
-            "Content-Type": "application/pdf",
-            "Content-Disposition": `inline; filename="${filename}"`,
-            "Content-Length": pdfBuffer.length,
-        });
+                    await prisma.receipt.update({
+                        where: { id: receipt.id },
+                        data: {
+                            pdfUrl: `/api/public/receipts/${receipt.publicToken}/pdf`,
+                        },
+                    });
 
-        res.send(pdfBuffer);
+                    res.set({
+                        "Content-Type": "application/pdf",
+                        "Content-Disposition": `inline; filename="${filename}"`,
+                        "Content-Length": pdfBuffer.length,
+                    });
+
+                    res.send(pdfBuffer);
+                } catch (pdfError) {
+                    console.error("[pdf]", pdfError);
+                    res.status(500).send("Failed to generate PDF");
+                }
+            }
+        );
     } catch (error) {
-        console.error("[pdf]", error);
-        res.status(500).send("Failed to generate PDF");
+        console.error("[pdf.outer]", error);
+        res.status(500).send("Unable to generate receipt PDF");
     }
 };
 
