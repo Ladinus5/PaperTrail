@@ -59,33 +59,65 @@
       <iframe src="/r/<%= receipt.publicToken %>" class="w-full border-0" style="height: 900px;"></iframe>
     </div>
 
-    <!-- Share Help -->
-    <div class="mt-lg p-md bg-surface-container-low rounded-xl flex items-start gap-md">
-      <span class="material-symbols-outlined text-primary text-[22px] mt-0.5">info</span>
-      <div class="flex flex-col gap-xs">
-        <span class="font-title-md text-[14px] font-medium text-on-surface">How to send this receipt to your customer</span>
-        <p class="font-body-md text-[13px] text-on-surface-variant leading-relaxed">
-          <strong>Best way (link):</strong> Tap <strong>"Share"</strong> or <strong>"Copy Link"</strong> and send it via WhatsApp, SMS, or email. Your customer gets a live receipt they can view anytime on any device.
-        </p>
-        <p class="font-body-md text-[13px] text-on-surface-variant leading-relaxed mt-2">
-          <strong>To save as PDF on mobile:</strong><br/>
-          <span class="inline-flex items-center gap-1 mt-1">
-            <span class="material-symbols-outlined text-[14px]">iphone</span>
-            <strong>iPhone:</strong> Open the receipt → tap <strong>Share</strong> → <strong>Print</strong> → pinch out on the preview → <strong>Save to Files</strong>
-          </span><br/>
-          <span class="inline-flex items-center gap-1 mt-1">
-            <span class="material-symbols-outlined text-[14px]">android</span>
-            <strong>Android:</strong> Open the receipt → tap <strong>⋮ menu</strong> → <strong>Share</strong> → <strong>Print</strong> → <strong>Save as PDF</strong>
-          </span><br/>
-          <span class="inline-flex items-center gap-1 mt-1">
-            <span class="material-symbols-outlined text-[14px]">computer</span>
-            <strong>Desktop:</strong> Open the receipt → press <strong>Ctrl+P</strong> (or <strong>⌘+P</strong>) → <strong>Save as PDF</strong>
-          </span>
-        </p>
+<!-- Share Help -->
+<div class="mt-lg p-md bg-surface-container-low rounded-xl flex items-start gap-md">
+  <span class="material-symbols-outlined text-primary text-[22px] mt-0.5 flex-shrink-0">info</span>
+  <div class="flex flex-col gap-md flex-1 min-w-0">
+
+    <span class="font-title-md text-[14px] font-medium text-on-surface">
+      How to send this receipt to your customer
+    </span>
+
+    <!-- Best method -->
+    <div>
+      <div class="font-label-md text-[12px] font-semibold text-primary uppercase tracking-wider mb-1">Best way — send the link</div>
+      <p class="font-body-md text-[13px] text-on-surface-variant leading-relaxed">
+        Tap <strong>"Share"</strong> or <strong>"Copy Link"</strong> and send it via WhatsApp, SMS, or email. Your customer gets a live receipt they can view anytime on any device.
+      </p>
+    </div>
+
+    <!-- Save as PDF -->
+    <div>
+      <div class="font-label-md text-[12px] font-semibold text-primary uppercase tracking-wider mb-2">To save as PDF</div>
+
+      <div class="space-y-3">
+        <!-- iPhone -->
+        <div class="flex gap-sm">
+          <span class="material-symbols-outlined text-on-surface-variant text-[18px] flex-shrink-0 mt-0.5">phone_iphone</span>
+          <div class="flex flex-col min-w-0">
+            <span class="font-title-md text-[13px] font-medium text-on-surface">iPhone</span>
+            <span class="font-body-md text-[12px] text-on-surface-variant leading-relaxed">
+              Open the receipt → tap <strong>Share</strong> → <strong>Print</strong> → pinch out on the preview → <strong>Save to Files</strong>
+            </span>
+          </div>
+        </div>
+
+        <!-- Android -->
+        <div class="flex gap-sm">
+          <span class="material-symbols-outlined text-on-surface-variant text-[18px] flex-shrink-0 mt-0.5">android</span>
+          <div class="flex flex-col min-w-0">
+            <span class="font-title-md text-[13px] font-medium text-on-surface">Android</span>
+            <span class="font-body-md text-[12px] text-on-surface-variant leading-relaxed">
+              Open the receipt → tap <strong>⋮ menu</strong> → <strong>Share</strong> → <strong>Print</strong> → <strong>Save as PDF</strong>
+            </span>
+          </div>
+        </div>
+
+        <!-- Desktop -->
+        <div class="flex gap-sm">
+          <span class="material-symbols-outlined text-on-surface-variant text-[18px] flex-shrink-0 mt-0.5">computer</span>
+          <div class="flex flex-col min-w-0">
+            <span class="font-title-md text-[13px] font-medium text-on-surface">Desktop</span>
+            <span class="font-body-md text-[12px] text-on-surface-variant leading-relaxed">
+              Open the receipt → press <strong>Ctrl+P</strong> (or <strong>⌘+P</strong> on Mac) → <strong>Save as PDF</strong>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
 
   </div>
+</div>
 </main>
 
 <script>
